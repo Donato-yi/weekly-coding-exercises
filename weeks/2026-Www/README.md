@@ -1,36 +1,46 @@
-# Weekly Focus — 2026-W07
+# Weekly Focus — 2026-W09
 
 ## Theme
-- TypeScript + React hooks: performance and state consistency
+- Build a small, testable HTTP API with strong validation and clear error handling.
 
 ## Exercises
-- Build a debounced search hook with cancellation and stable references.
+- Scaffold a minimal tasks API (CRUD) with explicit request/response schemas.
+- Add validation + structured error responses.
 
 ## Tests
-- Add unit tests for debounce timing and cancellation (Vitest + fake timers).
+- Unit tests for handler logic (happy path + validation failures).
+- One lightweight integration test for the full request pipeline.
 
 ## UI Demo (if applicable)
-- Small search box showing pending state and last-settled query.
+- N/A (API-only week).
 
 ## Tutorial Notes
-- Review React 18 concurrency patterns (useDeferredValue, startTransition) and when they help.
+- Keep handlers thin; push logic into services for easier tests.
+- Prefer deterministic fixtures; avoid time-based flakiness.
 
 ## Tried / Solved / Learned
-- Sketched an API for a reusable debounce hook and noted edge cases (rapid input, unmount cleanup).
+- Tried: handler-first vs. service-first scaffolding.
+- Solved: validation error shape and consistent HTTP status mapping.
+- Learned: a small, well-defined test harness pays dividends fast.
 
-## Daily Entry — 2026-02-13
+---
+
+## Daily Entry — 2026-02-23
 
 ### Exercise(s)
-- Drafted a debounced search hook API and usage example.
+- Created a minimal tasks API skeleton and defined request/response contracts.
+- Implemented basic validation with clear error messages.
 
 ### Tests
-- Planned Vitest coverage: timer advance, cancel on unmount, and ignore stale requests.
+- Added unit tests for create/update handlers (valid + invalid payloads).
 
 ### Mini Tutorial Summary
-- Concurrency primitives are best for “nice to have” responsiveness; debouncing still essential for expensive calls.
+- Keep the API surface small; test the contract before the implementation details.
 
 ### UI Demo Notes
-- Demo should surface pending state and last stable query to reduce user confusion.
+- N/A.
 
 ### Tried / Solved / Learned
-- Identified key edge cases: multiple rapid inputs, cancellation behavior, and ensuring stable callbacks.
+- Tried: table-driven tests for handler cases.
+- Solved: consistent error formatting across endpoints.
+- Learned: contract-first keeps refactors safer.

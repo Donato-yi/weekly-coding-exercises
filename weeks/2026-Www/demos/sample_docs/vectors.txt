@@ -1,0 +1,1 @@
+Vector search ranks documents using similarity between numeric embeddings.

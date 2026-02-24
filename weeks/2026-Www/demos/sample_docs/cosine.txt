@@ -1,0 +1,1 @@
+Cosine similarity compares the angle between vectors rather than their length.

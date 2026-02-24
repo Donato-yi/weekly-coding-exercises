@@ -1,46 +1,42 @@
 # Weekly Focus — 2026-W09
 
 ## Theme
-- Build a small, testable HTTP API with strong validation and clear error handling.
+- Type‑safe API design + security middleware patterns for JavaScript/TypeScript apps.
 
 ## Exercises
-- Scaffold a minimal tasks API (CRUD) with explicit request/response schemas.
-- Add validation + structured error responses.
+- Build a small TypeScript API with request validation (Zod) and versioned routes.
+- Add a lightweight rate limiter + bot detection stub to simulate security middleware.
 
 ## Tests
-- Unit tests for handler logic (happy path + validation failures).
-- One lightweight integration test for the full request pipeline.
+- Vitest unit tests for validators, rate limiter behavior, and error shapes.
 
 ## UI Demo (if applicable)
-- N/A (API-only week).
+- Simple Vite page that sends requests and visualizes rate‑limit headers/responses.
 
 ## Tutorial Notes
-- Keep handlers thin; push logic into services for easier tests.
-- Prefer deterministic fixtures; avoid time-based flakiness.
+- Keep SDK interfaces stable; surface breaking changes behind a major version.
+- Prefer clear error contracts (problem+json style) for client stability.
 
 ## Tried / Solved / Learned
-- Tried: handler-first vs. service-first scaffolding.
-- Solved: validation error shape and consistent HTTP status mapping.
-- Learned: a small, well-defined test harness pays dividends fast.
+- Tried: splitting routing by version and enforcing per‑route schemas.
+- Solved: consistent error response shape across middleware layers.
+- Learned: stability guarantees reduce downstream churn more than raw feature count.
 
----
-
-## Daily Entry — 2026-02-23
+## Daily Entry — 2026-02-24
 
 ### Exercise(s)
-- Created a minimal tasks API skeleton and defined request/response contracts.
-- Implemented basic validation with clear error messages.
+- Drafted a TS API skeleton with Zod schema validation and a basic rate‑limit middleware.
 
 ### Tests
-- Added unit tests for create/update handlers (valid + invalid payloads).
+- Added unit tests for schema failures, rate‑limit counters, and retry‑after headers.
 
 ### Mini Tutorial Summary
-- Keep the API surface small; test the contract before the implementation details.
+- Versioned routes + stable error contracts make client integrations resilient during rapid iteration.
 
 ### UI Demo Notes
-- N/A.
+- Vite page shows request counts and rate‑limit responses in a small dashboard.
 
 ### Tried / Solved / Learned
-- Tried: table-driven tests for handler cases.
-- Solved: consistent error formatting across endpoints.
-- Learned: contract-first keeps refactors safer.
+- Tried: using a shared middleware pipeline for all endpoints.
+- Solved: separating auth/validation/limit concerns for clearer failure modes.
+- Learned: “stable API surface” is a feature worth explicit design time.

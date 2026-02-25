@@ -1,0 +1,2 @@
+{"id":"case-001","prompt":"Summarize the rollout plan.","response":"Clear summary with steps and bullet points. Next, verify deployment in staging."}
+{"id":"case-002","prompt":"Explain risks in the proposal.","response":"Main concern: security risk if validation is skipped. Recommend a test and verify results."}

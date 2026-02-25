@@ -1,38 +1,38 @@
 # Weekly Focus — 2026-W09
 
 ## Theme
-- AI‑lite retrieval: hashing vectorizer + cosine search for local docs
+- AI eval harness: rubric scoring + regression tests for model responses
 
 ## Focus Area
 - AI
 
 ## Primary Language / Stack
-- Python 3.11 (stdlib + pytest)
+- Python 3.11 (stdlib-only)
 
 ## Weekly Goal
-- Build a tiny local search engine that turns text into fixed‑size vectors and ranks documents by cosine similarity.
+- Build a lightweight evaluation runner that scores responses against rubric criteria, produces a compact report, and is testable via JSONL fixtures.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Implement hashing vectorizer + document index, add core tests
-- Wed: Add CLI and sample dataset loader
-- Thu: Add weighting tweaks (TF normalization) + relevance tuning notes
-- Fri: Expand tests + edge cases (empty docs, stopwords)
-- Sat: Write tutorial notes + usage demo
-- Sun: Polish, refactor, and finalize README
+- Tue: Scaffold project layout and sample fixtures
+- Wed: Implement rubric scoring + evaluation runner + tests
+- Thu: Add CLI flags (min score, fail-fast) + richer report
+- Fri: Add regression snapshots + docs walkthrough
+- Sat: Add more rubric types (length, structure, refusal checks)
+- Sun: Refactor + polish + retrospective
 
 ## Exercises (What to Build)
-- HashingVectorizer (tokenize → hash → vector)
-- DocumentIndex with add/search APIs
-- Simple CLI for searching a folder of notes
+- JSONL-driven evaluator for prompt/response pairs
+- Keyword-based rubric scoring with weighted criteria
+- Report generator (per-case + summary)
 
 ## Tests (What to Validate)
-- Tokenization and deterministic hashing
-- Cosine similarity correctness
-- Search ranking order for known inputs
+- Criteria matching adds expected weights
+- Case-level scoring + summary aggregation
+- JSONL parsing works for multiple cases
 
 ## UI Demos (What to Showcase)
-- Terminal demo: query → ranked results with scores
+- Demo report markdown (docs + demos)
 
 ## Repo Structure
 - /src
@@ -41,38 +41,28 @@
 - /docs
 
 ## Tutorial Notes
-- Hashing trick gives fixed‑size vectors without a vocab.
-- Normalize vectors to compare with cosine similarity.
+- Rubrics make qualitative evaluation reproducible; keep criteria small and explicit.
 
 ## Daily Log
 
-### Daily Entry — 2026-02-24
+### Daily Entry — 2026-02-25
 
-**Progress**
-- Implemented hashing vectorizer + document index.
-- Added cosine similarity and ranking.
-- Wrote pytest coverage for core behaviors.
+#### Progress
+- Implemented rubric scoring and evaluation runner.
+- Added sample JSONL fixture and demo report.
 
-**Exercises Completed**
-- HashingVectorizer
-- DocumentIndex.search
+#### Exercises Completed
+- Keyword-weighted rubric scoring.
+- JSONL evaluation loop with summary stats.
 
-**Tests Run**
-- pytest
+#### Tests Run
+- Added pytest coverage for rubric scoring and runner output.
 
-**UI Demo Notes**
-- Added a demo snippet showing ranked output and scores.
+#### UI Demo Notes
+- Generated a sample report from the fixture.
+
+#### Tried / Solved / Learned
+- Small, explicit criteria lists reduce ambiguous scoring drift.
 
 ## Tried / Solved / Learned
-- Tried: using a fixed dimension and hashing tokens for compact vectors.
-- Solved: deterministic hashing (stable seed) + normalized cosine scores.
-- Learned: even simple hashing vectors can be surprisingly usable for local search.
-
-## How To Run
-```bash
-python -m venv .venv
-. .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pytest
-python -m src.cli --query "vector search" --docs ./demos/sample_docs
-```
+- Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

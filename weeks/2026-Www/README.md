@@ -64,5 +64,24 @@
 #### Tried / Solved / Learned
 - Small, explicit criteria lists reduce ambiguous scoring drift.
 
+### Daily Entry — 2026-02-26
+
+#### Progress
+- Added CLI flags for min-score thresholds and fail-fast behavior.
+- Expanded report output with pass/fail counts and per-criterion weights.
+
+#### Exercises Completed
+- Implemented pass/fail tracking in the evaluation runner.
+- Updated markdown report formatting to include thresholds and status.
+
+#### Tests Run
+- Added coverage for min-score and fail-fast behavior.
+
+#### UI Demo Notes
+- Refreshed the demo report to reflect the new report format.
+
+#### Tried / Solved / Learned
+- Small pass/fail thresholds make rubric scores easier to operationalize in CI.
+
 ## Tried / Solved / Learned
 - Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

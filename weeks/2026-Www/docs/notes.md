@@ -18,3 +18,5 @@
 - `--min-score` enforces a passing threshold per case.
 - `--fail-fast` stops on the first failing case (useful for CI).
 - `--out` writes the markdown report instead of stdout.
+- `--snapshot` checks the report against a stored markdown baseline.
+- `--update-snapshot` rewrites the baseline when changes are intended.

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from rubrics import build_default_rubric
+from snapshots import check_snapshot
 
 
 @dataclass
@@ -93,11 +94,24 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=None, help="Optional output markdown path")
     parser.add_argument("--min-score", type=int, default=0, help="Minimum score to pass")
     parser.add_argument("--fail-fast", action="store_true", help="Stop at first failing case")
+    parser.add_argument("--snapshot", type=Path, default=None, help="Path to regression snapshot")
+    parser.add_argument(
+        "--update-snapshot",
+        action="store_true",
+        help="Overwrite snapshot with current output",
+    )
     args = parser.parse_args()
 
     cases = read_jsonl(args.path)
     report = evaluate_cases(cases, min_score=args.min_score, fail_fast=args.fail_fast)
     markdown = to_markdown(report)
+
+    if args.snapshot:
+        ok, message = check_snapshot(markdown, args.snapshot, update=args.update_snapshot)
+        if not ok:
+            print(f"Snapshot mismatch: {args.snapshot}")
+            raise SystemExit(1)
+        print(f"Snapshot: {message}")
 
     if args.out:
         args.out.write_text(markdown, encoding="utf-8")

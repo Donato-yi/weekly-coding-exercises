@@ -83,5 +83,24 @@
 #### Tried / Solved / Learned
 - Small pass/fail thresholds make rubric scores easier to operationalize in CI.
 
+### Daily Entry — 2026-02-27
+
+#### Progress
+- Added regression snapshot checks for markdown reports.
+- Wrote a walkthrough doc for snapshot usage in CI.
+
+#### Exercises Completed
+- Implemented snapshot compare/update helper.
+- Added snapshot CLI flags in the eval runner.
+
+#### Tests Run
+- Added unit tests for snapshot update/mismatch handling.
+
+#### UI Demo Notes
+- Added a baseline regression snapshot alongside the demo report.
+
+#### Tried / Solved / Learned
+- Snapshot tests make scoring regressions obvious without bloating unit tests.
+
 ## Tried / Solved / Learned
 - Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

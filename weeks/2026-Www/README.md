@@ -105,21 +105,22 @@
 ### Daily Entry — 2026-03-01
 
 #### Progress
-- Added criteria coverage summaries to eval reports.
-- Updated demo and regression snapshot outputs to match new report format.
+- Added criteria coverage percentages to reports.
+- Added JSON report output for pipeline-friendly consumption.
+- Refreshed demo report and regression snapshot content.
 
 #### Exercises Completed
-- Implemented per-criterion hit counts in the evaluator.
-- Exposed coverage section in the markdown report.
+- Implemented coverage percent calculation per rubric criterion.
+- Added JSON serialization for case results and summary.
 
 #### Tests Run
-- Extended evaluator summary tests for coverage counts.
+- Extended evaluator summary tests for coverage percentages.
 
 #### UI Demo Notes
-- Coverage section highlights which rubric criteria appear across cases.
+- Coverage percentages highlight which rubric criteria appear across cases.
 
 #### Tried / Solved / Learned
-- Coverage summaries make it easier to spot missing rubric signals quickly.
+- Adding JSON output makes it easier to drop this into CI and dashboards.
 
 ## Tried / Solved / Learned
 - Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

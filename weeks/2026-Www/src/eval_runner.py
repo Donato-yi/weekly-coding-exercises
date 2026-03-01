@@ -62,7 +62,15 @@ def evaluate_cases(
         if fail_fast and not passed:
             break
 
-    average = round(total_score / max(len(results), 1), 2)
+    case_count = max(len(results), 1)
+    average = round(total_score / case_count, 2)
+    criteria_coverage = {
+        name: {
+            "count": count,
+            "percent": round(count / case_count * 100, 1),
+        }
+        for name, count in criteria_hits.items()
+    }
     return {
         "rubric": rubric.name,
         "max_score": rubric.max_score,
@@ -73,6 +81,22 @@ def evaluate_cases(
         "failed": failed,
         "cases": results,
         "criteria_hits": criteria_hits,
+        "criteria_coverage": criteria_coverage,
+    }
+
+
+def serialize_report(report: Dict[str, object]) -> Dict[str, object]:
+    return {
+        **report,
+        "cases": [
+            {
+                "id": case.case_id,
+                "score": case.score,
+                "passed": case.passed,
+                "hits": case.hits,
+            }
+            for case in report["cases"]
+        ],
     }
 
 
@@ -86,8 +110,10 @@ def to_markdown(report: Dict[str, object]) -> str:
         "## Criteria Coverage",
     ]
     case_count = max(len(report["cases"]), 1)
-    for name, count in report["criteria_hits"].items():
-        lines.append(f"- {name}: {count} / {case_count} cases")
+    for name, stats in report["criteria_coverage"].items():
+        lines.append(
+            f"- {name}: {stats['count']} / {case_count} cases ({stats['percent']}%)"
+        )
     lines.extend([
         "",
         "## Case Results",
@@ -103,6 +129,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run a simple rubric-based evaluation.")
     parser.add_argument("path", type=Path, help="Path to JSONL cases")
     parser.add_argument("--out", type=Path, default=None, help="Optional output markdown path")
+    parser.add_argument("--out-json", type=Path, default=None, help="Optional output JSON path")
     parser.add_argument("--min-score", type=int, default=0, help="Minimum score to pass")
     parser.add_argument("--fail-fast", action="store_true", help="Stop at first failing case")
     parser.add_argument("--snapshot", type=Path, default=None, help="Path to regression snapshot")
@@ -128,6 +155,12 @@ def main() -> None:
         args.out.write_text(markdown, encoding="utf-8")
     else:
         print(markdown)
+
+    if args.out_json:
+        args.out_json.write_text(
+            json.dumps(serialize_report(report), indent=2),
+            encoding="utf-8",
+        )
 
 
 if __name__ == "__main__":

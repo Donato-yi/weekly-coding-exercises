@@ -18,6 +18,8 @@ def test_evaluate_cases_summary():
     assert report["criteria_hits"]["verification"] == 2
     assert report["criteria_hits"]["actionable"] == 2
     assert report["criteria_hits"]["risk"] == 1
+    assert report["criteria_coverage"]["clarity"]["percent"] == 50.0
+    assert report["criteria_coverage"]["verification"]["percent"] == 100.0
 
 
 def test_fail_fast_stops_on_failure():

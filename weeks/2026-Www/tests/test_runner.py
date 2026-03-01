@@ -13,6 +13,11 @@ def test_evaluate_cases_summary():
     assert len(report["cases"]) == 2
     assert report["average_score"] > 0
     assert report["passed"] + report["failed"] == 2
+    assert report["criteria_hits"]["clarity"] == 1
+    assert report["criteria_hits"]["structure"] == 1
+    assert report["criteria_hits"]["verification"] == 2
+    assert report["criteria_hits"]["actionable"] == 2
+    assert report["criteria_hits"]["risk"] == 1
 
 
 def test_fail_fast_stops_on_failure():

@@ -38,12 +38,15 @@ def evaluate_cases(
     results: List[CaseResult] = []
     total_score = 0
     failed = 0
+    criteria_hits = {criterion.name: 0 for criterion in rubric.criteria}
 
     for case in cases:
         response = case.get("response", "")
         score_data = rubric.score(response)
         score = score_data["total"]
         passed = score >= min_score
+        for name in score_data["hits"].keys():
+            criteria_hits[name] += 1
         if not passed:
             failed += 1
         results.append(
@@ -69,6 +72,7 @@ def evaluate_cases(
         "passed": len(results) - failed,
         "failed": failed,
         "cases": results,
+        "criteria_hits": criteria_hits,
     }
 
 
@@ -79,8 +83,15 @@ def to_markdown(report: Dict[str, object]) -> str:
         f"Min score threshold: {report['min_score']}",
         f"Cases: {len(report['cases'])} | Passed: {report['passed']} | Failed: {report['failed']}",
         "",
-        "## Case Results",
+        "## Criteria Coverage",
     ]
+    case_count = max(len(report["cases"]), 1)
+    for name, count in report["criteria_hits"].items():
+        lines.append(f"- {name}: {count} / {case_count} cases")
+    lines.extend([
+        "",
+        "## Case Results",
+    ])
     for case in report["cases"]:
         status = "pass" if case.passed else "fail"
         hits = ", ".join(f"{name}({weight})" for name, weight in case.hits.items()) or "none"

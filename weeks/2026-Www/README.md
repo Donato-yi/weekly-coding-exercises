@@ -102,5 +102,24 @@
 #### Tried / Solved / Learned
 - Snapshot tests make scoring regressions obvious without bloating unit tests.
 
+### Daily Entry — 2026-03-01
+
+#### Progress
+- Added criteria coverage summaries to eval reports.
+- Updated demo and regression snapshot outputs to match new report format.
+
+#### Exercises Completed
+- Implemented per-criterion hit counts in the evaluator.
+- Exposed coverage section in the markdown report.
+
+#### Tests Run
+- Extended evaluator summary tests for coverage counts.
+
+#### UI Demo Notes
+- Coverage section highlights which rubric criteria appear across cases.
+
+#### Tried / Solved / Learned
+- Coverage summaries make it easier to spot missing rubric signals quickly.
+
 ## Tried / Solved / Learned
 - Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

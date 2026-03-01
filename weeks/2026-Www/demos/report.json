@@ -1,0 +1,61 @@
+{
+  "rubric": "default",
+  "max_score": 10,
+  "min_score": 0,
+  "total_score": 14,
+  "average_score": 7.0,
+  "passed": 2,
+  "failed": 0,
+  "cases": [
+    {
+      "id": "case-001",
+      "score": 8,
+      "passed": true,
+      "hits": {
+        "clarity": 2,
+        "structure": 2,
+        "verification": 2,
+        "actionable": 2
+      }
+    },
+    {
+      "id": "case-002",
+      "score": 6,
+      "passed": true,
+      "hits": {
+        "risk": 2,
+        "verification": 2,
+        "actionable": 2
+      }
+    }
+  ],
+  "criteria_hits": {
+    "clarity": 1,
+    "structure": 1,
+    "risk": 1,
+    "verification": 2,
+    "actionable": 2
+  },
+  "criteria_coverage": {
+    "clarity": {
+      "count": 1,
+      "percent": 50.0
+    },
+    "structure": {
+      "count": 1,
+      "percent": 50.0
+    },
+    "risk": {
+      "count": 1,
+      "percent": 50.0
+    },
+    "verification": {
+      "count": 2,
+      "percent": 100.0
+    },
+    "actionable": {
+      "count": 2,
+      "percent": 100.0
+    }
+  }
+}

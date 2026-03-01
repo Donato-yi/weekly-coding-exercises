@@ -105,22 +105,21 @@
 ### Daily Entry — 2026-03-01
 
 #### Progress
-- Added criteria coverage percentages to reports.
-- Added JSON report output for pipeline-friendly consumption.
-- Refreshed demo report and regression snapshot content.
+- Sorted criteria coverage and hit lists for consistent report output.
+- Added a short retrospective doc and refreshed report snapshots.
 
 #### Exercises Completed
-- Implemented coverage percent calculation per rubric criterion.
-- Added JSON serialization for case results and summary.
+- Added markdown formatting helpers for deterministic ordering.
+- Documented week retrospective notes.
 
 #### Tests Run
-- Extended evaluator summary tests for coverage percentages.
+- Not run (pytest unavailable in automation environment); added helper tests for ordering rules.
 
 #### UI Demo Notes
-- Coverage percentages highlight which rubric criteria appear across cases.
+- Coverage list is ordered by percent; per-case hits are ordered by weight.
 
 #### Tried / Solved / Learned
-- Adding JSON output makes it easier to drop this into CI and dashboards.
+- Deterministic ordering keeps regression snapshots clean and reviewable.
 
 ## Tried / Solved / Learned
 - Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.

@@ -100,6 +100,20 @@ def serialize_report(report: Dict[str, object]) -> Dict[str, object]:
     }
 
 
+def _sorted_criteria_coverage(coverage: Dict[str, Dict[str, float]]) -> List[tuple[str, Dict[str, float]]]:
+    return sorted(
+        coverage.items(),
+        key=lambda item: (-item[1]["percent"], item[0]),
+    )
+
+
+def _format_hits(hits: Dict[str, int]) -> str:
+    if not hits:
+        return "none"
+    ordered = sorted(hits.items(), key=lambda item: (-item[1], item[0]))
+    return ", ".join(f"{name}({weight})" for name, weight in ordered)
+
+
 def to_markdown(report: Dict[str, object]) -> str:
     lines = [
         f"# Eval Report — {report['rubric']}",
@@ -110,7 +124,7 @@ def to_markdown(report: Dict[str, object]) -> str:
         "## Criteria Coverage",
     ]
     case_count = max(len(report["cases"]), 1)
-    for name, stats in report["criteria_coverage"].items():
+    for name, stats in _sorted_criteria_coverage(report["criteria_coverage"]):
         lines.append(
             f"- {name}: {stats['count']} / {case_count} cases ({stats['percent']}%)"
         )
@@ -120,7 +134,7 @@ def to_markdown(report: Dict[str, object]) -> str:
     ])
     for case in report["cases"]:
         status = "pass" if case.passed else "fail"
-        hits = ", ".join(f"{name}({weight})" for name, weight in case.hits.items()) or "none"
+        hits = _format_hits(case.hits)
         lines.append(f"- {case.case_id}: {case.score} [{status}] | hits: {hits}")
     return "\n".join(lines)
 

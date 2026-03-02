@@ -1,38 +1,38 @@
-# Weekly Focus — 2026-W09
+# Weekly Focus — 2026-W10
 
 ## Theme
-- AI eval harness: rubric scoring + regression tests for model responses
+- Automation: local developer task runner with composable steps and logging
 
 ## Focus Area
-- AI
+- automation
 
 ## Primary Language / Stack
-- Python 3.11 (stdlib-only)
+- Go 1.22 (stdlib-only)
 
 ## Weekly Goal
-- Build a lightweight evaluation runner that scores responses against rubric criteria, produces a compact report, and is testable via JSONL fixtures.
+- Build a small, reliable task runner that reads a simple YAML/JSON task spec, executes steps, and produces a concise run report suitable for CI/local dev.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Scaffold project layout and sample fixtures
-- Wed: Implement rubric scoring + evaluation runner + tests
-- Thu: Add CLI flags (min score, fail-fast) + richer report
-- Fri: Add regression snapshots + docs walkthrough
-- Sat: Add more rubric types (length, structure, refusal checks)
+- Tue: Define task schema + config loader + sample spec
+- Wed: Implement step runner + command exec + env support
+- Thu: Add structured logging + timing + exit summaries
+- Fri: Add report output (markdown + json) + docs
+- Sat: Add retry/backoff + concurrency controls
 - Sun: Refactor + polish + retrospective
 
 ## Exercises (What to Build)
-- JSONL-driven evaluator for prompt/response pairs
-- Keyword-based rubric scoring with weighted criteria
-- Report generator (per-case + summary)
+- Task spec parser (JSON first, optional YAML later)
+- Step execution engine with per-step status
+- Report generator (summary + per-step details)
 
 ## Tests (What to Validate)
-- Criteria matching adds expected weights
-- Case-level scoring + summary aggregation
-- JSONL parsing works for multiple cases
+- Config parsing and schema validation
+- Step success/failure propagation
+- Report formatting and deterministic ordering
 
 ## UI Demos (What to Showcase)
-- Demo report markdown (docs + demos)
+- Sample CLI run output + generated markdown report
 
 ## Repo Structure
 - /src
@@ -41,85 +41,10 @@
 - /docs
 
 ## Tutorial Notes
-- Rubrics make qualitative evaluation reproducible; keep criteria small and explicit.
+- Keep task specs small and explicit; errors should point to the exact failing step.
 
 ## Daily Log
-
-### Daily Entry — 2026-02-25
-
-#### Progress
-- Implemented rubric scoring and evaluation runner.
-- Added sample JSONL fixture and demo report.
-
-#### Exercises Completed
-- Keyword-weighted rubric scoring.
-- JSONL evaluation loop with summary stats.
-
-#### Tests Run
-- Added pytest coverage for rubric scoring and runner output.
-
-#### UI Demo Notes
-- Generated a sample report from the fixture.
-
-#### Tried / Solved / Learned
-- Small, explicit criteria lists reduce ambiguous scoring drift.
-
-### Daily Entry — 2026-02-26
-
-#### Progress
-- Added CLI flags for min-score thresholds and fail-fast behavior.
-- Expanded report output with pass/fail counts and per-criterion weights.
-
-#### Exercises Completed
-- Implemented pass/fail tracking in the evaluation runner.
-- Updated markdown report formatting to include thresholds and status.
-
-#### Tests Run
-- Added coverage for min-score and fail-fast behavior.
-
-#### UI Demo Notes
-- Refreshed the demo report to reflect the new report format.
-
-#### Tried / Solved / Learned
-- Small pass/fail thresholds make rubric scores easier to operationalize in CI.
-
-### Daily Entry — 2026-02-27
-
-#### Progress
-- Added regression snapshot checks for markdown reports.
-- Wrote a walkthrough doc for snapshot usage in CI.
-
-#### Exercises Completed
-- Implemented snapshot compare/update helper.
-- Added snapshot CLI flags in the eval runner.
-
-#### Tests Run
-- Added unit tests for snapshot update/mismatch handling.
-
-#### UI Demo Notes
-- Added a baseline regression snapshot alongside the demo report.
-
-#### Tried / Solved / Learned
-- Snapshot tests make scoring regressions obvious without bloating unit tests.
-
-### Daily Entry — 2026-03-01
-
-#### Progress
-- Sorted criteria coverage and hit lists for consistent report output.
-- Added a short retrospective doc and refreshed report snapshots.
-
-#### Exercises Completed
-- Added markdown formatting helpers for deterministic ordering.
-- Documented week retrospective notes.
-
-#### Tests Run
-- Not run (pytest unavailable in automation environment); added helper tests for ordering rules.
-
-#### UI Demo Notes
-- Coverage list is ordered by percent; per-case hits are ordered by weight.
-
-#### Tried / Solved / Learned
-- Deterministic ordering keeps regression snapshots clean and reviewable.
+-
 
 ## Tried / Solved / Learned
-- Default rubrics should stay small; scale with multiple focused rubrics rather than one giant list.
+-

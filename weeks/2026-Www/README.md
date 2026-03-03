@@ -43,8 +43,15 @@
 ## Tutorial Notes
 - Keep task specs small and explicit; errors should point to the exact failing step.
 
+## Daily Entry — 2026-03-03 (Tue)
+- Progress: defined JSON schema structs, loader with strict decoding, and validation checks.
+- Exercises completed: initial task spec parser (JSON-only).
+- Tests run: Not run (Go toolchain not available in automation environment).
+- UI demo notes: sample spec in `/demos/sample-spec.json`.
+- Tried / Solved / Learned: `DisallowUnknownFields` helps catch typos early.
+
 ## Daily Log
--
+- 2026-03-03: Added schema + loader + sample spec; basic validation and tests.
 
 ## Tried / Solved / Learned
--
+- Using strict JSON decoding avoids silent config mistakes.

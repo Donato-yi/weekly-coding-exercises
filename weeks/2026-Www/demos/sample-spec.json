@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "tasks": [
+    {
+      "name": "lint",
+      "steps": [
+        {"name": "fmt", "cmd": "gofmt -w ./..."},
+        {"name": "staticcheck", "cmd": "staticcheck ./..."}
+      ]
+    },
+    {
+      "name": "test",
+      "steps": [
+        {"name": "unit", "cmd": "go test ./...", "env": {"CGO_ENABLED": "0"}}
+      ]
+    }
+  ]
+}

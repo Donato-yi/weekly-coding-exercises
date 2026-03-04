@@ -1,38 +1,38 @@
 # Weekly Focus — 2026-W10
 
 ## Theme
-- Automation: local developer task runner with composable steps and logging
+- Tiny AI from scratch: Naive Bayes text classifier + evaluation CLI
 
 ## Focus Area
-- automation
+- AI
 
 ## Primary Language / Stack
-- Go 1.22 (stdlib-only)
+- Python 3 (stdlib only)
 
 ## Weekly Goal
-- Build a small, reliable task runner that reads a simple YAML/JSON task spec, executes steps, and produces a concise run report suitable for CI/local dev.
+- Build a minimal, well-tested Naive Bayes classifier that trains on a small text dataset, evaluates accuracy/confusion matrix, and supports a CLI to classify new text.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Define task schema + config loader + sample spec
-- Wed: Implement step runner + command exec + env support
-- Thu: Add structured logging + timing + exit summaries
-- Fri: Add report output (markdown + json) + docs
-- Sat: Add retry/backoff + concurrency controls
-- Sun: Refactor + polish + retrospective
+- Tue: Sketch tokenizer, data model, and metrics API
+- Wed: Implement classifier + tests + CLI
+- Thu: Add docs/tutorial + improve dataset
+- Fri: Add error analysis notes + simple demo output
+- Sat: Refactor + edge-case tests
+- Sun: Review + polish README + lessons learned
 
 ## Exercises (What to Build)
-- Task spec parser (JSON first, optional YAML later)
-- Step execution engine with per-step status
-- Report generator (summary + per-step details)
+- Naive Bayes classifier with Laplace smoothing
+- Tokenizer for lightweight text normalization
+- CLI that trains/evaluates and classifies input text
 
 ## Tests (What to Validate)
-- Config parsing and schema validation
-- Step success/failure propagation
-- Report formatting and deterministic ordering
+- Tokenization behavior (lowercase, strip punctuation)
+- Classifier predicts expected label on a tiny dataset
+- Probability outputs are normalized
 
 ## UI Demos (What to Showcase)
-- Sample CLI run output + generated markdown report
+- CLI demo run showing accuracy + confusion matrix
 
 ## Repo Structure
 - /src
@@ -41,17 +41,15 @@
 - /docs
 
 ## Tutorial Notes
-- Keep task specs small and explicit; errors should point to the exact failing step.
-
-## Daily Entry — 2026-03-03 (Tue)
-- Progress: defined JSON schema structs, loader with strict decoding, and validation checks.
-- Exercises completed: initial task spec parser (JSON-only).
-- Tests run: Not run (Go toolchain not available in automation environment).
-- UI demo notes: sample spec in `/demos/sample-spec.json`.
-- Tried / Solved / Learned: `DisallowUnknownFields` helps catch typos early.
+- Short explanation of Naive Bayes assumptions, smoothing, and evaluation.
 
 ## Daily Log
-- 2026-03-03: Added schema + loader + sample spec; basic validation and tests.
+- **Daily Entry — 2026-03-04**
+  - **Progress:** Implemented tokenizer, Naive Bayes classifier, metrics, and CLI entry point.
+  - **Exercises Completed:** Training + inference pipeline; sample dataset loader.
+  - **Tests Run:** `python -m unittest` (tokenization + prediction + probability sum).
+  - **UI Demo Notes:** CLI prints accuracy + confusion matrix; supports `--text` classification.
+  - **Tried / Solved / Learned:** Laplace smoothing keeps rare-word probabilities from zeroing out a class.
 
 ## Tried / Solved / Learned
-- Using strict JSON decoding avoids silent config mistakes.
+- Laplace smoothing and token normalization materially stabilize tiny datasets.

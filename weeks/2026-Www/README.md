@@ -50,6 +50,12 @@
   - **Tests Run:** `python -m unittest` (tokenization + prediction + probability sum).
   - **UI Demo Notes:** CLI prints accuracy + confusion matrix; supports `--text` classification.
   - **Tried / Solved / Learned:** Laplace smoothing keeps rare-word probabilities from zeroing out a class.
+- **Daily Entry — 2026-03-05**
+  - **Progress:** Added evaluation guidance and expanded the sample dataset for better balance.
+  - **Exercises Completed:** Dataset enrichment and evaluation notes.
+  - **Tests Run:** `python -m unittest`.
+  - **UI Demo Notes:** CLI still prints accuracy + confusion matrix with the expanded dataset.
+  - **Tried / Solved / Learned:** Extra samples make probability estimates less brittle on tiny datasets.
 
 ## Tried / Solved / Learned
 - Laplace smoothing and token normalization materially stabilize tiny datasets.

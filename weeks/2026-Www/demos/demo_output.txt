@@ -1,0 +1,11 @@
+$ python -m src.cli --evaluate
+Accuracy: 1.00
+Confusion Matrix:
+actual\pred  negative     positive
+negative     6           0
+positive     0           6
+
+$ python -m src.cli --text "slow crashes and bugs"
+Prediction: negative
+  positive: 0.131
+  negative: 0.869

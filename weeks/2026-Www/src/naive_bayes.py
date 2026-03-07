@@ -23,8 +23,22 @@ class NaiveBayesClassifier:
         self.vocab: set[str] = set()
         self.fitted = False
 
+    def _prepare_fit_inputs(self, texts: Iterable[str], labels: Iterable[str]) -> Tuple[List[str], List[str]]:
+        text_list = list(texts)
+        label_list = list(labels)
+        if len(text_list) != len(label_list):
+            raise ValueError("Texts and labels must be the same length")
+        if not text_list:
+            raise ValueError("Training data cannot be empty")
+        return text_list, label_list
+
     def fit(self, texts: Iterable[str], labels: Iterable[str]) -> None:
-        for text, label in zip(texts, labels):
+        text_list, label_list = self._prepare_fit_inputs(texts, labels)
+        self.class_counts = Counter()
+        self.token_counts = defaultdict(Counter)
+        self.total_tokens = Counter()
+        self.vocab = set()
+        for text, label in zip(text_list, label_list):
             self.class_counts[label] += 1
             tokens = tokenize(text)
             self.token_counts[label].update(tokens)

@@ -68,6 +68,12 @@
   - **Tests Run:** `python -m unittest`.
   - **UI Demo Notes:** `demos/demo_output.txt` captures a full CLI evaluation run.
   - **Tried / Solved / Learned:** Misclassifications often trace back to sparse tokens; highlight top contributing tokens for future improvement.
+- **Daily Entry — 2026-03-07**
+  - **Progress:** Refactored training input validation and added edge-case coverage.
+  - **Exercises Completed:** Fit-length mismatch + empty dataset guards.
+  - **Tests Run:** `python -m unittest discover -s tests` (fails: test_runner import error for rubrics module; test_nb_classifier expected label mismatch).
+  - **UI Demo Notes:** No UI changes today; CLI still outputs accuracy + confusion matrix.
+  - **Tried / Solved / Learned:** Empty inputs should fail fast; empty text predictions fall back to class priors.
 
 ## Tried / Solved / Learned
 - Laplace smoothing and token normalization materially stabilize tiny datasets.

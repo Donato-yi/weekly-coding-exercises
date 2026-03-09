@@ -1,38 +1,40 @@
-# Weekly Focus — 2026-W10
+# Weekly Focus — 2026-W11
 
 ## Theme
-- Tiny AI from scratch: Naive Bayes text classifier + evaluation CLI
+- Lightweight automation runner CLI: define tasks in YAML, run with retries, and capture structured logs
 
 ## Focus Area
-- AI
+- automation
 
 ## Primary Language / Stack
-- Python 3 (stdlib only)
+- Go 1.22 + Cobra (CLI) + YAML (gopkg.in/yaml.v3)
 
 ## Weekly Goal
-- Build a minimal, well-tested Naive Bayes classifier that trains on a small text dataset, evaluates accuracy/confusion matrix, and supports a CLI to classify new text.
+- Build a small, well-tested CLI that loads a YAML task file, executes commands with timeouts/retries, and writes a JSONL run log for later review.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Sketch tokenizer, data model, and metrics API
-- Wed: Implement classifier + tests + CLI
-- Thu: Add docs/tutorial + improve dataset
-- Fri: Add error analysis notes + simple demo output
-- Sat: Refactor + edge-case tests
-- Sun: Review + polish README + lessons learned
+- Tue: Implement config schema + YAML parsing + validation
+- Wed: Implement task runner with timeout + retry behavior
+- Thu: Add JSONL logging + summary output
+- Fri: Add docs/tutorial + sample task file
+- Sat: Add integration tests + edge cases
+- Sun: Review, polish README, and capture lessons learned
 
 ## Exercises (What to Build)
-- Naive Bayes classifier with Laplace smoothing
-- Tokenizer for lightweight text normalization
-- CLI that trains/evaluates and classifies input text
+- Task schema (name, command, retries, timeout)
+- Runner that executes tasks sequentially with clear status output
+- JSONL log writer with timestamps and exit codes
+- Sample YAML config
 
 ## Tests (What to Validate)
-- Tokenization behavior (lowercase, strip punctuation)
-- Classifier predicts expected label on a tiny dataset
-- Probability outputs are normalized
+- YAML parsing + validation errors
+- Timeout handling and retry behavior
+- Log output format and required fields
 
 ## UI Demos (What to Showcase)
-- CLI demo run showing accuracy + confusion matrix
+- CLI run output showing task status + summary
+- Sample JSONL log snippet
 
 ## Repo Structure
 - /src
@@ -41,39 +43,16 @@
 - /docs
 
 ## Tutorial Notes
-- Short explanation of Naive Bayes assumptions, smoothing, and evaluation.
-
-## How To Run
-- Install: Python 3.x
-- Run tests: `python -m unittest`
-- Evaluate: `python -m src.cli --evaluate`
-- Classify: `python -m src.cli --text "your text here"`
+- Go exec.Command with context timeouts
+- Designing minimal task schemas for automation
 
 ## Daily Log
-- **Daily Entry — 2026-03-04**
-  - **Progress:** Implemented tokenizer, Naive Bayes classifier, metrics, and CLI entry point.
-  - **Exercises Completed:** Training + inference pipeline; sample dataset loader.
-  - **Tests Run:** `python -m unittest` (tokenization + prediction + probability sum).
-  - **UI Demo Notes:** CLI prints accuracy + confusion matrix; supports `--text` classification.
-  - **Tried / Solved / Learned:** Laplace smoothing keeps rare-word probabilities from zeroing out a class.
-- **Daily Entry — 2026-03-05**
-  - **Progress:** Added evaluation guidance and expanded the sample dataset for better balance.
-  - **Exercises Completed:** Dataset enrichment and evaluation notes.
-  - **Tests Run:** `python -m unittest`.
-  - **UI Demo Notes:** CLI still prints accuracy + confusion matrix with the expanded dataset.
-  - **Tried / Solved / Learned:** Extra samples make probability estimates less brittle on tiny datasets.
-- **Daily Entry — 2026-03-06**
-  - **Progress:** Added error-analysis notes, demo output, and clarified metrics.
-  - **Exercises Completed:** Confusion matrix explanation + demo transcript capture.
-  - **Tests Run:** `python -m unittest`.
-  - **UI Demo Notes:** `demos/demo_output.txt` captures a full CLI evaluation run.
-  - **Tried / Solved / Learned:** Misclassifications often trace back to sparse tokens; highlight top contributing tokens for future improvement.
-- **Daily Entry — 2026-03-07**
-  - **Progress:** Refactored training input validation and added edge-case coverage.
-  - **Exercises Completed:** Fit-length mismatch + empty dataset guards.
-  - **Tests Run:** `python -m unittest discover -s tests` (fails: test_runner import error for rubrics module; test_nb_classifier expected label mismatch).
-  - **UI Demo Notes:** No UI changes today; CLI still outputs accuracy + confusion matrix.
-  - **Tried / Solved / Learned:** Empty inputs should fail fast; empty text predictions fall back to class priors.
+- **Daily Entry — 2026-03-09**
+  - **Progress:** Set weekly goal and plan.
+  - **Exercises Completed:** Planned CLI scope and core features.
+  - **Tests Run:** N/A
+  - **UI Demo Notes:** N/A
+  - **Tried / Solved / Learned:** Defined a lean task schema to keep the runner small.
 
 ## Tried / Solved / Learned
-- Laplace smoothing and token normalization materially stabilize tiny datasets.
+- A tight schema reduces scope creep and makes testing straightforward.

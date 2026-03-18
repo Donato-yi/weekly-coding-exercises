@@ -1,40 +1,40 @@
-# Weekly Focus — 2026-W11
+# Weekly Focus — 2026-W12
 
 ## Theme
-- Lightweight automation runner CLI: define tasks in YAML, run with retries, and capture structured logs
+- In-memory work queue architecture: retries, dead-letter, and metrics
 
 ## Focus Area
-- automation
+- architecture
 
 ## Primary Language / Stack
-- Go 1.22 + Cobra (CLI) + YAML (gopkg.in/yaml.v3)
+- Python 3.12 + pytest
 
 ## Weekly Goal
-- Build a small, well-tested CLI that loads a YAML task file, executes commands with timeouts/retries, and writes a JSONL run log for later review.
+- Build a small, testable in-memory queue with ack/nack, retry handling, dead-letter routing, and basic metrics. Provide a usage demo and short tutorial notes about reliability patterns.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Implement config schema + YAML parsing + validation
-- Wed: Implement task runner with timeout + retry behavior
-- Thu: Add JSONL logging + summary output
-- Fri: Add docs/tutorial + sample task file
-- Sat: Add integration tests + edge cases
-- Sun: Review, polish README, and capture lessons learned
+- Tue: Implement core queue data structures + message model
+- Wed: Add ack/nack + retry + dead-letter + metrics + tests
+- Thu: Add docs/tutorial + usage demo
+- Fri: Add edge cases (ordering, empty queue behavior) + tests
+- Sat: Add integration-style tests + polish docs
+- Sun: Review, refactor, and summarize lessons learned
 
 ## Exercises (What to Build)
-- Task schema (name, command, retries, timeout)
-- Runner that executes tasks sequentially with clear status output
-- JSONL log writer with timestamps and exit codes
-- Sample YAML config
+- Message model with attempts + timestamps
+- Queue with enqueue/dequeue/ack/nack
+- Retry logic + dead-letter queue
+- Metrics summary (ready/inflight/dead)
 
 ## Tests (What to Validate)
-- YAML parsing + validation errors
-- Timeout handling and retry behavior
-- Log output format and required fields
+- Ack removes inflight messages
+- Nack requeues with incremented attempts
+- Dead-letter after max retries
+- Metrics reflect queue state
 
 ## UI Demos (What to Showcase)
-- CLI run output showing task status + summary
-- Sample JSONL log snippet
+- Example usage snippet + sample output
 
 ## Repo Structure
 - /src
@@ -43,16 +43,16 @@
 - /docs
 
 ## Tutorial Notes
-- Go exec.Command with context timeouts
-- Designing minimal task schemas for automation
+- Idempotency and retries
+- Dead-letter queues as safety valves
 
 ## Daily Log
-- **Daily Entry — 2026-03-09**
-  - **Progress:** Set weekly goal and plan.
-  - **Exercises Completed:** Planned CLI scope and core features.
-  - **Tests Run:** N/A
-  - **UI Demo Notes:** N/A
-  - **Tried / Solved / Learned:** Defined a lean task schema to keep the runner small.
+- **Daily Entry — 2026-03-18**
+  - **Progress:** Implemented queue, retry/dead-letter behavior, and metrics. Wrote initial tests and demo snippet.
+  - **Exercises Completed:** Core queue API + message model; retry/ack/nack flows.
+  - **Tests Run:** `pytest -q`
+  - **UI Demo Notes:** Example shows enqueue → dequeue → ack/nack flow.
+  - **Tried / Solved / Learned:** Keeping inflight tracking explicit makes retry semantics clearer.
 
 ## Tried / Solved / Learned
-- A tight schema reduces scope creep and makes testing straightforward.
+- Clear inflight tracking simplifies retry and dead-letter behavior.

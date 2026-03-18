@@ -1,40 +1,37 @@
 # Weekly Focus — 2026-W12
 
 ## Theme
-- In-memory work queue architecture: retries, dead-letter, and metrics
+- Design tokens → CSS variables toolkit for lightweight UI theming
 
 ## Focus Area
-- architecture
+- design
 
 ## Primary Language / Stack
-- Python 3.12 + pytest
+- TypeScript + Node.js (tsx) + node:test
 
 ## Weekly Goal
-- Build a small, testable in-memory queue with ack/nack, retry handling, dead-letter routing, and basic metrics. Provide a usage demo and short tutorial notes about reliability patterns.
+- Build a tiny, typed design‑token library that outputs CSS variables, supports theme overrides, and includes tests + a usage demo.
 
 ## Plan (Mon → Sun)
 - Mon: Define goal + plan only
-- Tue: Implement core queue data structures + message model
-- Wed: Add ack/nack + retry + dead-letter + metrics + tests
-- Thu: Add docs/tutorial + usage demo
-- Fri: Add edge cases (ordering, empty queue behavior) + tests
-- Sat: Add integration-style tests + polish docs
+- Tue: Define token schema + validation helpers
+- Wed: Implement generator + tests + demo (today)
+- Thu: Add docs/tutorial + usage examples
+- Fri: Add theme presets + edge‑case tests
+- Sat: Add integration demo (HTML/CSS snippet) + polish docs
 - Sun: Review, refactor, and summarize lessons learned
 
 ## Exercises (What to Build)
-- Message model with attempts + timestamps
-- Queue with enqueue/dequeue/ack/nack
-- Retry logic + dead-letter queue
-- Metrics summary (ready/inflight/dead)
+- Token schema (colors, spacing, radius, typography)
+- Theme merge/override utility
+- CSS variables serializer
 
 ## Tests (What to Validate)
-- Ack removes inflight messages
-- Nack requeues with incremented attempts
-- Dead-letter after max retries
-- Metrics reflect queue state
+- Theme overrides merge correctly
+- CSS variable output is stable and contains expected keys
 
 ## UI Demos (What to Showcase)
-- Example usage snippet + sample output
+- Example CSS vars block + component usage snippet
 
 ## Repo Structure
 - /src
@@ -43,16 +40,16 @@
 - /docs
 
 ## Tutorial Notes
-- Idempotency and retries
-- Dead-letter queues as safety valves
+- Design tokens as the single source of truth
+- When to use CSS variables vs. direct styles
 
 ## Daily Log
 - **Daily Entry — 2026-03-18**
-  - **Progress:** Implemented queue, retry/dead-letter behavior, and metrics. Wrote initial tests and demo snippet.
-  - **Exercises Completed:** Core queue API + message model; retry/ack/nack flows.
-  - **Tests Run:** `pytest -q`
-  - **UI Demo Notes:** Example shows enqueue → dequeue → ack/nack flow.
-  - **Tried / Solved / Learned:** Keeping inflight tracking explicit makes retry semantics clearer.
+  - **Progress:** Implemented token schema, theme merge, CSS var serialization. Added tests and a usage demo.
+  - **Exercises Completed:** Token map + override merge + CSS vars output.
+  - **Tests Run:** `npm test`
+  - **UI Demo Notes:** Included a sample CSS vars block and button usage snippet.
+  - **Tried / Solved / Learned:** Keeping token keys flat makes CSS var naming predictable.
 
 ## Tried / Solved / Learned
-- Clear inflight tracking simplifies retry and dead-letter behavior.
+- Flat token keys keep CSS var names consistent and easy to grep.

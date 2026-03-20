@@ -20,21 +20,30 @@ const darkTheme = createTheme({
 });
 ```
 
-## 3) Scope by data attribute
+## 3) Or start from a preset
+```ts
+import { createPresetTheme } from "../src/tokens.js";
+
+const sunsetTheme = createPresetTheme("sunset", {
+  color: { primary: "#fb7185" }
+});
+```
+
+## 4) Scope by data attribute
 ```ts
 import { toCssVars } from "../src/tokens.js";
 
 const darkCss = toCssVars(darkTheme, "[data-theme=\"dark\"]");
 ```
 
-## 4) Apply in HTML
+## 5) Apply in HTML
 ```html
 <div data-theme="dark">
   <button class="btn">Dark Theme</button>
 </div>
 ```
 
-## 5) Use CSS vars
+## 6) Use CSS vars
 ```css
 .btn {
   background: var(--color-primary);

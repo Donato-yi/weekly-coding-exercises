@@ -1,6 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { baseTokens, createTheme, toCssVarMap, toCssVars } from "../src/tokens.js";
+import {
+  baseTokens,
+  createPresetTheme,
+  createTheme,
+  themePresets,
+  toCssVarMap,
+  toCssVars
+} from "../src/tokens.js";
 
 test("createTheme merges overrides", () => {
   const theme = createTheme({ color: { primary: "#111111" } });
@@ -8,11 +15,22 @@ test("createTheme merges overrides", () => {
   assert.equal(theme.color.surface, baseTokens.color.surface);
 });
 
-test("toCssVars emits expected keys", () => {
-  const css = toCssVars(baseTokens);
+test("createTheme with no overrides returns base tokens", () => {
+  const theme = createTheme();
+  assert.deepEqual(theme, baseTokens);
+});
+
+test("createPresetTheme applies preset + overrides", () => {
+  const theme = createPresetTheme("light", { color: { primary: "#0ea5e9" } });
+  assert.equal(theme.color.primary, "#0ea5e9");
+  assert.equal(theme.color.surface, themePresets.light.color?.surface);
+});
+
+test("toCssVars emits expected keys and selector", () => {
+  const css = toCssVars(baseTokens, "[data-theme=\"ocean\"]");
   assert.match(css, /--color-primary:/);
   assert.match(css, /--space-md:/);
-  assert.match(css, /:root \{/);
+  assert.match(css, /\[data-theme=\"ocean\"\] \{/);
 });
 
 test("toCssVarMap exposes all token keys", () => {

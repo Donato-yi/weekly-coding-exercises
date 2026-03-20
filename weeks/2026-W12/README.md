@@ -60,7 +60,14 @@
   - **Tests Run:** `npm test`
   - **UI Demo Notes:** Added a themed example using `[data-theme]` scoping.
   - **Tried / Solved / Learned:** Scoped selectors keep theme overrides from leaking across components.
+- **Daily Entry — 2026-03-20**
+  - **Progress:** Added theme presets (light/dark/sunset), preset helper, and updated demos/docs to showcase presets.
+  - **Exercises Completed:** Preset catalog + preset theme helper + scoped demo refresh.
+  - **Tests Run:** Not run (requires npm install).
+  - **UI Demo Notes:** Added a sunset preset example alongside dark.
+  - **Tried / Solved / Learned:** Presets are best when they stay small and tweakable.
 
 ## Tried / Solved / Learned
 - Flat token keys keep CSS var names consistent and easy to grep.
 - Scoped selectors (`[data-theme="dark"]`) make switching safe and predictable.
+- Preset themes should be thin layers on top of base tokens to stay flexible.

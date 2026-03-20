@@ -6,12 +6,23 @@
   --color-surfaceText: #e5e7eb;
   --color-primary: #22c55e;
 }
+
+[data-theme="sunset"] {
+  --color-surface: #fff7ed;
+  --color-surfaceText: #7c2d12;
+  --color-primary: #f97316;
+}
 ```
 
 ```html
 <div data-theme="dark" class="card">
   <h2>Dark Theme Card</h2>
   <button class="btn">Confirm</button>
+</div>
+
+<div data-theme="sunset" class="card">
+  <h2>Sunset Theme Card</h2>
+  <button class="btn">Book now</button>
 </div>
 ```
 

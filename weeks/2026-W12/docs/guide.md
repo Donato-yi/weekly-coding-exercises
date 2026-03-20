@@ -12,6 +12,15 @@ const css = toCssVars(theme);
 console.log(css);
 ```
 
+## Presets
+Presets give you curated themes you can tweak quickly:
+```ts
+import { createPresetTheme, toCssVars } from "./src/tokens.js";
+
+const sunset = createPresetTheme("sunset", { spacing: { md: "18px" } });
+console.log(toCssVars(sunset, "[data-theme=\"sunset\"]"));
+```
+
 ## Theme scoping
 Use a scoped selector to avoid global overrides:
 ```ts

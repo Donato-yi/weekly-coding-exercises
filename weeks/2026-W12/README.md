@@ -35,6 +35,7 @@
 ## UI Demos (What to Showcase)
 - Example CSS vars block + component usage snippet
 - Light/dark theme override example
+- Integration demo (HTML/CSS snippet with data-theme toggles)
 
 ## Repo Structure
 - /src
@@ -46,6 +47,7 @@
 - Design tokens as the single source of truth
 - When to use CSS variables vs. direct styles
 - Prefer scoped selectors for theme switching (data attributes)
+- Keep integration demos self-contained for quick copy/paste
 
 ## Daily Log
 - **Daily Entry — 2026-03-18**
@@ -66,6 +68,12 @@
   - **Tests Run:** Not run (requires npm install).
   - **UI Demo Notes:** Added a sunset preset example alongside dark.
   - **Tried / Solved / Learned:** Presets are best when they stay small and tweakable.
+- **Daily Entry — 2026-03-21**
+  - **Progress:** Added an integration demo (HTML/CSS) showcasing preset theme switching and polished documentation with setup + usage guidance.
+  - **Exercises Completed:** Integration demo assets + integration guide.
+  - **Tests Run:** Not run (requires npm install).
+  - **UI Demo Notes:** Added a self-contained demo with `[data-theme]` toggles for light/dark/sunset.
+  - **Tried / Solved / Learned:** Keeping demos minimal makes them easy to embed in docs and reuse in product prototypes.
 
 ## Tried / Solved / Learned
 - Flat token keys keep CSS var names consistent and easy to grep.

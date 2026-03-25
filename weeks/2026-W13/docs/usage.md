@@ -16,4 +16,5 @@ go test ./...
 
 ## Notes
 - Uses HTMX for partial updates (list + item swaps).
+- Validation errors return list HTML with a banner message.
 - Tailwind is loaded via CDN for fast styling.

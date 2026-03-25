@@ -52,7 +52,14 @@
   - **Tests Run:** Not run (requires local Go install).
   - **UI Demo Notes:** Added demo notes covering the empty state + inline toggle flow.
   - **Tried / Solved / Learned:** HTMX swaps are easiest when list and item templates are independently renderable.
+- **Daily Entry — 2026-03-25**
+  - **Progress:** Added validation + error handling for add requests (empty, duplicate, length). Updated templates to render a banner while keeping list state.
+  - **Exercises Completed:** ListData model, error banner markup, duplicate checks in the store.
+  - **Tests Run:** Not run (requires local Go install).
+  - **UI Demo Notes:** Error banner appears without losing the list state.
+  - **Tried / Solved / Learned:** Returning list HTML on errors keeps HTMX swaps simple.
 
 ## Tried / Solved / Learned
 - Keeping handlers small makes HTMX partials easy to wire.
 - Structuring templates as `page`, `list`, and `item` keeps swaps consistent.
+- Rendering validation errors in the list partial keeps the UI reactive without extra client logic.

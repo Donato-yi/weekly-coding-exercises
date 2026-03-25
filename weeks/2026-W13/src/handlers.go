@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const maxTitleLen = 60
+
 type Server struct {
 	store     *Store
 	templates *Templates
@@ -33,7 +35,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = s.templates.RenderPage(w, PageData{Items: s.store.List()})
+	_ = s.templates.RenderPage(w, PageData{List: ListData{Items: s.store.List()}})
 }
 
 func (s *Server) handleAdd(w http.ResponseWriter, r *http.Request) {
@@ -42,17 +44,24 @@ func (s *Server) handleAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := r.ParseForm(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Invalid form submission."})
 		return
 	}
 	title := strings.TrimSpace(r.FormValue("title"))
 	if title == "" {
-		w.WriteHeader(http.StatusBadRequest)
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Please enter a habit name."})
+		return
+	}
+	if len(title) > maxTitleLen {
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Habit names must be 60 characters or less."})
+		return
+	}
+	if s.store.HasTitle(title) {
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "That habit already exists."})
 		return
 	}
 	s.store.Add(title)
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = s.templates.RenderList(w, s.store.List())
+	s.renderList(w, http.StatusOK, ListData{Items: s.store.List()})
 }
 
 func (s *Server) handleToggle(w http.ResponseWriter, r *http.Request) {
@@ -78,4 +87,10 @@ func (s *Server) handleToggle(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_ = s.templates.RenderItem(w, item)
+}
+
+func (s *Server) renderList(w http.ResponseWriter, status int, data ListData) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
+	_ = s.templates.RenderList(w, data)
 }

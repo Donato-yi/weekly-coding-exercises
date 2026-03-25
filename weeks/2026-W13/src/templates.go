@@ -10,7 +10,12 @@ type Templates struct {
 }
 
 type PageData struct {
+	List ListData
+}
+
+type ListData struct {
 	Items []Item
+	Error string
 }
 
 func NewTemplates() (*Templates, error) {
@@ -25,8 +30,8 @@ func (t *Templates) RenderPage(w io.Writer, data PageData) error {
 	return t.tmpl.ExecuteTemplate(w, "page", data)
 }
 
-func (t *Templates) RenderList(w io.Writer, items []Item) error {
-	return t.tmpl.ExecuteTemplate(w, "list", items)
+func (t *Templates) RenderList(w io.Writer, data ListData) error {
+	return t.tmpl.ExecuteTemplate(w, "list", data)
 }
 
 func (t *Templates) RenderItem(w io.Writer, item Item) error {
@@ -56,7 +61,7 @@ const pageTemplate = `
           <button class="rounded-lg bg-emerald-500 text-emerald-950 font-semibold px-4 py-2" type="submit">Add</button>
         </form>
         <div class="mt-6" id="list">
-          {{template "list" .Items}}
+          {{template "list" .List}}
         </div>
       </section>
     </main>
@@ -67,9 +72,14 @@ const pageTemplate = `
 
 const listTemplate = `
 {{define "list"}}
-  {{if .}}
+  {{if .Error}}
+    <div role="alert" class="mb-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+      {{.Error}}
+    </div>
+  {{end}}
+  {{if .Items}}
     <ul class="space-y-3">
-      {{range .}}
+      {{range .Items}}
         {{template "item" .}}
       {{end}}
     </ul>

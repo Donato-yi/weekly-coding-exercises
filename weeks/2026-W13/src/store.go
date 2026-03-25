@@ -1,6 +1,9 @@
 package habits
 
-import "sync"
+import (
+	"strings"
+	"sync"
+)
 
 type Item struct {
 	ID    int
@@ -25,6 +28,18 @@ func (s *Store) Add(title string) Item {
 	s.nextID++
 	s.items = append(s.items, item)
 	return item
+}
+
+func (s *Store) HasTitle(title string) bool {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	needle := strings.ToLower(strings.TrimSpace(title))
+	for _, item := range s.items {
+		if strings.ToLower(strings.TrimSpace(item.Title)) == needle {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *Store) Toggle(id int) (Item, bool) {

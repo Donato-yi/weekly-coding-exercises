@@ -32,6 +32,60 @@ func TestAddItem(t *testing.T) {
 	}
 }
 
+func TestAddItemValidation(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	req := httptest.NewRequest(http.MethodPost, "/items", strings.NewReader("title="))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	res := httptest.NewRecorder()
+	h.ServeHTTP(res, req)
+
+	if res.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", res.Code)
+	}
+	if !strings.Contains(res.Body.String(), "Please enter a habit name") {
+		t.Fatalf("expected empty-title error")
+	}
+
+	form := url.Values{}
+	form.Set("title", "Hydrate")
+	addReq := httptest.NewRequest(http.MethodPost, "/items", strings.NewReader(form.Encode()))
+	addReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	addRes := httptest.NewRecorder()
+	h.ServeHTTP(addRes, addReq)
+
+	dupReq := httptest.NewRequest(http.MethodPost, "/items", strings.NewReader(form.Encode()))
+	dupReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	dupRes := httptest.NewRecorder()
+	h.ServeHTTP(dupRes, dupReq)
+
+	if dupRes.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", dupRes.Code)
+	}
+	if !strings.Contains(dupRes.Body.String(), "already exists") {
+		t.Fatalf("expected duplicate error")
+	}
+
+	longTitle := strings.Repeat("a", 70)
+	longForm := url.Values{}
+	longForm.Set("title", longTitle)
+	longReq := httptest.NewRequest(http.MethodPost, "/items", strings.NewReader(longForm.Encode()))
+	longReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	longRes := httptest.NewRecorder()
+	h.ServeHTTP(longRes, longReq)
+
+	if longRes.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", longRes.Code)
+	}
+	if !strings.Contains(longRes.Body.String(), "60 characters") {
+		t.Fatalf("expected length error")
+	}
+}
+
 func TestToggleItem(t *testing.T) {
 	server, err := habits.NewServer()
 	if err != nil {
@@ -51,7 +105,7 @@ func TestToggleItem(t *testing.T) {
 	}
 
 	toggleReq := httptest.NewRequest(http.MethodPost, "/items/1/toggle", nil)
-	oggleRes := httptest.NewRecorder()
+	toggleRes := httptest.NewRecorder()
 	h.ServeHTTP(toggleRes, toggleReq)
 
 	if toggleRes.Code != http.StatusOK {

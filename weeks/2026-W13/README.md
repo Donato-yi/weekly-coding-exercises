@@ -58,6 +58,12 @@
   - **Tests Run:** Not run (requires local Go install).
   - **UI Demo Notes:** Error banner appears without losing the list state.
   - **Tried / Solved / Learned:** Returning list HTML on errors keeps HTMX swaps simple.
+- **Daily Entry — 2026-03-26**
+  - **Progress:** Added a short tutorial doc covering HTMX swap targets + partial templates. Refined demo notes to call out the swap strategy and error flow.
+  - **Exercises Completed:** Documented page/list/item template layering and swap targets.
+  - **Tests Run:** Not run (requires local Go install).
+  - **UI Demo Notes:** Callouts now explain which fragments are swapped on add vs. toggle.
+  - **Tried / Solved / Learned:** Writing a swap map (page vs. list vs. item) keeps HTMX flows predictable.
 
 ## Tried / Solved / Learned
 - Keeping handlers small makes HTMX partials easy to wire.

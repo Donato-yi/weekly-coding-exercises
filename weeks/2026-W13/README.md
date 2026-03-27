@@ -64,8 +64,15 @@
   - **Tests Run:** Not run (requires local Go install).
   - **UI Demo Notes:** Callouts now explain which fragments are swapped on add vs. toggle.
   - **Tried / Solved / Learned:** Writing a swap map (page vs. list vs. item) keeps HTMX flows predictable.
+- **Daily Entry — 2026-03-27**
+  - **Progress:** Expanded server tests to cover not-found routes, invalid IDs, and method checks.
+  - **Exercises Completed:** Added edge-case tests for toggle paths + HTTP methods.
+  - **Tests Run:** Not run (requires local Go install).
+  - **UI Demo Notes:** No UI changes today.
+  - **Tried / Solved / Learned:** Negative-path tests (bad IDs, wrong methods) lock in handler contracts.
 
 ## Tried / Solved / Learned
 - Keeping handlers small makes HTMX partials easy to wire.
 - Structuring templates as `page`, `list`, and `item` keeps swaps consistent.
 - Rendering validation errors in the list partial keeps the UI reactive without extra client logic.
+- Negative-path tests (404/400/405) protect the HTMX contract for error cases.

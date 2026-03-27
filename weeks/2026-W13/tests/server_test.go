@@ -115,3 +115,80 @@ func TestToggleItem(t *testing.T) {
 		t.Fatalf("expected toggled item markup")
 	}
 }
+
+func TestToggleNotFound(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	req := httptest.NewRequest(http.MethodPost, "/items/99/toggle", nil)
+	res := httptest.NewRecorder()
+	h.ServeHTTP(res, req)
+
+	if res.Code != http.StatusNotFound {
+		t.Fatalf("expected 404, got %d", res.Code)
+	}
+}
+
+func TestToggleBadID(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	req := httptest.NewRequest(http.MethodPost, "/items/nope/toggle", nil)
+	res := httptest.NewRecorder()
+	h.ServeHTTP(res, req)
+
+	if res.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", res.Code)
+	}
+}
+
+func TestToggleBadPath(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	req := httptest.NewRequest(http.MethodPost, "/items/1/flip", nil)
+	res := httptest.NewRecorder()
+	h.ServeHTTP(res, req)
+
+	if res.Code != http.StatusNotFound {
+		t.Fatalf("expected 404, got %d", res.Code)
+	}
+}
+
+func TestMethodNotAllowed(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	indexReq := httptest.NewRequest(http.MethodPost, "/", nil)
+	indexRes := httptest.NewRecorder()
+	h.ServeHTTP(indexRes, indexReq)
+	if indexRes.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("expected 405, got %d", indexRes.Code)
+	}
+
+	itemsReq := httptest.NewRequest(http.MethodGet, "/items", nil)
+	itemsRes := httptest.NewRecorder()
+	h.ServeHTTP(itemsRes, itemsReq)
+	if itemsRes.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("expected 405, got %d", itemsRes.Code)
+	}
+
+	toggleReq := httptest.NewRequest(http.MethodGet, "/items/1/toggle", nil)
+	toggleRes := httptest.NewRecorder()
+	h.ServeHTTP(toggleRes, toggleReq)
+	if toggleRes.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("expected 405, got %d", toggleRes.Code)
+	}
+}

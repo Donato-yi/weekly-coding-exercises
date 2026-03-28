@@ -14,12 +14,15 @@ type PageData struct {
 }
 
 type ListData struct {
-	Items []Item
-	Error string
+	Items  []Item
+	Filter string
+	Error  string
 }
 
 func NewTemplates() (*Templates, error) {
-	tmpl, err := template.New("page").Parse(pageTemplate + listTemplate + itemTemplate)
+	tmpl, err := template.New("page").Funcs(template.FuncMap{
+		"eq": func(a, b string) bool { return a == b },
+	}).Parse(pageTemplate + listTemplate + itemTemplate)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +59,7 @@ const pageTemplate = `
         <p class="text-slate-300 mt-2">Server-rendered HTML + HTMX swaps for fast updates.</p>
       </header>
       <section class="bg-slate-900/60 rounded-xl p-6 border border-slate-800">
-        <form class="flex flex-col sm:flex-row gap-3" hx-post="/items" hx-target="#list" hx-swap="innerHTML">
+        <form class="flex flex-col sm:flex-row gap-3" hx-post="/items" hx-target="#list" hx-swap="innerHTML" hx-include="#filter-state">
           <input class="flex-1 rounded-lg bg-slate-900 border border-slate-700 px-3 py-2" name="title" placeholder="Add a habit (e.g. Stretch 10 min)" required />
           <button class="rounded-lg bg-emerald-500 text-emerald-950 font-semibold px-4 py-2" type="submit">Add</button>
         </form>
@@ -72,6 +75,12 @@ const pageTemplate = `
 
 const listTemplate = `
 {{define "list"}}
+  <input type="hidden" id="filter-state" name="filter" value="{{.Filter}}" />
+  <div class="mb-4 flex flex-wrap gap-2 text-xs">
+    <button class="rounded-full border border-slate-700 px-3 py-1 {{if eq .Filter "all"}}bg-slate-100 text-slate-900{{else}}text-slate-200{{end}}" hx-get="/?filter=all" hx-target="#list" hx-swap="innerHTML">All</button>
+    <button class="rounded-full border border-slate-700 px-3 py-1 {{if eq .Filter "pending"}}bg-slate-100 text-slate-900{{else}}text-slate-200{{end}}" hx-get="/?filter=pending" hx-target="#list" hx-swap="innerHTML">Pending</button>
+    <button class="rounded-full border border-slate-700 px-3 py-1 {{if eq .Filter "done"}}bg-slate-100 text-slate-900{{else}}text-slate-200{{end}}" hx-get="/?filter=done" hx-target="#list" hx-swap="innerHTML">Done</button>
+  </div>
   {{if .Error}}
     <div role="alert" class="mb-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
       {{.Error}}
@@ -84,7 +93,7 @@ const listTemplate = `
       {{end}}
     </ul>
   {{else}}
-    <p class="text-slate-400">No habits yet. Add the first one above.</p>
+    <p class="text-slate-400">No habits yet for this filter. Try a different view above.</p>
   {{end}}
 {{end}}
 `

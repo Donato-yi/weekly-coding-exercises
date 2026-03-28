@@ -17,8 +17,25 @@ type Store struct {
 	items  []Item
 }
 
+const (
+	FilterAll     = "all"
+	FilterDone    = "done"
+	FilterPending = "pending"
+)
+
 func NewStore() *Store {
 	return &Store{nextID: 1, items: []Item{}}
+}
+
+func NormalizeFilter(filter string) string {
+	switch strings.ToLower(strings.TrimSpace(filter)) {
+	case FilterDone:
+		return FilterDone
+	case FilterPending:
+		return FilterPending
+	default:
+		return FilterAll
+	}
 }
 
 func (s *Store) Add(title string) Item {
@@ -60,4 +77,23 @@ func (s *Store) List() []Item {
 	items := make([]Item, len(s.items))
 	copy(items, s.items)
 	return items
+}
+
+func (s *Store) Filtered(filter string) []Item {
+	filter = NormalizeFilter(filter)
+	items := s.List()
+	if filter == FilterAll {
+		return items
+	}
+	filtered := make([]Item, 0, len(items))
+	for _, item := range items {
+		if filter == FilterDone && item.Done {
+			filtered = append(filtered, item)
+			continue
+		}
+		if filter == FilterPending && !item.Done {
+			filtered = append(filtered, item)
+		}
+	}
+	return filtered
 }

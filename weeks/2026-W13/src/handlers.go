@@ -34,8 +34,14 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+	filter := NormalizeFilter(r.URL.Query().Get("filter"))
+	data := ListData{Items: s.store.Filtered(filter), Filter: filter}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = s.templates.RenderPage(w, PageData{List: ListData{Items: s.store.List()}})
+	if r.Header.Get("HX-Request") == "true" {
+		_ = s.templates.RenderList(w, data)
+		return
+	}
+	_ = s.templates.RenderPage(w, PageData{List: data})
 }
 
 func (s *Server) handleAdd(w http.ResponseWriter, r *http.Request) {
@@ -44,24 +50,25 @@ func (s *Server) handleAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := r.ParseForm(); err != nil {
-		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Invalid form submission."})
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Filter: FilterAll, Error: "Invalid form submission."})
 		return
 	}
+	filter := NormalizeFilter(r.FormValue("filter"))
 	title := strings.TrimSpace(r.FormValue("title"))
 	if title == "" {
-		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Please enter a habit name."})
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.Filtered(filter), Filter: filter, Error: "Please enter a habit name."})
 		return
 	}
 	if len(title) > maxTitleLen {
-		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "Habit names must be 60 characters or less."})
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.Filtered(filter), Filter: filter, Error: "Habit names must be 60 characters or less."})
 		return
 	}
 	if s.store.HasTitle(title) {
-		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.List(), Error: "That habit already exists."})
+		s.renderList(w, http.StatusBadRequest, ListData{Items: s.store.Filtered(filter), Filter: filter, Error: "That habit already exists."})
 		return
 	}
 	s.store.Add(title)
-	s.renderList(w, http.StatusOK, ListData{Items: s.store.List()})
+	s.renderList(w, http.StatusOK, ListData{Items: s.store.Filtered(filter), Filter: filter})
 }
 
 func (s *Server) handleToggle(w http.ResponseWriter, r *http.Request) {

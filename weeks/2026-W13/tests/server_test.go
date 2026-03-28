@@ -116,6 +116,50 @@ func TestToggleItem(t *testing.T) {
 	}
 }
 
+func TestFilterViews(t *testing.T) {
+	server, err := habits.NewServer()
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+	h := server.Routes()
+
+	form := url.Values{}
+	form.Set("title", "Hydrate")
+	addReq := httptest.NewRequest(http.MethodPost, "/items", strings.NewReader(form.Encode()))
+	addReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	addRes := httptest.NewRecorder()
+	h.ServeHTTP(addRes, addReq)
+
+	form = url.Values{}
+	form.Set("title", "Stretch")
+	addReq = httptest.NewRequest(http.MethodPost, "/items", strings.NewReader(form.Encode()))
+	addReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	addRes = httptest.NewRecorder()
+	h.ServeHTTP(addRes, addReq)
+
+	toggleReq := httptest.NewRequest(http.MethodPost, "/items/1/toggle", nil)
+	toggleRes := httptest.NewRecorder()
+	h.ServeHTTP(toggleRes, toggleReq)
+
+	doneReq := httptest.NewRequest(http.MethodGet, "/?filter=done", nil)
+	doneReq.Header.Set("HX-Request", "true")
+	doneRes := httptest.NewRecorder()
+	h.ServeHTTP(doneRes, doneReq)
+
+	if !strings.Contains(doneRes.Body.String(), "Hydrate") || strings.Contains(doneRes.Body.String(), "Stretch") {
+		t.Fatalf("expected done filter to show only completed items")
+	}
+
+	pendingReq := httptest.NewRequest(http.MethodGet, "/?filter=pending", nil)
+	pendingReq.Header.Set("HX-Request", "true")
+	pendingRes := httptest.NewRecorder()
+	h.ServeHTTP(pendingRes, pendingReq)
+
+	if !strings.Contains(pendingRes.Body.String(), "Stretch") || strings.Contains(pendingRes.Body.String(), "Hydrate") {
+		t.Fatalf("expected pending filter to hide completed items")
+	}
+}
+
 func TestToggleNotFound(t *testing.T) {
 	server, err := habits.NewServer()
 	if err != nil {

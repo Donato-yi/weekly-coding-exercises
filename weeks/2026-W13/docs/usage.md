@@ -17,4 +17,5 @@ go test ./...
 ## Notes
 - Uses HTMX for partial updates (list + item swaps).
 - Validation errors return list HTML with a banner message.
+- Filter pills (all/pending/done) use HX requests to swap only the list HTML.
 - Tailwind is loaded via CDN for fast styling.

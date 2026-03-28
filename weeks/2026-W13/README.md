@@ -70,9 +70,16 @@
   - **Tests Run:** Not run (requires local Go install).
   - **UI Demo Notes:** No UI changes today.
   - **Tried / Solved / Learned:** Negative-path tests (bad IDs, wrong methods) lock in handler contracts.
+- **Daily Entry — 2026-03-28**
+  - **Progress:** Added list filters (all/pending/done) with HTMX swaps and updated templates to preserve filter state on add/errors.
+  - **Exercises Completed:** Filtered store list, HX-only list rendering, UI filter pills, and filter tests.
+  - **Tests Run:** Not run (requires local Go install).
+  - **UI Demo Notes:** Filter pills now swap the list in place; empty states explain when a filter has no items.
+  - **Tried / Solved / Learned:** Keeping a hidden filter state + hx-include avoids rewriting the add form.
 
 ## Tried / Solved / Learned
 - Keeping handlers small makes HTMX partials easy to wire.
 - Structuring templates as `page`, `list`, and `item` keeps swaps consistent.
 - Rendering validation errors in the list partial keeps the UI reactive without extra client logic.
 - Negative-path tests (404/400/405) protect the HTMX contract for error cases.
+- HTMX filter swaps stay simple when the list partial owns the filter state.

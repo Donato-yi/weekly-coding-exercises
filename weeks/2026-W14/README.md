@@ -1,0 +1,58 @@
+# Weekly Focus — 2026-W14
+
+## Theme
+- Eval-first AI FAQ router with lightweight retrieval + guardrails
+
+## Focus Area
+- AI
+
+## Primary Language / Stack
+- Python + FastAPI + OpenAI SDK + SQLite + Pydantic
+
+## Weekly Goal
+- Build a small AI FAQ router that retrieves relevant snippets, enforces safety constraints, and logs evals for prompt/regression testing.
+
+## Plan (Mon → Sun)
+- Mon: Define goal + plan only
+- Tue: Set up FastAPI service + prompt templates + response schema
+- Wed: Build retrieval layer (SQLite + embedding cache) + simple relevance scoring
+- Thu: Add safety checks (blocked topics, citation requirements) + logging
+- Fri: Add eval harness + baseline test set + scoring summary
+- Sat: Add demo notes + minimal UI notes (curl/HTTP examples)
+- Sun: Refactor + summarize lessons learned + next steps
+
+## Exercises (What to Build)
+- Retrieval-backed FAQ route with citations
+- Safety filter + refusal policy for out-of-scope requests
+- Eval harness to compare prompt versions on a fixed dataset
+
+## Tests (What to Validate)
+- Retrieval returns top-k relevant snippets for seeded queries
+- Safety filter blocks disallowed topics deterministically
+- Evals produce stable scores across prompt versions
+
+## UI Demos (What to Showcase)
+- Example queries (in/out of scope) with expected responses
+- Eval summary table (accuracy / refusal rate / citation coverage)
+
+## Repo Structure
+- /src
+- /tests
+- /demos
+- /docs
+
+## Tutorial Notes
+- Keep prompts versioned and evaluated with a fixed test set.
+- Prefer deterministic safety checks before model calls.
+- Require citations to reduce hallucination risk.
+
+## Daily Log
+- **Daily Entry — 2026-03-30**
+  - **Progress:** Planned weekly focus, stack, and milestones.
+  - **Exercises Completed:** Planning only (Monday).
+  - **Tests Run:** Not applicable.
+  - **UI Demo Notes:** Not applicable.
+  - **Tried / Solved / Learned:** AI systems need eval harnesses from day one to prevent silent regressions.
+
+## Tried / Solved / Learned
+- Evals and safety checks should be part of the core architecture, not add-ons.

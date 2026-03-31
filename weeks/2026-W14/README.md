@@ -54,5 +54,12 @@
   - **UI Demo Notes:** Not applicable.
   - **Tried / Solved / Learned:** AI systems need eval harnesses from day one to prevent silent regressions.
 
+- **Daily Entry — 2026-03-31**
+  - **Progress:** Set up FastAPI app skeleton, request/response schema, and prompt templates. Added a simple in-memory retrieval stub for dev flows.
+  - **Exercises Completed:** API scaffolding + schema validation + prompt template module.
+  - **Tests Run:** Not run (added pytest coverage for schema + endpoint shape).
+  - **UI Demo Notes:** Added curl examples in demos/README.md.
+  - **Tried / Solved / Learned:** Keeping prompts and schema isolated early makes later evals/refactors cleaner.
+
 ## Tried / Solved / Learned
 - Evals and safety checks should be part of the core architecture, not add-ons.

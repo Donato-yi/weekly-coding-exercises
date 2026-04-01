@@ -61,5 +61,13 @@
   - **UI Demo Notes:** Added curl examples in demos/README.md.
   - **Tried / Solved / Learned:** Keeping prompts and schema isolated early makes later evals/refactors cleaner.
 
+- **Daily Entry — 2026-04-01**
+  - **Progress:** Replaced the retrieval stub with a SQLite-backed store, added hashed embedding caching, and introduced weighted relevance scoring (cosine + lexical overlap).
+  - **Exercises Completed:** SQLite schema + embedding cache + retrieval scoring implementation.
+  - **Tests Run:** Added retrieval unit test (not executed here).
+  - **UI Demo Notes:** Documented the new data store path in demos and docs.
+  - **Tried / Solved / Learned:** Simple, deterministic embeddings are enough for early ranking tests without external dependencies.
+
 ## Tried / Solved / Learned
 - Evals and safety checks should be part of the core architecture, not add-ons.
+- Deterministic hashed embeddings give a quick baseline before swapping in real vector models.

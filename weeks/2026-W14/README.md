@@ -68,6 +68,14 @@
   - **UI Demo Notes:** Documented the new data store path in demos and docs.
   - **Tried / Solved / Learned:** Simple, deterministic embeddings are enough for early ranking tests without external dependencies.
 
+- **Daily Entry — 2026-04-02**
+  - **Progress:** Added safety guardrails (blocklist + citation requirement) and JSONL logging for request routing decisions.
+  - **Exercises Completed:** Implemented `safety.py`, `logging_utils.py`, and updated API handling flow.
+  - **Tests Run:** Added safety unit tests (not executed here).
+  - **UI Demo Notes:** None today.
+  - **Tried / Solved / Learned:** Logging request metadata early makes evals and audits much easier later.
+
 ## Tried / Solved / Learned
 - Evals and safety checks should be part of the core architecture, not add-ons.
 - Deterministic hashed embeddings give a quick baseline before swapping in real vector models.
+- Guardrails + logging together create a clearer audit trail for FAQ routing behavior.

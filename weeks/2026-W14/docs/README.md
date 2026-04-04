@@ -6,3 +6,4 @@
 - Default DB path: `data/faq.db` (auto-seeded on first run).
 - Safety checks live in `src/safety.py` (blocklist + citation requirement).
 - Request routing is logged to `data/faq_logs.jsonl` for later eval review.
+- Demo curl examples live in `demos/README.md`, including blocked + handoff flows.

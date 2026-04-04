@@ -75,6 +75,13 @@
   - **UI Demo Notes:** None today.
   - **Tried / Solved / Learned:** Logging request metadata early makes evals and audits much easier later.
 
+- **Daily Entry — 2026-04-04**
+  - **Progress:** Expanded demo notes with UI/response expectations and additional curl examples for handoff + blocked flows.
+  - **Exercises Completed:** Documented happy-path, handoff, and refusal scenarios in demos/README.md.
+  - **Tests Run:** Not run (documentation-only change).
+  - **UI Demo Notes:** Added guidance for expected route/safety_status outputs per scenario.
+  - **Tried / Solved / Learned:** Clear demo scenarios make it easier to validate guardrails without a full UI.
+
 ## Tried / Solved / Learned
 - Evals and safety checks should be part of the core architecture, not add-ons.
 - Deterministic hashed embeddings give a quick baseline before swapping in real vector models.

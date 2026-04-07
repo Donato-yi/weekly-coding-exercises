@@ -1,0 +1,20 @@
+{
+  "report": {
+    "outputDir": "demos",
+    "format": "markdown"
+  },
+  "repos": [
+    {
+      "name": "example-api",
+      "path": "../example-api",
+      "testCommand": "go test ./...",
+      "lintCommand": "golangci-lint run"
+    },
+    {
+      "name": "example-web",
+      "path": "../example-web",
+      "testCommand": "npm test",
+      "lintCommand": "npm run lint"
+    }
+  ]
+}

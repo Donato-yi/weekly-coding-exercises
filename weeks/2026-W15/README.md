@@ -44,6 +44,22 @@
 - Keep config and output schemas versioned for future compatibility.
 - Prefer deterministic command execution (timeout + exit code capture).
 
+## Getting Started
+```bash
+# Run the CLI (placeholder scaffold)
+go run ./src --help
+
+go run ./src init --output docs/config.local.json
+
+go run ./src scan --config docs/config.example.json
+
+go run ./src report --config docs/config.example.json --out demos/weekly-report.md
+
+# Run tests
+
+go test ./...
+```
+
 ## Daily Log
 - **Daily Entry — 2026-04-06**
   - **Progress:** Planned weekly focus, stack, and milestones.
@@ -51,6 +67,12 @@
   - **Tests Run:** Not applicable.
   - **UI Demo Notes:** Not applicable.
   - **Tried / Solved / Learned:** The plan should keep command execution deterministic from day one.
+- **Daily Entry — 2026-04-07**
+  - **Progress:** Scaffolded Cobra CLI (init/scan/report), added JSON config schema + example config, and wrote stub report generator.
+  - **Exercises Completed:** Basic command wiring, config loader, starter report writer, and demo output.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added placeholder CLI output in `/demos/cli-output.txt`.
+  - **Tried / Solved / Learned:** Keeping config JSON-first simplifies validation and makes it easy to evolve into a schema-driven UI.
 
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.

@@ -1,0 +1,8 @@
+$ repo-health scan --config docs/config.example.json
+Scan started (2026-04-07T00:00:00-07:00)
+- example-api (../example-api): queued
+- example-web (../example-web): queued
+Scan complete (stub).
+
+$ repo-health report --config docs/config.example.json --out demos/weekly-report.md
+Report written to demos/weekly-report.md

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Repo Health Config",
+  "type": "object",
+  "required": ["report", "repos"],
+  "properties": {
+    "report": {
+      "type": "object",
+      "required": ["outputDir", "format"],
+      "properties": {
+        "outputDir": {"type": "string"},
+        "format": {"type": "string", "enum": ["markdown", "json"]}
+      }
+    },
+    "repos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "testCommand", "lintCommand"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "testCommand": {"type": "string"},
+          "lintCommand": {"type": "string"}
+        }
+      }
+    }
+  }
+}

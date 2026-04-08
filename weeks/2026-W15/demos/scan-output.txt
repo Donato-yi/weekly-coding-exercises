@@ -1,0 +1,10 @@
+Scan started (sample)
+- example-api (../example-api)
+  - git: clean
+  - tests: exit=0 (1123ms)
+  - lint: exit=0 (842ms)
+- example-web (../example-web)
+  - git: 3 changes
+  - tests: exit=1 (650ms)
+  - lint: exit=127 (120ms)
+Scan complete.

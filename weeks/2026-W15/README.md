@@ -73,6 +73,13 @@ go test ./...
   - **Tests Run:** Not run (Go toolchain not available in environment).
   - **UI Demo Notes:** Added placeholder CLI output in `/demos/cli-output.txt`.
   - **Tried / Solved / Learned:** Keeping config JSON-first simplifies validation and makes it easy to evolve into a schema-driven UI.
+- **Daily Entry — 2026-04-08**
+  - **Progress:** Implemented scanner utilities (git status parsing + command runner with timeouts) and wired the scan command to emit per-repo results.
+  - **Exercises Completed:** Added git/test/lint signal collection helpers, scan result struct, and sample scan output demo.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added `/demos/scan-output.txt` with a representative scan run.
+  - **Tried / Solved / Learned:** Keep scanner functions pure (parse/split) so they’re easy to test without shelling out.
 
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.
+- Keeping parsing logic separate from command execution makes scanners easier to test.

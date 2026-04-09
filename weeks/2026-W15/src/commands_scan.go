@@ -35,6 +35,14 @@ func NewScanCommand() *cobra.Command {
 				if scan.LintResult != nil {
 					fmt.Fprintf(cmd.OutOrStdout(), "  - lint: exit=%d (%dms)\n", scan.LintResult.ExitCode, scan.LintResult.DurationMs)
 				}
+				if scan.Dependency != nil {
+					fmt.Fprintf(cmd.OutOrStdout(), "  - deps: %s (direct=%d, dev=%d)\n", scan.Dependency.Manager, scan.Dependency.DirectCount, scan.Dependency.DevCount)
+				} else {
+					fmt.Fprintln(cmd.OutOrStdout(), "  - deps: none detected")
+				}
+				if scan.Changelog != nil {
+					fmt.Fprintf(cmd.OutOrStdout(), "  - changelog: %d commits (%s)\n", scan.Changelog.CommitCount, scan.Changelog.Range)
+				}
 				for _, err := range scan.Errors {
 					fmt.Fprintf(cmd.OutOrStdout(), "  - error: %s\n", err)
 				}

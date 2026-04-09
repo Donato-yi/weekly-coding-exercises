@@ -1,0 +1,6 @@
+Sample dependency audit output:
+
+- example-api
+  - deps: go (direct=8, dev=0)
+- example-web
+  - deps: npm (direct=12, dev=5)

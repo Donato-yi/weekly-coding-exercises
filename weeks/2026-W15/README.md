@@ -79,6 +79,12 @@ go test ./...
   - **Tests Run:** Not run (Go toolchain not available in environment).
   - **UI Demo Notes:** Added `/demos/scan-output.txt` with a representative scan run.
   - **Tried / Solved / Learned:** Keep scanner functions pure (parse/split) so they’re easy to test without shelling out.
+- **Daily Entry — 2026-04-09**
+  - **Progress:** Added dependency audit + changelog summary signals to scans and reports, plus docs and demo outputs.
+  - **Exercises Completed:** Implemented lightweight dependency detection (go.mod/package.json/requirements.txt), git log summarizer, and report enrichment.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added `/demos/dependency-audit.txt` and `/demos/changelog-summary.txt`.
+  - **Tried / Solved / Learned:** Low-friction heuristics provide useful signal without adding heavy tooling.
 
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.

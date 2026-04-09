@@ -1,0 +1,7 @@
+Sample changelog summary output:
+
+- example-api
+  - changelog: 3 commits (last 7 days)
+    - feat: add dependency scanner
+    - fix: normalize config loader
+    - docs: update weekly plan

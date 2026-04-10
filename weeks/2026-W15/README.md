@@ -53,7 +53,7 @@ go run ./src init --output docs/config.local.json
 
 go run ./src scan --config docs/config.example.json
 
-go run ./src report --config docs/config.example.json --out demos/weekly-report.md
+go run ./src report --config docs/config.example.json --out demos/weekly-report.md --json-out demos/weekly-report.json
 
 # Run tests
 
@@ -85,6 +85,12 @@ go test ./...
   - **Tests Run:** Not run (Go toolchain not available in environment).
   - **UI Demo Notes:** Added `/demos/dependency-audit.txt` and `/demos/changelog-summary.txt`.
   - **Tried / Solved / Learned:** Low-friction heuristics provide useful signal without adding heavy tooling.
+- **Daily Entry — 2026-04-10**
+  - **Progress:** Refactored report generation into structured data, added JSON export, and wired the command to emit markdown + JSON outputs.
+  - **Exercises Completed:** Added report models/renderers, report templates (md/json), and sample report demos.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added `/demos/weekly-report.md` and `/demos/weekly-report.json`.
+  - **Tried / Solved / Learned:** Keeping report data separate from rendering makes it easy to add new output formats.
 
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.

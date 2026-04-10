@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-04-10T00:00:00-07:00",
+  "summary": {
+    "reposScanned": 2,
+    "dirtyRepos": 1,
+    "testFailures": 0,
+    "lintFailures": 1,
+    "dependencyManifests": 2
+  },
+  "repos": [
+    {
+      "name": "automation-tools",
+      "path": "/work/repos/automation-tools",
+      "gitDirty": false,
+      "gitChanges": 0,
+      "testResult": {
+        "command": "npm",
+        "args": ["test"],
+        "exitCode": 0,
+        "output": "All tests passed",
+        "error": "",
+        "durationMs": 1240
+      },
+      "lintResult": {
+        "command": "npm",
+        "args": ["run", "lint"],
+        "exitCode": 1,
+        "output": "Lint issues found",
+        "error": "",
+        "durationMs": 900
+      },
+      "dependency": {
+        "manager": "npm",
+        "directCount": 14,
+        "devCount": 6,
+        "notes": "parsed package.json"
+      },
+      "changelog": {
+        "range": "last 7 days",
+        "commitCount": 4,
+        "highlights": [
+          "feat: add report templates",
+          "fix: tighten scan output formatting"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "name": "weekly-coding-exercises",
+      "path": "/work/repos/weekly-coding-exercises",
+      "gitDirty": true,
+      "gitChanges": 3,
+      "testResult": {
+        "command": "go",
+        "args": ["test", "./..."],
+        "exitCode": 0,
+        "output": "",
+        "error": "",
+        "durationMs": 800
+      },
+      "dependency": {
+        "manager": "go",
+        "directCount": 6,
+        "devCount": 0,
+        "notes": "parsed go.mod"
+      },
+      "changelog": {
+        "range": "last 7 days",
+        "commitCount": 2,
+        "highlights": [
+          "chore: update docs"
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

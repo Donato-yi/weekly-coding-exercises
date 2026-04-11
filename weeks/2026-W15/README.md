@@ -91,7 +91,14 @@ go test ./...
   - **Tests Run:** Not run (Go toolchain not available in environment).
   - **UI Demo Notes:** Added `/demos/weekly-report.md` and `/demos/weekly-report.json`.
   - **Tried / Solved / Learned:** Keeping report data separate from rendering makes it easy to add new output formats.
+- **Daily Entry — 2026-04-11**
+  - **Progress:** Added a demo walkthrough + review checklist to make the CLI report flow easy to reproduce.
+  - **Exercises Completed:** Wrote a step-by-step demo runbook and a lightweight report review checklist.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added `/demos/cli-walkthrough.txt` and `/docs/demo-walkthrough.md`.
+  - **Tried / Solved / Learned:** A clear “golden path” demo reduces onboarding friction.
 
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.
 - Keeping parsing logic separate from command execution makes scanners easier to test.
+- A short demo runbook prevents the “how do I start?” cliff for first-time users.

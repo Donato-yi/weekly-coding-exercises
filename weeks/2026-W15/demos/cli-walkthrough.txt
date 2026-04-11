@@ -1,0 +1,9 @@
+$ go run ./src init --output docs/config.local.json
+Wrote config to docs/config.local.json
+
+$ go run ./src scan --config docs/config.local.json
+Scan completed: 3 repos, 1 dirty, 0 test failures, 0 lint failures
+
+$ go run ./src report --config docs/config.local.json --out demos/weekly-report.md --json-out demos/weekly-report.json
+Report written: demos/weekly-report.md
+Report written: demos/weekly-report.json

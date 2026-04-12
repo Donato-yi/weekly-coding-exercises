@@ -1,0 +1,8 @@
+Status summary demo:
+
+- automation-tools: needs-attention (lint failed)
+- weekly-coding-exercises: needs-attention (dirty working tree)
+
+Summary counts:
+- healthy: 0
+- needs-attention: 2

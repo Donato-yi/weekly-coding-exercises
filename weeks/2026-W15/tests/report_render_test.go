@@ -16,12 +16,14 @@ func TestRenderMarkdownReportIncludesSummary(t *testing.T) {
             TestFailures:        0,
             LintFailures:        0,
             DependencyManifests: 1,
+            HealthyRepos:        1,
+            AttentionRepos:      1,
         },
-        Repos: []src.RepoReport{{Name: "demo", Path: "/tmp/demo"}},
+        Repos: []src.RepoReport{{Name: "demo", Path: "/tmp/demo", Status: "healthy"}},
     }
 
     output := src.RenderMarkdownReport(report)
-    for _, needle := range []string{"# Weekly Repo Health Report", "## Summary", "Repos scanned: 2"} {
+    for _, needle := range []string{"# Weekly Repo Health Report", "## Summary", "Repos scanned: 2", "Healthy repos: 1", "Needs attention: 1"} {
         if !strings.Contains(output, needle) {
             t.Fatalf("expected markdown to contain %q", needle)
         }

@@ -98,7 +98,15 @@ go test ./...
   - **UI Demo Notes:** Added `/demos/cli-walkthrough.txt` and `/docs/demo-walkthrough.md`.
   - **Tried / Solved / Learned:** A clear “golden path” demo reduces onboarding friction.
 
+- **Daily Entry — 2026-04-12**
+  - **Progress:** Added repo health status labels plus summary counts for faster triage, and updated report demos/docs.
+  - **Exercises Completed:** Status classifier helper, report summary enhancements, new status demo + notes.
+  - **Tests Run:** Not run (Go toolchain not available in environment).
+  - **UI Demo Notes:** Added `/demos/status-summary.txt` and refreshed weekly report examples.
+  - **Tried / Solved / Learned:** Small, explicit status tags make reports scannable at a glance.
+
 ## Tried / Solved / Learned
 - A tiny CLI with stable output is easier to automate than a large dashboard.
 - Keeping parsing logic separate from command execution makes scanners easier to test.
 - A short demo runbook prevents the “how do I start?” cliff for first-time users.
+- Status labels give a quick triage signal before digging into per-repo details.

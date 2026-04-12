@@ -8,9 +8,11 @@ Generated: 2026-04-10T00:00:00-07:00
 - Test failures: 0
 - Lint failures: 1
 - Dependency manifests detected: 2
+- Healthy repos: 0
+- Needs attention: 2
 
 ## Repos
-- automation-tools — path: /work/repos/automation-tools
+- automation-tools — status: needs-attention — path: /work/repos/automation-tools
   - git: clean
   - tests: exit=0 (1240ms)
   - lint: exit=1 (900ms)
@@ -18,7 +20,7 @@ Generated: 2026-04-10T00:00:00-07:00
   - changelog: 4 commits (last 7 days)
     - feat: add report templates
     - fix: tighten scan output formatting
-- weekly-coding-exercises — path: /work/repos/weekly-coding-exercises
+- weekly-coding-exercises — status: needs-attention — path: /work/repos/weekly-coding-exercises
   - git: 3 changes
   - tests: exit=0 (800ms)
   - deps: go (direct=6, dev=0)

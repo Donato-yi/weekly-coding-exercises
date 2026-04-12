@@ -19,11 +19,14 @@ type ReportSummary struct {
     TestFailures        int `json:"testFailures"`
     LintFailures        int `json:"lintFailures"`
     DependencyManifests int `json:"dependencyManifests"`
+    HealthyRepos        int `json:"healthyRepos"`
+    AttentionRepos      int `json:"attentionRepos"`
 }
 
 type RepoReport struct {
     Name        string             `json:"name"`
     Path        string             `json:"path"`
+    Status      string             `json:"status"`
     GitDirty    bool               `json:"gitDirty"`
     GitChanges  int                `json:"gitChanges"`
     TestResult  *CommandResult     `json:"testResult,omitempty"`
@@ -33,14 +36,35 @@ type RepoReport struct {
     Errors      []string           `json:"errors,omitempty"`
 }
 
+func repoNeedsAttention(scan RepoScan) bool {
+    if scan.GitDirty {
+        return true
+    }
+    if scan.TestResult != nil && scan.TestResult.ExitCode != 0 {
+        return true
+    }
+    if scan.LintResult != nil && scan.LintResult.ExitCode != 0 {
+        return true
+    }
+    if len(scan.Errors) > 0 {
+        return true
+    }
+    return false
+}
+
 func BuildReportData(cfg Config) Report {
     generatedAt := time.Now().Format(time.RFC3339)
     report := Report{GeneratedAt: generatedAt}
     for _, repo := range cfg.Repos {
         scan := ScanRepo(repo)
+        status := "healthy"
+        if repoNeedsAttention(scan) {
+            status = "needs-attention"
+        }
         entry := RepoReport{
             Name:       repo.Name,
             Path:       repo.Path,
+            Status:     status,
             GitDirty:   scan.GitDirty,
             GitChanges: scan.GitChanges,
             TestResult: scan.TestResult,
@@ -63,6 +87,11 @@ func BuildReportData(cfg Config) Report {
         if scan.Dependency != nil {
             report.Summary.DependencyManifests++
         }
+        if status == "healthy" {
+            report.Summary.HealthyRepos++
+        } else {
+            report.Summary.AttentionRepos++
+        }
     }
     report.Summary.ReposScanned = len(cfg.Repos)
     return report
@@ -78,11 +107,13 @@ func RenderMarkdownReport(report Report) string {
     sb.WriteString(fmt.Sprintf("- Dirty repos: %d\n", report.Summary.DirtyRepos))
     sb.WriteString(fmt.Sprintf("- Test failures: %d\n", report.Summary.TestFailures))
     sb.WriteString(fmt.Sprintf("- Lint failures: %d\n", report.Summary.LintFailures))
-    sb.WriteString(fmt.Sprintf("- Dependency manifests detected: %d\n\n", report.Summary.DependencyManifests))
+    sb.WriteString(fmt.Sprintf("- Dependency manifests detected: %d\n", report.Summary.DependencyManifests))
+    sb.WriteString(fmt.Sprintf("- Healthy repos: %d\n", report.Summary.HealthyRepos))
+    sb.WriteString(fmt.Sprintf("- Needs attention: %d\n\n", report.Summary.AttentionRepos))
 
     sb.WriteString("## Repos\n")
     for _, repo := range report.Repos {
-        sb.WriteString(fmt.Sprintf("- %s — path: %s\n", repo.Name, repo.Path))
+        sb.WriteString(fmt.Sprintf("- %s — status: %s — path: %s\n", repo.Name, repo.Status, repo.Path))
         if repo.GitDirty {
             sb.WriteString(fmt.Sprintf("  - git: %d changes\n", repo.GitChanges))
         } else {

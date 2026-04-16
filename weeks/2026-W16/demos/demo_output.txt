@@ -1,0 +1,18 @@
+$ python src/cli.py demos/sample_topology.json --focus identity
+{
+  "service_count": 4,
+  "warnings": [],
+  "cycles": [],
+  "deployment_order": [
+    "identity",
+    "catalog",
+    "payments",
+    "edge-gateway"
+  ],
+  "focus_service": "identity",
+  "blast_radius": [
+    "catalog",
+    "payments",
+    "edge-gateway"
+  ]
+}

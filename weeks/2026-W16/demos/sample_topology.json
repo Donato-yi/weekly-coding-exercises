@@ -1,0 +1,32 @@
+{
+  "services": [
+    {
+      "name": "identity",
+      "depends_on": [],
+      "owner": "platform",
+      "tier": "core",
+      "has_healthcheck": true
+    },
+    {
+      "name": "catalog",
+      "depends_on": ["identity"],
+      "owner": "commerce",
+      "tier": "core",
+      "has_healthcheck": true
+    },
+    {
+      "name": "payments",
+      "depends_on": ["identity"],
+      "owner": "commerce",
+      "tier": "critical",
+      "has_healthcheck": true
+    },
+    {
+      "name": "edge-gateway",
+      "depends_on": ["catalog", "payments"],
+      "owner": "platform",
+      "tier": "edge",
+      "has_healthcheck": true
+    }
+  ]
+}

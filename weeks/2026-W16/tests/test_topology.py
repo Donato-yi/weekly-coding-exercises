@@ -1,6 +1,12 @@
-import pytest
+import os
+import sys
+import unittest
 
-from topology import load_services
+ROOT = os.path.dirname(os.path.dirname(__file__))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from src.topology import load_services
 
 
 VALID_TOPOLOGY = {
@@ -13,40 +19,41 @@ VALID_TOPOLOGY = {
 }
 
 
-def test_deployment_order_is_dependency_first():
-    graph = load_services(VALID_TOPOLOGY)
-    assert graph.deployment_order() == ["identity", "catalog", "payments", "edge-gateway"]
+class TopologyTests(unittest.TestCase):
+    def test_deployment_order_is_dependency_first(self) -> None:
+        graph = load_services(VALID_TOPOLOGY)
+        self.assertEqual(graph.deployment_order(), ["identity", "catalog", "payments", "edge-gateway"])
+
+    def test_blast_radius_follows_reverse_dependencies(self) -> None:
+        graph = load_services(VALID_TOPOLOGY)
+        self.assertEqual(graph.blast_radius("identity"), ["catalog", "payments", "edge-gateway"])
+
+    def test_validate_reports_missing_metadata_and_unknown_dependencies(self) -> None:
+        graph = load_services(
+            {
+                "services": [
+                    {"name": "api", "depends_on": ["db"], "has_healthcheck": False},
+                ]
+            }
+        )
+        warnings = graph.validate()
+        self.assertIn("api depends on unknown service 'db'", warnings)
+        self.assertIn("api is missing an owner", warnings)
+        self.assertIn("api is missing a health check", warnings)
+
+    def test_cycle_detection_and_order_failure(self) -> None:
+        graph = load_services(
+            {
+                "services": [
+                    {"name": "a", "depends_on": ["b"], "owner": "team-a", "has_healthcheck": True},
+                    {"name": "b", "depends_on": ["a"], "owner": "team-b", "has_healthcheck": True},
+                ]
+            }
+        )
+        self.assertEqual(graph.find_cycles(), [["a", "b", "a"]])
+        with self.assertRaises(ValueError):
+            graph.deployment_order()
 
 
-def test_blast_radius_follows_reverse_dependencies():
-    graph = load_services(VALID_TOPOLOGY)
-    assert graph.blast_radius("identity") == ["catalog", "payments", "edge-gateway"]
-
-
-def test_validate_reports_missing_metadata_and_unknown_dependencies():
-    graph = load_services(
-        {
-            "services": [
-                {"name": "api", "depends_on": ["db"], "has_healthcheck": False},
-            ]
-        }
-    )
-    warnings = graph.validate()
-    assert "api depends on unknown service 'db'" in warnings
-    assert "api is missing an owner" in warnings
-    assert "api is missing a health check" in warnings
-
-
-def test_cycle_detection_and_order_failure():
-    graph = load_services(
-        {
-            "services": [
-                {"name": "a", "depends_on": ["b"], "owner": "team-a", "has_healthcheck": True},
-                {"name": "b", "depends_on": ["a"], "owner": "team-b", "has_healthcheck": True},
-            ]
-        }
-    )
-    cycles = graph.find_cycles()
-    assert cycles == [["a", "b", "a"]]
-    with pytest.raises(ValueError):
-        graph.deployment_order()
+if __name__ == "__main__":
+    unittest.main()

@@ -18,5 +18,5 @@ python src/cli.py demos/sample_topology.json --focus edge-gateway
 
 ## Test it
 ```bash
-pytest
+python -m unittest discover -s tests -v
 ```

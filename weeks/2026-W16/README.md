@@ -7,7 +7,7 @@
 - architecture
 
 ## Primary Language / Stack
-- Python 3.13 + dataclasses + pytest + JSON CLI
+- Python 3.13 + dataclasses + unittest + JSON CLI
 
 ## Weekly Goal
 - Build a small toolkit that models service dependencies, validates topology health, and surfaces rollout order plus blast-radius insights for architecture reviews.
@@ -51,7 +51,7 @@
 
 ## Getting Started
 ```bash
-pytest
+python -m unittest discover -s tests -v
 python src/cli.py demos/sample_topology.json --focus edge-gateway
 ```
 
@@ -63,9 +63,9 @@ python src/cli.py demos/sample_topology.json --focus edge-gateway
   - **UI Demo Notes:** Not applicable.
   - **Tried / Solved / Learned:** Architecture exercises feel more concrete when they produce an artifact a team could actually review.
 - **Daily Entry — 2026-04-16**
-  - **Progress:** Implemented topology parsing, cycle detection, rollout ordering, blast-radius analysis, a small CLI, docs, demo input, and pytest coverage.
+  - **Progress:** Implemented topology parsing, cycle detection, rollout ordering, blast-radius analysis, a small CLI, docs, demo input, and unittest coverage.
   - **Exercises Completed:** Core graph engine, architecture warnings, CLI report path, and example review materials.
-  - **Tests Run:** `pytest`
+  - **Tests Run:** `python -m unittest discover -s tests -v`
   - **UI Demo Notes:** Added a sample topology plus expected CLI output in `/demos`.
   - **Tried / Solved / Learned:** Ownership and health-check gaps often matter just as much as the graph shape itself.
 

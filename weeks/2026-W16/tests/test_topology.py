@@ -11,10 +11,10 @@ from src.topology import load_services
 
 VALID_TOPOLOGY = {
     "services": [
-        {"name": "identity", "depends_on": [], "owner": "platform", "has_healthcheck": True},
-        {"name": "catalog", "depends_on": ["identity"], "owner": "commerce", "has_healthcheck": True},
-        {"name": "payments", "depends_on": ["identity"], "owner": "commerce", "has_healthcheck": True},
-        {"name": "edge-gateway", "depends_on": ["catalog", "payments"], "owner": "platform", "has_healthcheck": True},
+        {"name": "identity", "depends_on": [], "owner": "platform", "tier": "core", "has_healthcheck": True},
+        {"name": "catalog", "depends_on": ["identity"], "owner": "commerce", "tier": "core", "has_healthcheck": True},
+        {"name": "payments", "depends_on": ["identity"], "owner": "commerce", "tier": "critical", "has_healthcheck": True},
+        {"name": "edge-gateway", "depends_on": ["catalog", "payments"], "owner": "platform", "tier": "edge", "has_healthcheck": True},
     ]
 }
 
@@ -32,7 +32,7 @@ class TopologyTests(unittest.TestCase):
         graph = load_services(
             {
                 "services": [
-                    {"name": "api", "depends_on": ["db"], "has_healthcheck": False},
+                    {"name": "api", "depends_on": ["db"], "tier": "critical", "has_healthcheck": False},
                 ]
             }
         )

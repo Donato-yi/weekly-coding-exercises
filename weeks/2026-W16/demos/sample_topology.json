@@ -19,11 +19,25 @@
       "depends_on": ["identity"],
       "owner": "commerce",
       "tier": "critical",
+      "has_healthcheck": false
+    },
+    {
+      "name": "notifications",
+      "depends_on": ["identity"],
+      "owner": "",
+      "tier": "shared",
+      "has_healthcheck": true
+    },
+    {
+      "name": "reporting",
+      "depends_on": ["catalog", "payments"],
+      "owner": "data",
+      "tier": "shared",
       "has_healthcheck": true
     },
     {
       "name": "edge-gateway",
-      "depends_on": ["catalog", "payments"],
+      "depends_on": ["catalog", "payments", "notifications"],
       "owner": "platform",
       "tier": "edge",
       "has_healthcheck": true

@@ -26,16 +26,19 @@
 - Dependency graph validator with cycle detection
 - Rollout-order planner for safe deployment sequencing
 - Blast-radius report for selected services
+- Lightweight policy scoring to prioritize architecture review risk
 
 ## Tests (What to Validate)
 - Cycle detection catches invalid graphs
 - Rollout ordering stays deterministic for valid graphs
 - Blast-radius output includes downstream dependents
 - Warnings are emitted for missing owners or health checks
+- Policy scores rank the riskiest services first
 
 ## UI Demos (What to Showcase)
 - Sample topology JSON
 - Example CLI output for a healthy topology
+- Policy-score output for a slightly messy topology
 - Notes on how to use the report in an architecture review
 
 ## Repo Structure
@@ -48,11 +51,12 @@
 - Keep topology input human-readable so architecture discussions do not depend on a heavy UI.
 - Prefer deterministic graph output because reviews are easier when ordering does not change between runs.
 - Pair dependency graphs with ownership and health-check metadata to make risk more actionable.
+- Keep policy scoring simple enough that humans can explain why a service ranked high.
 
 ## Getting Started
 ```bash
 python -m unittest discover -s tests -v
-python src/cli.py demos/sample_topology.json --focus edge-gateway
+python src/cli.py demos/sample_topology.json --focus identity
 ```
 
 ## Daily Log
@@ -68,8 +72,15 @@ python src/cli.py demos/sample_topology.json --focus edge-gateway
   - **Tests Run:** `python -m unittest discover -s tests -v`
   - **UI Demo Notes:** Added a sample topology plus expected CLI output in `/demos`.
   - **Tried / Solved / Learned:** Ownership and health-check gaps often matter just as much as the graph shape itself.
+- **Daily Entry — 2026-04-17**
+  - **Progress:** Added per-service policy scoring, refreshed the sample topology to include intentional operational gaps, expanded docs, and updated the demo output to surface risk hotspots first.
+  - **Exercises Completed:** Policy-score ranking, richer demo fixture, checklist refresh, and test coverage for score ordering.
+  - **Tests Run:** `python -m unittest discover -s tests -v`
+  - **UI Demo Notes:** The CLI demo now shows warnings plus ranked policy scores for `payments`, `identity`, and `notifications`.
+  - **Tried / Solved / Learned:** Review output gets much easier to act on when structural graph data is paired with a tiny, explainable prioritization model.
 
 ## Tried / Solved / Learned
 - Graph tooling becomes more useful when it mixes structural checks with simple operational metadata.
 - Blast radius is easier to reason about when you traverse reverse dependencies instead of eyeballing diagrams.
 - A tiny CLI plus JSON fixtures is enough to create a repeatable architecture-review exercise.
+- Policy-style scoring is useful when it stays transparent and does not pretend to be more precise than it is.

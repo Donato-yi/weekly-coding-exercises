@@ -14,9 +14,9 @@ class ReviewSummaryTests(unittest.TestCase):
         graph = load_services(
             {
                 "services": [
-                    {"name": "identity", "depends_on": [], "owner": "platform", "has_healthcheck": True},
-                    {"name": "catalog", "depends_on": ["identity"], "owner": "commerce", "has_healthcheck": True},
-                    {"name": "edge-gateway", "depends_on": ["catalog"], "owner": "platform", "has_healthcheck": True},
+                    {"name": "identity", "depends_on": [], "owner": "platform", "tier": "core", "has_healthcheck": True},
+                    {"name": "catalog", "depends_on": ["identity"], "owner": "commerce", "tier": "core", "has_healthcheck": True},
+                    {"name": "edge-gateway", "depends_on": ["catalog"], "owner": "platform", "tier": "edge", "has_healthcheck": True},
                 ]
             }
         )
@@ -36,6 +36,22 @@ class ReviewSummaryTests(unittest.TestCase):
         summary = graph.review_summary()
         self.assertEqual(summary["cycles"], [["api", "worker", "api"]])
         self.assertNotIn("deployment_order", summary)
+
+    def test_policy_scores_rank_riskiest_services_first(self) -> None:
+        graph = load_services(
+            {
+                "services": [
+                    {"name": "identity", "depends_on": [], "owner": "platform", "tier": "core", "has_healthcheck": True},
+                    {"name": "payments", "depends_on": ["identity"], "owner": "", "tier": "critical", "has_healthcheck": False},
+                    {"name": "edge-gateway", "depends_on": ["payments"], "owner": "platform", "tier": "edge", "has_healthcheck": True},
+                ]
+            }
+        )
+        scores = graph.policy_scores()
+        self.assertEqual(scores[0]["service"], "payments")
+        self.assertEqual(scores[0]["level"], "high")
+        self.assertIn("payments is missing an owner", scores[0]["warnings"])
+        self.assertIn("payments is missing a health check", scores[0]["warnings"])
 
 
 if __name__ == "__main__":

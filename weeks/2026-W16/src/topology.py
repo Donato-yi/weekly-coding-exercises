@@ -5,6 +5,14 @@ from dataclasses import dataclass, field
 import json
 
 
+TIER_WEIGHTS = {
+    "critical": 4,
+    "core": 3,
+    "shared": 2,
+    "edge": 1,
+}
+
+
 @dataclass(frozen=True)
 class Service:
     name: str
@@ -20,14 +28,20 @@ class ArchitectureGraph:
 
     def validate(self) -> list[str]:
         warnings: list[str] = []
+        for service_warnings in self.warning_map().values():
+            warnings.extend(service_warnings)
+        return warnings
+
+    def warning_map(self) -> dict[str, list[str]]:
+        warnings: dict[str, list[str]] = {name: [] for name in self.services}
         for name, service in self.services.items():
             for dependency in service.depends_on:
                 if dependency not in self.services:
-                    warnings.append(f"{name} depends on unknown service '{dependency}'")
+                    warnings[name].append(f"{name} depends on unknown service '{dependency}'")
             if not service.owner:
-                warnings.append(f"{name} is missing an owner")
+                warnings[name].append(f"{name} is missing an owner")
             if not service.has_healthcheck:
-                warnings.append(f"{name} is missing a health check")
+                warnings[name].append(f"{name} is missing a health check")
         return warnings
 
     def find_cycles(self) -> list[list[str]]:
@@ -104,12 +118,47 @@ class ArchitectureGraph:
                     queue.append(dependent)
         return impacted
 
+    def policy_scores(self) -> list[dict[str, object]]:
+        warning_map = self.warning_map()
+        results: list[dict[str, object]] = []
+        for name in sorted(self.services):
+            service = self.services[name]
+            warnings = warning_map[name]
+            blast = self.blast_radius(name)
+            dependency_weight = len([dep for dep in service.depends_on if dep in self.services])
+            score = (
+                TIER_WEIGHTS.get(service.tier, 1)
+                + len(blast)
+                + dependency_weight
+                + (2 if not service.owner else 0)
+                + (2 if not service.has_healthcheck else 0)
+                + (2 * len([dep for dep in service.depends_on if dep not in self.services]))
+            )
+            level = "low"
+            if score >= 8:
+                level = "high"
+            elif score >= 5:
+                level = "medium"
+            results.append(
+                {
+                    "service": name,
+                    "tier": service.tier or "unspecified",
+                    "score": score,
+                    "level": level,
+                    "blast_radius_size": len(blast),
+                    "warnings": warnings,
+                }
+            )
+        results.sort(key=lambda item: (-int(item["score"]), str(item["service"])))
+        return results
+
     def review_summary(self, focus: str | None = None) -> dict[str, object]:
         cycles = self.find_cycles()
         summary: dict[str, object] = {
             "service_count": len(self.services),
             "warnings": self.validate(),
             "cycles": cycles,
+            "policy_scores": self.policy_scores(),
         }
         if not cycles:
             summary["deployment_order"] = self.deployment_order()

@@ -1,0 +1,69 @@
+{
+  "colors": {
+    "surface": {
+      "base": "#ffffff",
+      "muted": "#f5f7fb",
+      "inverse": "#0f172a"
+    },
+    "text": {
+      "primary": "#0f172a",
+      "secondary": "#475569",
+      "inverse": "#f8fafc"
+    },
+    "accent": {
+      "brand": "#4f46e5",
+      "success": "#15803d",
+      "warning": "#d97706"
+    },
+    "border": {
+      "subtle": "#cbd5e1"
+    }
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px"
+  },
+  "radius": {
+    "sm": "6px",
+    "md": "10px",
+    "pill": "999px"
+  },
+  "typography": {
+    "fontFamily": {
+      "base": "Inter, system-ui, sans-serif"
+    },
+    "fontSize": {
+      "body": "16px",
+      "label": "14px",
+      "hero": "32px"
+    }
+  },
+  "checks": [
+    {
+      "name": "body-on-surface",
+      "foreground": "colors.text.primary",
+      "background": "colors.surface.base",
+      "minRatio": 4.5
+    },
+    {
+      "name": "secondary-on-muted",
+      "foreground": "colors.text.secondary",
+      "background": "colors.surface.muted",
+      "minRatio": 4.5
+    },
+    {
+      "name": "inverse-on-brand",
+      "foreground": "colors.text.inverse",
+      "background": "colors.accent.brand",
+      "minRatio": 4.5
+    },
+    {
+      "name": "warning-on-muted",
+      "foreground": "colors.accent.warning",
+      "background": "colors.surface.muted",
+      "minRatio": 4.5
+    }
+  ]
+}

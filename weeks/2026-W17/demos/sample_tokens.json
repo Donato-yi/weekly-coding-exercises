@@ -40,6 +40,34 @@
       "hero": "32px"
     }
   },
+  "semantic": {
+    "button": {
+      "primary": {
+        "bg": "{colors.accent.brand}",
+        "fg": "{colors.text.inverse}"
+      },
+      "secondary": {
+        "bg": "{colors.surface.muted}",
+        "fg": "{colors.text.primary}",
+        "border": "{colors.border.subtle}"
+      }
+    },
+    "banner": {
+      "success": {
+        "bg": "{colors.accent.success}",
+        "fg": "{colors.text.inverse}"
+      },
+      "warning": {
+        "bg": "{colors.surface.muted}",
+        "fg": "{colors.accent.warning}"
+      }
+    },
+    "badge": {
+      "info": {
+        "bg": "{colors.accent.info}"
+      }
+    }
+  },
   "checks": [
     {
       "name": "body-on-surface",
@@ -60,9 +88,15 @@
       "minRatio": 4.5
     },
     {
+      "name": "primary-button-pair",
+      "foreground": "semantic.button.primary.fg",
+      "background": "semantic.button.primary.bg",
+      "minRatio": 4.5
+    },
+    {
       "name": "warning-on-muted",
-      "foreground": "colors.accent.warning",
-      "background": "colors.surface.muted",
+      "foreground": "semantic.banner.warning.fg",
+      "background": "semantic.banner.warning.bg",
       "minRatio": 4.5
     }
   ]

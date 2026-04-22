@@ -20,7 +20,16 @@ function main() {
     console.log(`- ${check.name}: ${check.status.toUpperCase()} (${check.ratio}:1) ${check.message}`);
   }
   console.log('');
-  console.log(`# Summary: ${summary.tokenCount} tokens, ${summary.counts.pass} pass, ${summary.counts.warn} warn, ${summary.counts.fail} fail`);
+  console.log('# Token Warnings');
+  if (summary.warnings.length === 0) {
+    console.log('- none');
+  } else {
+    for (const warning of summary.warnings) {
+      console.log(`- ${warning.type}: ${warning.message}`);
+    }
+  }
+  console.log('');
+  console.log(`# Summary: ${summary.tokenCount} tokens, ${summary.counts.pass} pass, ${summary.counts.warn} warn, ${summary.counts.fail} fail, ${summary.warningCount} token warnings`);
 }
 
 main();

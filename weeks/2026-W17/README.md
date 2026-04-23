@@ -58,6 +58,8 @@
 ```bash
 node --test tests/*.test.mjs
 node src/cli.mjs demos/sample_tokens.json
+node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
+node src/cli.mjs demos/sample_tokens.json --summary-only
 ```
 
 ## Daily Log
@@ -73,9 +75,16 @@ node src/cli.mjs demos/sample_tokens.json
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** The sample now shows component-level aliases like `semantic.button.primary.bg` and intentionally includes one broken alias to demonstrate warning output.
   - **Tried / Solved / Learned:** Semantic design tokens are much easier to review when the tooling can bridge component intent back to the base palette automatically.
+- **Daily Entry — 2026-04-23**
+  - **Progress:** Added CLI argument parsing for selector overrides and summary-only output, then created a clean dark-theme fixture plus fresh demo captures.
+  - **Exercises Completed:** `--selector` support, `--summary-only` mode, CLI usage help, CLI tests, `dark_tokens.json`, and updated docs/demo output files.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** There is now a scoped `[data-theme="dark"]` example that shows the same toolkit working for a dark theme without changing the token engine itself.
+  - **Tried / Solved / Learned:** Tiny CLI flags matter because review tooling becomes much more usable when engineers can scope output to a theme selector or skip noisy CSS during quick audit checks.
 
 ## Tried / Solved / Learned
 - Token naming discipline matters because every variable becomes a public API for the UI.
 - A tiny contrast audit catches issues early without forcing a full design system platform.
 - JSON fixtures plus CLI output make design review artifacts easy to version and compare.
 - Semantic aliases improve readability, but they need explicit validation or they quietly become broken CSS contracts.
+- Ergonomic flags are often the difference between a neat utility and a tool people actually keep using.

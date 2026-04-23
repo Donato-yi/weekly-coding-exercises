@@ -1,0 +1,71 @@
+{
+  "colors": {
+    "surface": {
+      "base": "#0f172a",
+      "raised": "#111827",
+      "muted": "#1e293b"
+    },
+    "text": {
+      "primary": "#f8fafc",
+      "secondary": "#cbd5e1",
+      "muted": "#94a3b8"
+    },
+    "accent": {
+      "brand": "#818cf8",
+      "success": "#22c55e",
+      "warning": "#f59e0b"
+    },
+    "border": {
+      "subtle": "#334155"
+    }
+  },
+  "spacing": {
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px"
+  },
+  "radius": {
+    "sm": "6px",
+    "md": "10px",
+    "pill": "999px"
+  },
+  "semantic": {
+    "button": {
+      "primary": {
+        "bg": "{colors.accent.brand}",
+        "fg": "{colors.surface.base}"
+      },
+      "ghost": {
+        "bg": "{colors.surface.muted}",
+        "fg": "{colors.text.primary}",
+        "border": "{colors.border.subtle}"
+      }
+    },
+    "badge": {
+      "success": {
+        "bg": "{colors.accent.success}",
+        "fg": "{colors.surface.base}"
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "body-on-dark-surface",
+      "foreground": "colors.text.primary",
+      "background": "colors.surface.base",
+      "minRatio": 4.5
+    },
+    {
+      "name": "secondary-on-muted-dark",
+      "foreground": "colors.text.secondary",
+      "background": "colors.surface.muted",
+      "minRatio": 4.5
+    },
+    {
+      "name": "primary-button-dark",
+      "foreground": "semantic.button.primary.fg",
+      "background": "semantic.button.primary.bg",
+      "minRatio": 4.5
+    }
+  ]
+}

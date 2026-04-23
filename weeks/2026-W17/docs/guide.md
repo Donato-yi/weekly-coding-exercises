@@ -5,6 +5,7 @@ This week's exercise turns a small nested token file into practical review artif
 1. A `:root` CSS variable block that frontend code can consume directly.
 2. A contrast audit that catches obvious accessibility issues before a full UI implementation exists.
 3. A token warning pass that highlights broken semantic aliases before they ship into a theme.
+4. A small CLI with review-friendly flags for scoped theme previews and fast audit-only output.
 
 ## Why this exercise matters
 
@@ -14,9 +15,17 @@ Design systems often fail in the handoff layer, not in the mockup. Stable token 
 
 1. Update `demos/sample_tokens.json` or replace it with exported design tokens.
 2. Use raw tokens for physical values, then point semantic tokens at them with `{colors.accent.brand}` style aliases.
-3. Run `node src/cli.mjs demos/sample_tokens.json`.
+3. Run one of the CLI commands below.
 4. Review the generated CSS, contrast audit, and token warnings.
 5. Fix failing pairs or dangling aliases before wiring the theme into a component library.
+
+## CLI examples
+
+```bash
+node src/cli.mjs demos/sample_tokens.json
+node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
+node src/cli.mjs demos/sample_tokens.json --summary-only
+```
 
 ## Notes on semantic aliases
 
@@ -24,8 +33,14 @@ Design systems often fail in the handoff layer, not in the mockup. Stable token 
 - The CLI resolves aliases during contrast checks, so tests can validate component-level pairings instead of only raw palette tokens.
 - Broken aliases are surfaced as warnings so token packs can fail review before they break runtime styling.
 
+## Demo fixtures
+
+- `demos/sample_tokens.json` keeps one intentionally broken alias and one failing warning pair so the audit has something useful to flag.
+- `demos/dark_tokens.json` is a clean dark theme fixture that demonstrates selector scoping with `[data-theme="dark"]`.
+- `demos/demo_output.txt` and `demos/dark_demo_output.txt` capture representative CLI output for quick review.
+
 ## Next extensions
 
-- Support scoped theme selectors, such as `[data-theme="dark"]`
 - Emit JSON reports for CI or pull-request comments
 - Add token diffing so designers can compare theme revisions between commits
+- Support grouped reports for multiple theme files in one run

@@ -1,0 +1,36 @@
+﻿# CSS Variables
+[data-theme=dark] {
+  --colors-accent-brand: #818cf8;
+  --colors-accent-success: #22c55e;
+  --colors-accent-warning: #f59e0b;
+  --colors-border-subtle: #334155;
+  --colors-surface-base: #0f172a;
+  --colors-surface-muted: #1e293b;
+  --colors-surface-raised: #111827;
+  --colors-text-muted: #94a3b8;
+  --colors-text-primary: #f8fafc;
+  --colors-text-secondary: #cbd5e1;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+  --radius-sm: 6px;
+  --semantic-badge-success-bg: var(--colors-accent-success);
+  --semantic-badge-success-fg: var(--colors-surface-base);
+  --semantic-button-ghost-bg: var(--colors-surface-muted);
+  --semantic-button-ghost-border: var(--colors-border-subtle);
+  --semantic-button-ghost-fg: var(--colors-text-primary);
+  --semantic-button-primary-bg: var(--colors-accent-brand);
+  --semantic-button-primary-fg: var(--colors-surface-base);
+  --spacing-lg: 24px;
+  --spacing-md: 16px;
+  --spacing-sm: 8px;
+}
+
+# Contrast Audit
+- body-on-dark-surface: PASS (17.06:1) Passes minimum ratio 4.5
+- secondary-on-muted-dark: PASS (9.85:1) Passes minimum ratio 4.5
+- primary-button-dark: PASS (5.98:1) Passes minimum ratio 4.5
+
+# Token Warnings
+- none
+
+# Summary: 23 tokens, 3 pass, 0 warn, 0 fail, 0 token warnings

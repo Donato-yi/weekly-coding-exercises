@@ -25,7 +25,16 @@ Design systems often fail in the handoff layer, not in the mockup. Stable token 
 node src/cli.mjs demos/sample_tokens.json
 node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
 node src/cli.mjs demos/sample_tokens.json --summary-only
+node src/cli.mjs demos/sample_tokens.json --format markdown --output demos/report.md
+node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json
 ```
+
+## Export modes
+
+- `--format text` keeps the current terminal-friendly review output.
+- `--format markdown` wraps CSS in fenced blocks and produces a shareable artifact for docs or pull requests.
+- `--format json` emits structured summary data that a CI step or bot can parse.
+- `--output <path>` writes the chosen format to disk while still printing it to stdout, which is handy for both automation logs and saved review artifacts.
 
 ## Notes on semantic aliases
 
@@ -41,6 +50,6 @@ node src/cli.mjs demos/sample_tokens.json --summary-only
 
 ## Next extensions
 
-- Emit JSON reports for CI or pull-request comments
 - Add token diffing so designers can compare theme revisions between commits
 - Support grouped reports for multiple theme files in one run
+- Emit SARIF or GitHub-friendly annotations for failing contrast checks

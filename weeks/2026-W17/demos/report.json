@@ -1,0 +1,66 @@
+{
+  "selector": ":root",
+  "summary": {
+    "tokenCount": 31,
+    "counts": {
+      "pass": 4,
+      "warn": 0,
+      "fail": 1
+    },
+    "warningCount": 1,
+    "warnings": [
+      {
+        "type": "dangling-alias",
+        "path": "semantic.badge.info.bg",
+        "message": "semantic.badge.info.bg points to missing token colors.accent.info"
+      }
+    ],
+    "checks": [
+      {
+        "name": "body-on-surface",
+        "foreground": "#0f172a",
+        "background": "#ffffff",
+        "ratio": 17.85,
+        "minRatio": 4.5,
+        "status": "pass",
+        "message": "Passes minimum ratio 4.5"
+      },
+      {
+        "name": "secondary-on-muted",
+        "foreground": "#475569",
+        "background": "#f5f7fb",
+        "ratio": 7.07,
+        "minRatio": 4.5,
+        "status": "pass",
+        "message": "Passes minimum ratio 4.5"
+      },
+      {
+        "name": "inverse-on-brand",
+        "foreground": "#f8fafc",
+        "background": "#4f46e5",
+        "ratio": 6.01,
+        "minRatio": 4.5,
+        "status": "pass",
+        "message": "Passes minimum ratio 4.5"
+      },
+      {
+        "name": "primary-button-pair",
+        "foreground": "#f8fafc",
+        "background": "#4f46e5",
+        "ratio": 6.01,
+        "minRatio": 4.5,
+        "status": "pass",
+        "message": "Passes minimum ratio 4.5"
+      },
+      {
+        "name": "warning-on-muted",
+        "foreground": "#d97706",
+        "background": "#f5f7fb",
+        "ratio": 2.97,
+        "minRatio": 4.5,
+        "status": "fail",
+        "message": "Below minimum ratio 4.5 by 1.53"
+      }
+    ]
+  }
+}

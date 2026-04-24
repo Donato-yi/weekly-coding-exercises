@@ -17,7 +17,7 @@
 - Tue: Build token flattener, CSS variable generator, contrast audit, and starter tests
 - Wed: Add semantic token aliases and richer warnings
 - Thu: Add CLI ergonomics and demo fixtures
-- Fri: Add export modes and docs polish
+- Fri: Add export modes, file output support, and docs polish
 - Sat: Add design review checklist and more examples
 - Sun: Refactor, summarize tradeoffs, and capture follow-up ideas
 
@@ -60,6 +60,8 @@ node --test tests/*.test.mjs
 node src/cli.mjs demos/sample_tokens.json
 node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
 node src/cli.mjs demos/sample_tokens.json --summary-only
+node src/cli.mjs demos/sample_tokens.json --format markdown --output demos/report.md
+node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json
 ```
 
 ## Daily Log
@@ -81,6 +83,12 @@ node src/cli.mjs demos/sample_tokens.json --summary-only
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** There is now a scoped `[data-theme="dark"]` example that shows the same toolkit working for a dark theme without changing the token engine itself.
   - **Tried / Solved / Learned:** Tiny CLI flags matter because review tooling becomes much more usable when engineers can scope output to a theme selector or skip noisy CSS during quick audit checks.
+- **Daily Entry — 2026-04-24**
+  - **Progress:** Added export modes for markdown and JSON, plus file output support so the toolkit can generate review artifacts directly into docs or CI-friendly files.
+  - **Exercises Completed:** `--format` handling, `--output` file writes, markdown/json render paths, expanded CLI tests, and refreshed docs/demo instructions.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** The sample workflow now includes `demos/report.md` for human review and `demos/report.json` for tooling or pull-request automation.
+  - **Tried / Solved / Learned:** Tooling becomes much easier to reuse when the same command can target both humans and machines instead of forcing everyone through one terminal-only format.
 
 ## Tried / Solved / Learned
 - Token naming discipline matters because every variable becomes a public API for the UI.
@@ -88,3 +96,4 @@ node src/cli.mjs demos/sample_tokens.json --summary-only
 - JSON fixtures plus CLI output make design review artifacts easy to version and compare.
 - Semantic aliases improve readability, but they need explicit validation or they quietly become broken CSS contracts.
 - Ergonomic flags are often the difference between a neat utility and a tool people actually keep using.
+- Export flexibility matters because review tools usually need both readable artifacts and machine-consumable summaries.

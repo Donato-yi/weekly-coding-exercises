@@ -1,0 +1,54 @@
+# Design Token Report
+
+## CSS Variables
+```css
+:root {
+  --colors-accent-brand: #4f46e5;
+  --colors-accent-success: #15803d;
+  --colors-accent-warning: #d97706;
+  --colors-border-subtle: #cbd5e1;
+  --colors-surface-base: #ffffff;
+  --colors-surface-inverse: #0f172a;
+  --colors-surface-muted: #f5f7fb;
+  --colors-text-inverse: #f8fafc;
+  --colors-text-primary: #0f172a;
+  --colors-text-secondary: #475569;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+  --radius-sm: 6px;
+  --semantic-badge-info-bg: var(--colors-accent-info);
+  --semantic-banner-success-bg: var(--colors-accent-success);
+  --semantic-banner-success-fg: var(--colors-text-inverse);
+  --semantic-banner-warning-bg: var(--colors-surface-muted);
+  --semantic-banner-warning-fg: var(--colors-accent-warning);
+  --semantic-button-primary-bg: var(--colors-accent-brand);
+  --semantic-button-primary-fg: var(--colors-text-inverse);
+  --semantic-button-secondary-bg: var(--colors-surface-muted);
+  --semantic-button-secondary-border: var(--colors-border-subtle);
+  --semantic-button-secondary-fg: var(--colors-text-primary);
+  --spacing-lg: 24px;
+  --spacing-md: 16px;
+  --spacing-sm: 8px;
+  --spacing-xs: 4px;
+  --typography-fontFamily-base: Inter, system-ui, sans-serif;
+  --typography-fontSize-body: 16px;
+  --typography-fontSize-hero: 32px;
+  --typography-fontSize-label: 14px;
+}
+```
+
+## Contrast Audit
+- **body-on-surface**: PASS (17.85:1), Passes minimum ratio 4.5
+- **secondary-on-muted**: PASS (7.07:1), Passes minimum ratio 4.5
+- **inverse-on-brand**: PASS (6.01:1), Passes minimum ratio 4.5
+- **primary-button-pair**: PASS (6.01:1), Passes minimum ratio 4.5
+- **warning-on-muted**: FAIL (2.97:1), Below minimum ratio 4.5 by 1.53
+
+## Token Warnings
+- **dangling-alias**: semantic.badge.info.bg points to missing token colors.accent.info
+
+## Summary
+- Selector: `:root`
+- Tokens: 31
+- Checks: 4 pass, 0 warn, 1 fail
+- Token warnings: 1

@@ -42,5 +42,7 @@ test('buildSummary surfaces dangling alias warnings', () => {
   const summary = buildSummary(tokens);
   assert.equal(summary.warningCount, 1);
   assert.match(summary.warnings[0].message, /missing token colors\.accent\.info/);
+  assert.equal(summary.reviewChecklist.length, 2);
+  assert.match(summary.reviewChecklist[0].action, /Adjust warning-on-muted before release/);
   assert.match(buildCssVariables(tokens), /--semantic-button-primary-bg: var\(--colors-accent-brand\);/);
 });

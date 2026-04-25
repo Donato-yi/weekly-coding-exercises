@@ -89,6 +89,12 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** The sample workflow now includes `demos/report.md` for human review and `demos/report.json` for tooling or pull-request automation.
   - **Tried / Solved / Learned:** Tooling becomes much easier to reuse when the same command can target both humans and machines instead of forcing everyone through one terminal-only format.
+- **Daily Entry — 2026-04-25**
+  - **Progress:** Added a generated review checklist so failing contrast pairs and semantic token warnings now become explicit follow-up items in text, markdown, and JSON exports.
+  - **Exercises Completed:** Review-checklist summary generation, CLI/report rendering updates, refreshed docs/demo notes, and extra test coverage for checklist output.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** Added `demos/review_checklist.md` so design-review artifacts now read more like a handoff checklist than a raw terminal dump.
+  - **Tried / Solved / Learned:** Review tooling gets more useful when it tells the next reviewer exactly what to fix, not just what failed.
 
 ## Tried / Solved / Learned
 - Token naming discipline matters because every variable becomes a public API for the UI.
@@ -97,3 +103,4 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
 - Semantic aliases improve readability, but they need explicit validation or they quietly become broken CSS contracts.
 - Ergonomic flags are often the difference between a neat utility and a tool people actually keep using.
 - Export flexibility matters because review tools usually need both readable artifacts and machine-consumable summaries.
+- Audit output gets easier to act on when it turns failures into checklist items instead of making reviewers translate raw findings by hand.

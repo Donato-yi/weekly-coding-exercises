@@ -19,3 +19,4 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
 - A dark-theme fixture that cleanly scopes variables to a custom selector
 - A summary-only mode that makes quick audit checks less noisy in terminal review
 - Saved markdown and JSON artifacts that can be attached to design reviews or fed into automation
+- A generated review checklist that turns failures and token warnings into concrete follow-up tasks for design review

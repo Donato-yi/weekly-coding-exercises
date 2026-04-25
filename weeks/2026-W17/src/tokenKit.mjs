@@ -170,11 +170,33 @@ export function buildSummary(tokens) {
     return acc;
   }, { pass: 0, warn: 0, fail: 0 });
 
+  const reviewChecklist = [
+    ...checks
+      .filter((item) => item.status !== 'pass')
+      .map((item) => ({
+        type: 'contrast',
+        name: item.name,
+        status: item.status,
+        action: item.status === 'fail'
+          ? `Adjust ${item.name} before release, it is ${(item.minRatio - item.ratio).toFixed(2)} below the target ratio.`
+          : `Review ${item.name}, it is close to the minimum ratio ${item.minRatio}.`,
+      })),
+    ...warnings.map((warning) => ({
+      type: warning.type,
+      name: warning.path,
+      status: 'warn',
+      action: warning.type === 'dangling-alias'
+        ? `Fix or remove the alias at ${warning.path} so the semantic token resolves cleanly.`
+        : `Review ${warning.path} because ${warning.message}`,
+    })),
+  ];
+
   return {
     tokenCount: Object.keys(flattenTokens(tokens)).length,
     counts,
     warningCount: warnings.length,
     warnings,
     checks,
+    reviewChecklist,
   };
 }

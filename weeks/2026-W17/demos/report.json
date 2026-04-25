@@ -61,6 +61,20 @@
         "status": "fail",
         "message": "Below minimum ratio 4.5 by 1.53"
       }
+    ],
+    "reviewChecklist": [
+      {
+        "type": "contrast",
+        "name": "warning-on-muted",
+        "status": "fail",
+        "action": "Adjust warning-on-muted before release, it is 1.53 below the target ratio."
+      },
+      {
+        "type": "dangling-alias",
+        "name": "semantic.badge.info.bg",
+        "status": "warn",
+        "action": "Fix or remove the alias at semantic.badge.info.bg so the semantic token resolves cleanly."
+      }
     ]
   }
 }

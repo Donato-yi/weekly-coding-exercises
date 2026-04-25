@@ -26,6 +26,7 @@ test('renderReport can omit CSS output for quick review', () => {
   const output = renderReport(tokens, { summaryOnly: true });
   assert.doesNotMatch(output, /# CSS Variables/);
   assert.match(output, /# Contrast Audit/);
+  assert.match(output, /# Review Checklist/);
   assert.match(output, /# Summary:/);
 });
 
@@ -41,6 +42,7 @@ test('renderReport supports json exports', () => {
   const parsed = JSON.parse(output);
   assert.equal(parsed.selector, '[data-theme="light"]');
   assert.equal(parsed.summary.counts.fail, 1);
+  assert.equal(parsed.summary.reviewChecklist.length, 2);
   assert.equal(parsed.css, undefined);
 });
 

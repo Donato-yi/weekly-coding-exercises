@@ -111,6 +111,15 @@ function renderTextReport(payload, summaryOnly = false) {
     }
   }
   lines.push('');
+  lines.push('# Review Checklist');
+  if (payload.summary.reviewChecklist.length === 0) {
+    lines.push('- ready for review');
+  } else {
+    for (const item of payload.summary.reviewChecklist) {
+      lines.push(`- [ ] ${item.name}: ${item.action}`);
+    }
+  }
+  lines.push('');
   lines.push(`# Summary: ${payload.summary.tokenCount} tokens, ${payload.summary.counts.pass} pass, ${payload.summary.counts.warn} warn, ${payload.summary.counts.fail} fail, ${payload.summary.warningCount} token warnings`);
 
   return lines.join('\n');
@@ -138,6 +147,15 @@ function renderMarkdownReport(payload, summaryOnly = false) {
   } else {
     for (const warning of payload.summary.warnings) {
       lines.push(`- **${warning.type}**: ${warning.message}`);
+    }
+  }
+  lines.push('');
+  lines.push('## Review Checklist');
+  if (payload.summary.reviewChecklist.length === 0) {
+    lines.push('- ready for review');
+  } else {
+    for (const item of payload.summary.reviewChecklist) {
+      lines.push(`- [ ] **${item.name}**: ${item.action}`);
     }
   }
   lines.push('');

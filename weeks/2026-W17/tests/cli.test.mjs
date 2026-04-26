@@ -4,11 +4,13 @@ import fs from 'node:fs';
 import { parseArgs, renderReport, usage } from '../src/cli.mjs';
 
 const tokens = JSON.parse(fs.readFileSync(new URL('../demos/sample_tokens.json', import.meta.url), 'utf8'));
+const baselineTokens = JSON.parse(fs.readFileSync(new URL('../demos/baseline_tokens.json', import.meta.url), 'utf8'));
 
 test('parseArgs supports selector overrides, summary-only mode, and export options', () => {
-  const args = parseArgs(['demos/sample_tokens.json', '--selector', '[data-theme="dark"]', '--summary-only', '--format', 'json', '--output', 'demos/report.json']);
+  const args = parseArgs(['demos/sample_tokens.json', '--selector', '[data-theme="dark"]', '--compare', 'demos/baseline_tokens.json', '--summary-only', '--format', 'json', '--output', 'demos/report.json']);
   assert.equal(args.inputPath, 'demos/sample_tokens.json');
   assert.equal(args.selector, '[data-theme="dark"]');
+  assert.equal(args.comparePath, 'demos/baseline_tokens.json');
   assert.equal(args.summaryOnly, true);
   assert.equal(args.format, 'json');
   assert.equal(args.outputPath, 'demos/report.json');
@@ -31,8 +33,9 @@ test('renderReport can omit CSS output for quick review', () => {
 });
 
 test('renderReport supports markdown exports', () => {
-  const output = renderReport(tokens, { format: 'markdown' });
+  const output = renderReport(tokens, { format: 'markdown', compareTokens: baselineTokens });
   assert.match(output, /# Design Token Report/);
+  assert.match(output, /## Token Diff/);
   assert.match(output, /```css/);
   assert.match(output, /## Summary/);
 });
@@ -48,6 +51,7 @@ test('renderReport supports json exports', () => {
 
 test('usage documents the new CLI flags', () => {
   assert.match(usage(), /--selector <css-selector>/);
+  assert.match(usage(), /--compare <path>/);
   assert.match(usage(), /--summary-only/);
   assert.match(usage(), /--format <text\|markdown\|json>/);
   assert.match(usage(), /--output <path>/);

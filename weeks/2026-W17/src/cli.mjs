@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildCssVariables, buildSummary } from './tokenKit.mjs';
+import { buildCssVariables, buildSummary, buildTokenDiff } from './tokenKit.mjs';
 
 const VALID_FORMATS = new Set(['text', 'markdown', 'json']);
 
@@ -11,6 +11,7 @@ export function usage() {
     '',
     'Options:',
     '  --selector <css-selector>  Override the CSS selector used for generated variables',
+    '  --compare <path>           Compare the input tokens against a baseline token file',
     '  --summary-only             Print the audit summary without the CSS variable block',
     '  --format <type>            Choose text, markdown, or json output',
     '  --output <path>            Write the rendered report to a file',
@@ -22,6 +23,7 @@ export function parseArgs(argv) {
   const options = {
     inputPath: null,
     selector: ':root',
+    comparePath: null,
     summaryOnly: false,
     format: 'text',
     outputPath: null,
@@ -44,6 +46,15 @@ export function parseArgs(argv) {
         throw new Error('Missing value for --selector');
       }
       options.selector = selector;
+      index += 1;
+      continue;
+    }
+    if (arg === '--compare') {
+      const comparePath = argv[index + 1];
+      if (!comparePath) {
+        throw new Error('Missing value for --compare');
+      }
+      options.comparePath = comparePath;
       index += 1;
       continue;
     }
@@ -80,11 +91,12 @@ export function parseArgs(argv) {
   return options;
 }
 
-function buildReportPayload(tokens, selector = ':root') {
+function buildReportPayload(tokens, selector = ':root', compareTokens = null) {
   return {
     selector,
     css: buildCssVariables(tokens, selector),
     summary: buildSummary(tokens),
+    diff: compareTokens ? buildTokenDiff(compareTokens, tokens) : null,
   };
 }
 
@@ -120,6 +132,23 @@ function renderTextReport(payload, summaryOnly = false) {
     }
   }
   lines.push('');
+  if (payload.diff) {
+    lines.push('# Token Diff');
+    lines.push(`- Added: ${payload.diff.counts.added}`);
+    lines.push(`- Removed: ${payload.diff.counts.removed}`);
+    lines.push(`- Changed: ${payload.diff.counts.changed}`);
+    for (const item of payload.diff.changed) {
+      lines.push(`- ${item.path}: ${item.before} -> ${item.after}`);
+    }
+    for (const item of payload.diff.added) {
+      lines.push(`- ${item.path}: added ${item.value}`);
+    }
+    for (const item of payload.diff.removed) {
+      lines.push(`- ${item.path}: removed ${item.value}`);
+    }
+    lines.push('');
+  }
+
   lines.push(`# Summary: ${payload.summary.tokenCount} tokens, ${payload.summary.counts.pass} pass, ${payload.summary.counts.warn} warn, ${payload.summary.counts.fail} fail, ${payload.summary.warningCount} token warnings`);
 
   return lines.join('\n');
@@ -159,13 +188,30 @@ function renderMarkdownReport(payload, summaryOnly = false) {
     }
   }
   lines.push('');
+  if (payload.diff) {
+    lines.push('## Token Diff');
+    lines.push(`- Added: ${payload.diff.counts.added}`);
+    lines.push(`- Removed: ${payload.diff.counts.removed}`);
+    lines.push(`- Changed: ${payload.diff.counts.changed}`);
+    for (const item of payload.diff.changed) {
+      lines.push(`- \`${item.path}\`: \`${item.before}\` -> \`${item.after}\``);
+    }
+    for (const item of payload.diff.added) {
+      lines.push(`- \`${item.path}\`: added \`${item.value}\``);
+    }
+    for (const item of payload.diff.removed) {
+      lines.push(`- \`${item.path}\`: removed \`${item.value}\``);
+    }
+    lines.push('');
+  }
+
   lines.push(`## Summary\n- Selector: \`${payload.selector}\`\n- Tokens: ${payload.summary.tokenCount}\n- Checks: ${payload.summary.counts.pass} pass, ${payload.summary.counts.warn} warn, ${payload.summary.counts.fail} fail\n- Token warnings: ${payload.summary.warningCount}`);
 
   return lines.join('\n');
 }
 
-export function renderReport(tokens, { selector = ':root', summaryOnly = false, format = 'text' } = {}) {
-  const payload = buildReportPayload(tokens, selector);
+export function renderReport(tokens, { selector = ':root', compareTokens = null, summaryOnly = false, format = 'text' } = {}) {
+  const payload = buildReportPayload(tokens, selector, compareTokens);
 
   if (format === 'json') {
     const jsonPayload = summaryOnly
@@ -198,7 +244,10 @@ export function main(argv = process.argv.slice(2)) {
   }
 
   const tokens = JSON.parse(fs.readFileSync(options.inputPath, 'utf8'));
-  const output = renderReport(tokens, options);
+  const compareTokens = options.comparePath
+    ? JSON.parse(fs.readFileSync(options.comparePath, 'utf8'))
+    : null;
+  const output = renderReport(tokens, { ...options, compareTokens });
 
   if (options.outputPath) {
     fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });

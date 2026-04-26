@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { buildCssVariables, buildSummary, contrastRatio, flattenTokens, resolveToken } from '../src/tokenKit.mjs';
+import { buildCssVariables, buildSummary, buildTokenDiff, contrastRatio, flattenTokens, resolveToken } from '../src/tokenKit.mjs';
 
 const tokens = JSON.parse(fs.readFileSync(new URL('../demos/sample_tokens.json', import.meta.url), 'utf8'));
+const baselineTokens = JSON.parse(fs.readFileSync(new URL('../demos/baseline_tokens.json', import.meta.url), 'utf8'));
 
 test('flattenTokens produces stable dot paths', () => {
   const flat = flattenTokens(tokens);
@@ -45,4 +46,12 @@ test('buildSummary surfaces dangling alias warnings', () => {
   assert.equal(summary.reviewChecklist.length, 2);
   assert.match(summary.reviewChecklist[0].action, /Adjust warning-on-muted before release/);
   assert.match(buildCssVariables(tokens), /--semantic-button-primary-bg: var\(--colors-accent-brand\);/);
+});
+
+test('buildTokenDiff reports added and changed token paths', () => {
+  const diff = buildTokenDiff(baselineTokens, tokens);
+  assert.equal(diff.counts.added > 0, true);
+  assert.equal(diff.counts.changed > 0, true);
+  assert.equal(diff.changed.some((item) => item.path === 'colors.accent.brand'), true);
+  assert.equal(diff.added.some((item) => item.path === 'semantic.badge.info.bg'), true);
 });

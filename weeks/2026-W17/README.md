@@ -62,6 +62,7 @@ node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
 node src/cli.mjs demos/sample_tokens.json --summary-only
 node src/cli.mjs demos/sample_tokens.json --format markdown --output demos/report.md
 node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json
+node src/cli.mjs demos/sample_tokens.json --compare demos/baseline_tokens.json --format markdown --output demos/compare_report.md
 ```
 
 ## Daily Log
@@ -95,6 +96,12 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** Added `demos/review_checklist.md` so design-review artifacts now read more like a handoff checklist than a raw terminal dump.
   - **Tried / Solved / Learned:** Review tooling gets more useful when it tells the next reviewer exactly what to fix, not just what failed.
+- **Daily Entry — 2026-04-26**
+  - **Progress:** Added baseline token diffing so the CLI can show what changed between two token revisions alongside the usual accessibility audit and checklist output.
+  - **Exercises Completed:** `--compare` CLI support, token diff summaries, baseline demo fixture, compare-report demo artifact, docs refresh, and test coverage for diff output.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** Added `demos/compare_report.md` so a reviewer can scan value changes, new tokens, and lingering accessibility problems in one markdown artifact.
+  - **Tried / Solved / Learned:** Design-review tooling gets a lot more credible when it can answer both "is this accessible?" and "what actually changed?" in the same pass.
 
 ## Tried / Solved / Learned
 - Token naming discipline matters because every variable becomes a public API for the UI.
@@ -104,3 +111,4 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
 - Ergonomic flags are often the difference between a neat utility and a tool people actually keep using.
 - Export flexibility matters because review tools usually need both readable artifacts and machine-consumable summaries.
 - Audit output gets easier to act on when it turns failures into checklist items instead of making reviewers translate raw findings by hand.
+- Diff context matters because teams review token revisions, not isolated snapshots.

@@ -200,3 +200,40 @@ export function buildSummary(tokens) {
     reviewChecklist,
   };
 }
+
+export function buildTokenDiff(baselineTokens, nextTokens) {
+  const baseline = flattenTokens(baselineTokens);
+  const current = flattenTokens(nextTokens);
+  const allPaths = Array.from(new Set([...Object.keys(baseline), ...Object.keys(current)])).sort();
+
+  const added = [];
+  const removed = [];
+  const changed = [];
+
+  for (const path of allPaths) {
+    if (!(path in baseline)) {
+      added.push({ path, value: current[path] });
+      continue;
+    }
+
+    if (!(path in current)) {
+      removed.push({ path, value: baseline[path] });
+      continue;
+    }
+
+    if (baseline[path] !== current[path]) {
+      changed.push({ path, before: baseline[path], after: current[path] });
+    }
+  }
+
+  return {
+    counts: {
+      added: added.length,
+      removed: removed.length,
+      changed: changed.length,
+    },
+    added,
+    removed,
+    changed,
+  };
+}

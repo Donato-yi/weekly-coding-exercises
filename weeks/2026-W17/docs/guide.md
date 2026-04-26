@@ -6,7 +6,7 @@ This week's exercise turns a small nested token file into practical review artif
 2. A contrast audit that catches obvious accessibility issues before a full UI implementation exists.
 3. A token warning pass that highlights broken semantic aliases before they ship into a theme.
 4. A review checklist that turns failed checks and token warnings into concrete follow-up items.
-5. A small CLI with review-friendly flags for scoped theme previews and fast audit-only output.
+5. A small CLI with review-friendly flags for scoped theme previews, fast audit-only output, and baseline token diffs.
 
 ## Why this exercise matters
 
@@ -28,6 +28,7 @@ node src/cli.mjs demos/dark_tokens.json --selector '[data-theme="dark"]'
 node src/cli.mjs demos/sample_tokens.json --summary-only
 node src/cli.mjs demos/sample_tokens.json --format markdown --output demos/report.md
 node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json
+node src/cli.mjs demos/sample_tokens.json --compare demos/baseline_tokens.json --format markdown --output demos/compare_report.md
 ```
 
 ## Export modes
@@ -36,6 +37,7 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
 - `--format markdown` wraps CSS in fenced blocks and produces a shareable artifact for docs or pull requests.
 - `--format json` emits structured summary data that a CI step or bot can parse.
 - `--output <path>` writes the chosen format to disk while still printing it to stdout, which is handy for both automation logs and saved review artifacts.
+- `--compare <path>` adds a baseline diff so reviewers can see which token values changed, which paths were added, and which ones disappeared.
 - Exported summaries now include a review checklist so pull requests can carry the exact follow-up items alongside the raw audit data.
 
 ## Notes on semantic aliases
@@ -47,12 +49,14 @@ node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output 
 ## Demo fixtures
 
 - `demos/sample_tokens.json` keeps one intentionally broken alias and one failing warning pair so the audit has something useful to flag.
+- `demos/baseline_tokens.json` gives the CLI a previous revision to diff against when a token change needs review context.
 - `demos/dark_tokens.json` is a clean dark theme fixture that demonstrates selector scoping with `[data-theme="dark"]`.
 - `demos/demo_output.txt` and `demos/dark_demo_output.txt` capture representative CLI output for quick review.
 - `demos/review_checklist.md` shows the checklist-focused markdown export that a designer or frontend reviewer could paste into a ticket.
+- `demos/compare_report.md` shows how the diff output can make token-review changesets much easier to scan.
 
 ## Next extensions
 
-- Add token diffing so designers can compare theme revisions between commits
 - Support grouped reports for multiple theme files in one run
 - Emit SARIF or GitHub-friendly annotations for failing contrast checks
+- Compare multiple theme files in one command so a design-system PR can review a whole pack at once

@@ -6,6 +6,7 @@
     "test": "node --test tests/*.test.mjs",
     "demo": "node src/cli.mjs demos/sample_tokens.json",
     "demo:markdown": "node src/cli.mjs demos/sample_tokens.json --format markdown --output demos/report.md",
-    "demo:json": "node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json"
+    "demo:json": "node src/cli.mjs demos/sample_tokens.json --format json --summary-only --output demos/report.json",
+    "demo:compare": "node src/cli.mjs demos/sample_tokens.json --compare demos/baseline_tokens.json --format markdown --output demos/compare_report.md"
   }
 }

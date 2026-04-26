@@ -1,4 +1,4 @@
-﻿# CSS Variables
+# CSS Variables
 [data-theme=dark] {
   --colors-accent-brand: #818cf8;
   --colors-accent-success: #22c55e;

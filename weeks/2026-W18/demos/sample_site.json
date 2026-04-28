@@ -1,0 +1,51 @@
+{
+  "pages": [
+    {
+      "title": "Home",
+      "path": "/",
+      "links": [
+        "/docs",
+        "/pricing",
+        "/blog"
+      ],
+      "section": "marketing"
+    },
+    {
+      "title": "Docs",
+      "path": "/docs",
+      "links": [
+        "/",
+        "/pricing"
+      ],
+      "section": "docs"
+    },
+    {
+      "title": "Pricing",
+      "path": "/pricing",
+      "links": [
+        "/",
+        "/docs"
+      ],
+      "section": "marketing"
+    },
+    {
+      "title": "Blog",
+      "path": "/blog",
+      "links": [
+        "/",
+        "/docs",
+        "/changelog"
+      ],
+      "section": "content"
+    },
+    {
+      "title": "Changelog",
+      "path": "/changelog",
+      "links": [
+        "/blog"
+      ],
+      "public": false,
+      "section": "content"
+    }
+  ]
+}

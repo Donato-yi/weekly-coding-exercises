@@ -15,7 +15,18 @@
       "path": "/docs",
       "links": [
         "/",
+        "/docs/getting-started",
         "/pricing"
+      ],
+      "section": "docs"
+    },
+    {
+      "title": "Getting Started",
+      "path": "/docs/getting-started",
+      "links": [
+        "/docs",
+        "/pricing",
+        "/blog"
       ],
       "section": "docs"
     },

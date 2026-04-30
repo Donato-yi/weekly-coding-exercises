@@ -10,6 +10,9 @@
     <loc>https://example.dev/docs</loc>
   </url>
   <url>
+    <loc>https://example.dev/docs/getting-started</loc>
+  </url>
+  <url>
     <loc>https://example.dev/pricing</loc>
   </url>
 </urlset>

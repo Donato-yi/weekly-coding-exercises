@@ -9,17 +9,18 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
-from sitekit import build_sitemap, normalize_path, parse_manifest, validate_pages
+from sitekit import build_breadcrumbs, build_markdown_report, build_sitemap, normalize_path, parse_manifest, validate_pages
 
 
 class SiteKitTests(unittest.TestCase):
     def sample_pages(self):
         payload = {
             "pages": [
-                {"title": "Home", "path": "/", "links": ["/docs", "/pricing"]},
-                {"title": "Docs", "path": "/docs/", "links": ["/", "/pricing", "/missing"]},
-                {"title": "Pricing", "path": "pricing", "links": ["/"]},
-                {"title": "Draft", "path": "/draft", "public": False, "links": ["/"]},
+                {"title": "Home", "path": "/", "links": ["/docs", "/pricing"], "section": "marketing"},
+                {"title": "Docs", "path": "/docs/", "links": ["/", "/docs/getting-started", "/pricing", "/missing"], "section": "docs"},
+                {"title": "Getting Started", "path": "/docs/getting-started", "links": ["/docs", "/pricing"], "section": "docs"},
+                {"title": "Pricing", "path": "pricing", "links": ["/"], "section": "marketing"},
+                {"title": "Draft", "path": "/draft", "public": False, "links": ["/"], "section": "internal"},
             ]
         }
         return parse_manifest(payload)
@@ -49,6 +50,19 @@ class SiteKitTests(unittest.TestCase):
         validation = validate_pages(pages, "https://example.dev")
         self.assertTrue(any("Duplicate canonical URL" in warning for warning in validation["warnings"]))
 
+    def test_breadcrumbs_include_parent_pages(self):
+        pages = self.sample_pages()
+        getting_started = next(page for page in pages if page.path == "/docs/getting-started")
+        self.assertEqual(build_breadcrumbs(getting_started, pages), ["Home", "Docs", "Getting Started"])
+
+    def test_report_includes_navigation_summary(self):
+        pages = self.sample_pages()
+        validation = validate_pages(pages, "https://example.dev")
+        report = build_markdown_report(pages, validation, "https://example.dev")
+        self.assertIn("## Navigation Summary", report)
+        self.assertIn("marketing -> docs", report)
+        self.assertIn("Breadcrumbs: Home > Docs > Getting Started", report)
+
     def test_cli_generates_artifacts(self):
         manifest = ROOT / "demos" / "sample_site.json"
         with tempfile.TemporaryDirectory() as tmp:
@@ -60,7 +74,7 @@ class SiteKitTests(unittest.TestCase):
                 text=True,
             )
             output = json.loads(result.stdout)
-            self.assertEqual(output["pages"], 5)
+            self.assertEqual(output["pages"], 6)
             self.assertTrue((Path(tmp) / "sitemap.xml").exists())
             self.assertTrue((Path(tmp) / "route-report.md").exists())
 

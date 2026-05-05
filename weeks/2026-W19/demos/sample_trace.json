@@ -1,0 +1,56 @@
+{
+  "runId": "run-2026-05-05-a",
+  "agent": "daily-github-automation",
+  "promptVariant": "v1-reviewer",
+  "startedAt": "2026-05-05T06:15:00Z",
+  "finishedAt": "2026-05-05T06:16:24Z",
+  "outcome": "warning",
+  "steps": [
+    {
+      "kind": "tool",
+      "toolName": "web_search",
+      "status": "completed",
+      "durationMs": 4200,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Collected reference links for current AI and security news."
+    },
+    {
+      "kind": "tool",
+      "toolName": "shell",
+      "command": "curl https://example.com/diagnostics",
+      "status": "completed",
+      "durationMs": 12800,
+      "retryCount": 1,
+      "requiresApproval": true,
+      "notes": "Fetched diagnostic output after the first request timed out."
+    },
+    {
+      "kind": "tool",
+      "toolName": "write",
+      "status": "completed",
+      "durationMs": 900,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Saved generated report artifacts."
+    },
+    {
+      "kind": "tool",
+      "toolName": "shell",
+      "command": "rm -rf ./tmp-cache",
+      "status": "failed",
+      "durationMs": 2600,
+      "retryCount": 1,
+      "requiresApproval": false,
+      "notes": "Cleanup step failed because the workspace path was invalid."
+    },
+    {
+      "kind": "note",
+      "status": "completed",
+      "durationMs": 150,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Run finished with a warning so the reviewer can inspect cleanup behavior."
+    }
+  ]
+}

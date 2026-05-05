@@ -1,0 +1,37 @@
+{
+  "runId": "run-2026-05-05-b",
+  "agent": "daily-github-automation",
+  "promptVariant": "v1-clean",
+  "startedAt": "2026-05-05T06:20:00Z",
+  "finishedAt": "2026-05-05T06:20:18Z",
+  "outcome": "success",
+  "steps": [
+    {
+      "kind": "tool",
+      "toolName": "read",
+      "status": "completed",
+      "durationMs": 300,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Loaded the prompt file."
+    },
+    {
+      "kind": "tool",
+      "toolName": "web_search",
+      "status": "completed",
+      "durationMs": 3800,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Collected recent references."
+    },
+    {
+      "kind": "tool",
+      "toolName": "write",
+      "status": "completed",
+      "durationMs": 700,
+      "retryCount": 0,
+      "requiresApproval": false,
+      "notes": "Saved the final report."
+    }
+  ]
+}

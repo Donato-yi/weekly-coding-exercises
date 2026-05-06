@@ -31,9 +31,10 @@
 ## Tests (What to Validate)
 - Trace parsing is deterministic for sample inputs
 - Warning rules trigger on repeated failures, risky commands, and approval-heavy runs
+- Prompt-risk heuristics trigger on bypass, secret-exposure, and ignore-instruction variants
 - Score output stays stable for the same trace data
 - CLI output remains coherent for both markdown and JSON formats
-- Summary metrics correctly count tools, retries, failures, and approval events
+- Summary metrics correctly count tools, retries, failures, approval events, and prompt risks
 
 ## UI Demos (What to Showcase)
 - Sample trace JSON files under `/demos`
@@ -51,6 +52,7 @@
 - The point is not a perfect eval framework. It is a compact review loop that makes agent behavior easier to inspect.
 - Review artifacts matter because teams trust automation faster when failure modes are legible.
 - Heuristic warnings are most useful when they point to follow-up actions instead of vague risk labels.
+- Stable rule IDs are worth adding early because they make later dashboards and CI hooks much easier.
 - Keeping the first drop dependency-light makes it easier to run anywhere Node 22 is already available.
 
 ## Getting Started
@@ -58,6 +60,7 @@
 node --test tests/*.test.mjs
 node src/cli.mjs demos/sample_trace.json
 node src/cli.mjs demos/sample_trace.json --format json
+node src/cli.mjs demos/prompt_risky_trace.json
 ```
 
 ## Daily Log
@@ -73,9 +76,16 @@ node src/cli.mjs demos/sample_trace.json --format json
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** Added generated markdown and JSON review artifacts under `/demos/generated` so the workflow already feels like a small internal eval dashboard.
   - **Tried / Solved / Learned:** Good agent review tooling is less about fancy scoring and more about making retries, failures, approvals, and risky commands visible at a glance.
+- **Daily Entry — 2026-05-06**
+  - **Progress:** Added prompt-risk heuristics, categorized command-risk rules, rule-hit reporting, and a risky prompt demo trace.
+  - **Exercises Completed:** Extended the parser with prompt signals, added rule IDs and categories, documented the new heuristics, and expanded the test suite.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** The markdown report now shows prompt preview details plus a dedicated Rule Hits section for reviewer-friendly triage.
+  - **Tried / Solved / Learned:** A compact rule layer makes the score much easier to trust because reviewers can see whether the downgrade came from prompt wording, shell behavior, or plain reliability issues.
 
 ## Tried / Solved / Learned
 - Useful AI tooling is increasingly the observability layer around model behavior.
 - A small trace-review CLI can stay concrete while still touching prompts, tools, safety, and developer experience.
 - Dependency-light exercises move faster because the friction is in the heuristics, not the package manager.
 - Approval-heavy runs deserve explicit review because successful completion can still hide process risk.
+- Prompt review gets a lot better once the trace stores enough prompt text to explain *why* a rule fired.

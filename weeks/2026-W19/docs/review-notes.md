@@ -20,5 +20,5 @@ Agent workflows are getting easier to run and harder to trust at a glance. This 
 ## Suggested next steps
 
 - Add prompt-comparison mode so two run variants can be reviewed side by side.
-- Split risky command detection into destructive, network, and permission buckets.
 - Emit machine-readable rule IDs so CI or dashboards can aggregate warning types over time.
+- Expand the CLI so reviewers can write markdown and JSON artifacts directly to a chosen output directory.

@@ -61,6 +61,8 @@ node --test tests/*.test.mjs
 node src/cli.mjs demos/sample_trace.json
 node src/cli.mjs demos/sample_trace.json --format json
 node src/cli.mjs demos/prompt_risky_trace.json
+node src/cli.mjs demos/sample_trace.json --format both --out-dir demos/generated --output-name report
+npm run report:bundle
 ```
 
 ## Daily Log
@@ -82,6 +84,12 @@ node src/cli.mjs demos/prompt_risky_trace.json
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** The markdown report now shows prompt preview details plus a dedicated Rule Hits section for reviewer-friendly triage.
   - **Tried / Solved / Learned:** A compact rule layer makes the score much easier to trust because reviewers can see whether the downgrade came from prompt wording, shell behavior, or plain reliability issues.
+- **Daily Entry — 2026-05-07**
+  - **Progress:** Reworked the CLI so it can emit markdown and JSON reports directly into a target folder, added bundle scripts for regenerating demo artifacts, and added CLI coverage tests.
+  - **Exercises Completed:** Restored the CLI entrypoint, added `--out-dir` and `--output-name` options, documented the richer report flow, and prepared demo artifact generation for both the clean and risky traces.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** Reviewers can now regenerate `/demos/generated/report.md`, `/demos/generated/report.json`, and the risky-trace bundle from the same CLI instead of relying on manual redirection.
+  - **Tried / Solved / Learned:** Report tooling gets much more reusable once the CLI can write named artifacts directly, because automation and human review stop fighting over stdout.
 
 ## Tried / Solved / Learned
 - Useful AI tooling is increasingly the observability layer around model behavior.
@@ -89,3 +97,4 @@ node src/cli.mjs demos/prompt_risky_trace.json
 - Dependency-light exercises move faster because the friction is in the heuristics, not the package manager.
 - Approval-heavy runs deserve explicit review because successful completion can still hide process risk.
 - Prompt review gets a lot better once the trace stores enough prompt text to explain *why* a rule fired.
+- A small `--out-dir` option can turn a one-off analysis CLI into something that fits cleanly into demos, CI, and repeatable review workflows.

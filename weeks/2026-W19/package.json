@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "report": "node src/cli.mjs demos/sample_trace.json",
-    "report:json": "node src/cli.mjs demos/sample_trace.json --format json"
+    "report:json": "node src/cli.mjs demos/sample_trace.json --format json",
+    "report:bundle": "node src/cli.mjs demos/sample_trace.json --format both --out-dir demos/generated --output-name report && node src/cli.mjs demos/prompt_risky_trace.json --format both --out-dir demos/generated --output-name prompt-risk-report"
   }
 }

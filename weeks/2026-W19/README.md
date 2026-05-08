@@ -25,7 +25,7 @@
 - Trace parser for agent runs with prompts, tool calls, and outcomes
 - Heuristic evaluator for latency, retries, failures, approval-required steps, and risky tool patterns
 - Markdown and JSON report generation
-- CLI that emits review artifacts from a single trace file
+- CLI that emits review artifacts from a single trace file and compares two run variants
 - Small set of demo traces showing clean, approval-heavy, and failure-prone runs
 
 ## Tests (What to Validate)
@@ -35,11 +35,13 @@
 - Score output stays stable for the same trace data
 - CLI output remains coherent for both markdown and JSON formats
 - Summary metrics correctly count tools, retries, failures, approval events, and prompt risks
+- Comparison mode highlights deltas and newly introduced rule hits between two runs
 
 ## UI Demos (What to Showcase)
 - Sample trace JSON files under `/demos`
 - Generated markdown report for a single run
 - Generated JSON summary for automation pipelines
+- Side-by-side comparison report for two traces or prompt variants
 - Notes on how an engineer could use the toolkit before trusting an agent workflow
 
 ## Repo Structure
@@ -62,6 +64,7 @@ node src/cli.mjs demos/sample_trace.json
 node src/cli.mjs demos/sample_trace.json --format json
 node src/cli.mjs demos/prompt_risky_trace.json
 node src/cli.mjs demos/sample_trace.json --format both --out-dir demos/generated --output-name report
+node src/cli.mjs demos/sample_trace.json demos/prompt_risky_trace.json --compare
 npm run report:bundle
 ```
 
@@ -90,6 +93,12 @@ npm run report:bundle
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** Reviewers can now regenerate `/demos/generated/report.md`, `/demos/generated/report.json`, and the risky-trace bundle from the same CLI instead of relying on manual redirection.
   - **Tried / Solved / Learned:** Report tooling gets much more reusable once the CLI can write named artifacts directly, because automation and human review stop fighting over stdout.
+- **Daily Entry — 2026-05-08**
+  - **Progress:** Added a comparison mode that evaluates two traces side by side, reports deltas, surfaces new rule hits, and writes comparison markdown/JSON artifacts alongside the existing single-run bundles.
+  - **Exercises Completed:** Built `src/compare.mjs`, extended the CLI with `--compare`, added comparison tests, updated docs, and expanded the generated demo bundle.
+  - **Tests Run:** `node --test tests/*.test.mjs`
+  - **UI Demo Notes:** The generated output can now show whether a new prompt variant actually improved the run or just shifted risk around.
+  - **Tried / Solved / Learned:** Comparison reports are much more actionable when they stay focused on deltas and newly introduced risks instead of duplicating every detail from both single-run reports.
 
 ## Tried / Solved / Learned
 - Useful AI tooling is increasingly the observability layer around model behavior.
@@ -98,3 +107,4 @@ npm run report:bundle
 - Approval-heavy runs deserve explicit review because successful completion can still hide process risk.
 - Prompt review gets a lot better once the trace stores enough prompt text to explain *why* a rule fired.
 - A small `--out-dir` option can turn a one-off analysis CLI into something that fits cleanly into demos, CI, and repeatable review workflows.
+- A useful comparison mode should answer "what changed and did it get better?" faster than a reviewer could by manually diffing two separate reports.

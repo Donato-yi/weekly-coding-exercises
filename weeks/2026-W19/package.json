@@ -7,6 +7,7 @@
     "test": "node --test tests/*.test.mjs",
     "report": "node src/cli.mjs demos/sample_trace.json",
     "report:json": "node src/cli.mjs demos/sample_trace.json --format json",
-    "report:bundle": "node src/cli.mjs demos/sample_trace.json --format both --out-dir demos/generated --output-name report && node src/cli.mjs demos/prompt_risky_trace.json --format both --out-dir demos/generated --output-name prompt-risk-report"
+    "report:compare": "node src/cli.mjs demos/sample_trace.json demos/prompt_risky_trace.json --compare",
+    "report:bundle": "node src/cli.mjs demos/sample_trace.json --format both --out-dir demos/generated --output-name report && node src/cli.mjs demos/prompt_risky_trace.json --format both --out-dir demos/generated --output-name prompt-risk-report && node src/cli.mjs demos/sample_trace.json demos/prompt_risky_trace.json --compare --format both --out-dir demos/generated --output-name comparison-report"
   }
 }

@@ -49,3 +49,26 @@ test('cli writes both report formats to an output directory', () => {
   assert.match(fs.readFileSync(markdownPath, 'utf8'), /Prompt Risks: 3/);
   assert.equal(JSON.parse(fs.readFileSync(jsonPath, 'utf8')).summary.riskyPromptCount, 3);
 });
+
+test('cli compares two traces and writes comparison artifacts', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'trace-compare-'));
+  const stdout = runCli([
+    'demos/sample_trace.json',
+    'demos/prompt_risky_trace.json',
+    '--compare',
+    '--format',
+    'both',
+    '--out-dir',
+    outDir,
+    '--output-name',
+    'comparison',
+  ]);
+
+  const markdownPath = path.join(outDir, 'comparison.md');
+  const jsonPath = path.join(outDir, 'comparison.json');
+
+  assert.match(stdout, /comparison\.md/);
+  assert.match(stdout, /comparison\.json/);
+  assert.match(fs.readFileSync(markdownPath, 'utf8'), /# Trace Comparison Report/);
+  assert.equal(JSON.parse(fs.readFileSync(jsonPath, 'utf8')).diff.betterRunLabel, 'Right run');
+});

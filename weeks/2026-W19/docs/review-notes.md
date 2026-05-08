@@ -19,6 +19,24 @@ Agent workflows are getting easier to run and harder to trust at a glance. This 
 
 ## Suggested next steps
 
-- Add prompt-comparison mode so two run variants can be reviewed side by side.
+- Add trend summaries across many traces so a team can spot whether quality is improving week over week.
 - Emit machine-readable rule IDs so CI or dashboards can aggregate warning types over time.
-- Expand the CLI so reviewers can write markdown and JSON artifacts directly to a chosen output directory.
+- Expand the comparison report so it can explain which step-level differences likely caused the score delta.
+
+## Friday update: side-by-side comparison mode
+
+The toolkit can now compare two traces directly:
+
+```bash
+node src/cli.mjs demos/sample_trace.json demos/prompt_risky_trace.json --compare
+node src/cli.mjs demos/sample_trace.json demos/prompt_risky_trace.json --compare --format both --out-dir demos/generated --output-name comparison-report
+```
+
+This helps a reviewer answer a slightly different question from the single-run report: not just "is this run risky?" but "did the new prompt or workflow actually improve anything?"
+
+The current comparison view focuses on:
+
+- score deltas,
+- failures, retries, approvals, risky-command counts, and prompt-risk counts,
+- newly introduced rule hits in the right-hand run,
+- and a short recommendation list when the newer variant regresses.

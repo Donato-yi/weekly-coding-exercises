@@ -16,12 +16,26 @@
         "shell",
         "write"
       ],
+      "toolUsage": {
+        "web_search": 1,
+        "shell": 2,
+        "write": 1
+      },
       "failureCount": 1,
+      "failureRate": 0.2,
       "retryCount": 2,
       "approvalCount": 1,
+      "approvalRate": 0.25,
       "riskyCommandCount": 2,
       "riskyPromptCount": 0,
-      "durationMs": 20650
+      "durationMs": 20650,
+      "slowStepCount": 0,
+      "longestStep": {
+        "index": 1,
+        "kind": "tool",
+        "toolName": "shell",
+        "durationMs": 12800
+      }
     },
     "evaluation": {
       "score": 41,
@@ -37,7 +51,8 @@
         "Add intermediate validation or narrower tool scopes before automatic retries.",
         "Log the destination, expected payload, and approval requirements for outbound network calls.",
         "Require human review for destructive file-system commands and validate the target path first.",
-        "Capture the effective prompt text in future traces so prompt-risk checks can explain tool behavior more directly."
+        "Capture the effective prompt text in future traces so prompt-risk checks can explain tool behavior more directly.",
+        "Failure density is high for a short run, so add a checkpoint after the first risky tool action to stop bad runs earlier."
       ],
       "ruleHits": [
         {
@@ -82,12 +97,24 @@
       "uniqueTools": [
         "shell"
       ],
+      "toolUsage": {
+        "shell": 2
+      },
       "failureCount": 0,
+      "failureRate": 0,
       "retryCount": 0,
       "approvalCount": 1,
+      "approvalRate": 0.5,
       "riskyCommandCount": 2,
       "riskyPromptCount": 3,
-      "durationMs": 5450
+      "durationMs": 5450,
+      "slowStepCount": 0,
+      "longestStep": {
+        "index": 0,
+        "kind": "tool",
+        "toolName": "shell",
+        "durationMs": 4100
+      }
     },
     "evaluation": {
       "score": 48,
@@ -105,7 +132,8 @@
         "Keep system and operator constraints explicit, and reject variants that tell the agent to ignore prior guidance.",
         "Require explicit human approval rules in the prompt and treat bypass language as a policy violation.",
         "Strip secret-handling requests from prompts and move sensitive inspection behind explicit human review.",
-        "Compare this run against a known-good trace before changing the prompt."
+        "Compare this run against a known-good trace before changing the prompt.",
+        "More than half of the tool calls needed approval, so this workflow may benefit from a pre-approved prep phase before escalation steps."
       ],
       "ruleHits": [
         {

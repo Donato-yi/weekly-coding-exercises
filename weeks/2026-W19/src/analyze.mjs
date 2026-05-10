@@ -69,6 +69,19 @@ export function parseTrace(input) {
   const promptFindings = detectPromptRisks(promptSignals.promptText);
   const tools = [...new Set(toolCalls.map((step) => step.toolName).filter(Boolean))];
   const durationMs = steps.reduce((total, step) => total + step.durationMs, 0);
+  const slowSteps = steps.filter((step) => step.durationMs >= 20000);
+  const longestStep = steps.reduce((current, step) => (step.durationMs > current.durationMs ? step : current), {
+    kind: 'note',
+    toolName: null,
+    durationMs: 0,
+    index: -1,
+  });
+  const toolUsage = toolCalls.reduce((counts, step) => {
+    counts[step.toolName] = (counts[step.toolName] ?? 0) + 1;
+    return counts;
+  }, {});
+  const approvalRate = toolCalls.length ? approvalSteps.length / toolCalls.length : 0;
+  const failureRate = steps.length ? failures.length / steps.length : 0;
 
   return {
     metadata: {
@@ -87,12 +100,22 @@ export function parseTrace(input) {
       stepCount: steps.length,
       toolCallCount: toolCalls.length,
       uniqueTools: tools,
+      toolUsage,
       failureCount: failures.length,
+      failureRate,
       retryCount: retries.reduce((total, step) => total + step.retryCount, 0),
       approvalCount: approvalSteps.length,
+      approvalRate,
       riskyCommandCount: commandFindings.length,
       riskyPromptCount: promptFindings.length,
       durationMs,
+      slowStepCount: slowSteps.length,
+      longestStep: {
+        index: longestStep.index,
+        kind: longestStep.kind,
+        toolName: longestStep.toolName,
+        durationMs: longestStep.durationMs,
+      },
     },
   };
 }
@@ -181,6 +204,14 @@ export function evaluateTrace(parsed) {
     recommendations.push('Capture the effective prompt text in future traces so prompt-risk checks can explain tool behavior more directly.');
   }
 
+  if (summary.approvalRate >= 0.5 && summary.toolCallCount >= 2) {
+    recommendations.push('More than half of the tool calls needed approval, so this workflow may benefit from a pre-approved prep phase before escalation steps.');
+  }
+
+  if (summary.failureRate >= 0.2 && summary.stepCount >= 4) {
+    recommendations.push('Failure density is high for a short run, so add a checkpoint after the first risky tool action to stop bad runs earlier.');
+  }
+
   const score = clamp(
     100
       - summary.failureCount * 18
@@ -207,8 +238,11 @@ export function evaluateTrace(parsed) {
 export function renderMarkdownReport(parsed, evaluation) {
   const { metadata, summary, promptSignals } = parsed;
   const durationSeconds = (summary.durationMs / 1000).toFixed(1);
+  const longestStepSeconds = (summary.longestStep.durationMs / 1000).toFixed(1);
+  const approvalRate = Math.round(summary.approvalRate * 100);
+  const failureRate = Math.round(summary.failureRate * 100);
 
-  return `# Trace Review Report\n\n## Run Metadata\n- Run ID: ${metadata.runId}\n- Agent: ${metadata.agent}\n- Prompt Variant: ${metadata.promptVariant}\n- Outcome: ${metadata.outcome}\n\n## Summary\n- Score: ${evaluation.score} (${evaluation.severity})\n- Steps: ${summary.stepCount}\n- Tool Calls: ${summary.toolCallCount}\n- Unique Tools: ${summary.uniqueTools.join(', ') || 'none'}\n- Failures: ${summary.failureCount}\n- Retries: ${summary.retryCount}\n- Approval Steps: ${summary.approvalCount}\n- Risky Commands: ${summary.riskyCommandCount}\n- Prompt Risks: ${summary.riskyPromptCount}\n- Total Duration: ${durationSeconds}s\n\n## Prompt Signals\n- Prompt Preview: ${promptSignals.preview || 'not captured'}\n- Prompt Length: ${promptSignals.length} char(s)\n\n## Warnings\n${renderBulletList(evaluation.warnings, 'No warnings detected.')}\n\n## Rule Hits\n${renderRuleHits(evaluation.ruleHits)}\n\n## Recommendations\n${renderBulletList(evaluation.recommendations, 'No follow-up actions suggested.')}\n`;
+  return `# Trace Review Report\n\n## Run Metadata\n- Run ID: ${metadata.runId}\n- Agent: ${metadata.agent}\n- Prompt Variant: ${metadata.promptVariant}\n- Outcome: ${metadata.outcome}\n\n## Summary\n- Score: ${evaluation.score} (${evaluation.severity})\n- Steps: ${summary.stepCount}\n- Tool Calls: ${summary.toolCallCount}\n- Unique Tools: ${summary.uniqueTools.join(', ') || 'none'}\n- Failures: ${summary.failureCount}\n- Retries: ${summary.retryCount}\n- Approval Steps: ${summary.approvalCount}\n- Risky Commands: ${summary.riskyCommandCount}\n- Prompt Risks: ${summary.riskyPromptCount}\n- Total Duration: ${durationSeconds}s\n\n## Prompt Signals\n- Prompt Preview: ${promptSignals.preview || 'not captured'}\n- Prompt Length: ${promptSignals.length} char(s)\n\n## Operational Profile\n- Tool Usage: ${renderToolUsage(summary.toolUsage)}\n- Approval Rate: ${approvalRate}% of tool calls\n- Failure Rate: ${failureRate}% of steps\n- Slow Steps (20s+): ${summary.slowStepCount}\n- Longest Step: ${renderLongestStep(summary.longestStep)} (${longestStepSeconds}s)\n\n## Warnings\n${renderBulletList(evaluation.warnings, 'No warnings detected.')}\n\n## Rule Hits\n${renderRuleHits(evaluation.ruleHits)}\n\n## Recommendations\n${renderBulletList(evaluation.recommendations, 'No follow-up actions suggested.')}\n`;
 }
 
 export function buildJsonReport(parsed, evaluation) {
@@ -301,6 +335,27 @@ function renderRuleHits(ruleHits) {
   }
 
   return ruleHits.map((item) => `- [${item.id}] (${item.severity}/${item.category}) ${item.message}`).join('\n');
+}
+
+function renderToolUsage(toolUsage) {
+  const entries = Object.entries(toolUsage);
+  if (!entries.length) {
+    return 'none';
+  }
+
+  return entries
+    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+    .map(([tool, count]) => `${tool} x${count}`)
+    .join(', ');
+}
+
+function renderLongestStep(longestStep) {
+  if (longestStep.index < 0) {
+    return 'none';
+  }
+
+  const label = longestStep.toolName ?? longestStep.kind;
+  return `#${longestStep.index} ${label}`;
 }
 
 function pushFinding(ruleHits, warnings, finding) {

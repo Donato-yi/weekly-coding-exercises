@@ -18,12 +18,24 @@
     "uniqueTools": [
       "shell"
     ],
+    "toolUsage": {
+      "shell": 2
+    },
     "failureCount": 0,
+    "failureRate": 0,
     "retryCount": 0,
     "approvalCount": 1,
+    "approvalRate": 0.5,
     "riskyCommandCount": 2,
     "riskyPromptCount": 3,
-    "durationMs": 5450
+    "durationMs": 5450,
+    "slowStepCount": 0,
+    "longestStep": {
+      "index": 0,
+      "kind": "tool",
+      "toolName": "shell",
+      "durationMs": 4100
+    }
   },
   "commandFindings": [
     {
@@ -79,7 +91,8 @@
       "Keep system and operator constraints explicit, and reject variants that tell the agent to ignore prior guidance.",
       "Require explicit human approval rules in the prompt and treat bypass language as a policy violation.",
       "Strip secret-handling requests from prompts and move sensitive inspection behind explicit human review.",
-      "Compare this run against a known-good trace before changing the prompt."
+      "Compare this run against a known-good trace before changing the prompt.",
+      "More than half of the tool calls needed approval, so this workflow may benefit from a pre-approved prep phase before escalation steps."
     ],
     "ruleHits": [
       {

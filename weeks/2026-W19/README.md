@@ -99,6 +99,12 @@ npm run report:bundle
   - **Tests Run:** `node --test tests/*.test.mjs`
   - **UI Demo Notes:** The generated output can now show whether a new prompt variant actually improved the run or just shifted risk around.
   - **Tried / Solved / Learned:** Comparison reports are much more actionable when they stay focused on deltas and newly introduced risks instead of duplicating every detail from both single-run reports.
+- **Daily Entry — 2026-05-10**
+  - **Progress:** Added an operational profile layer to the review report so each run now exposes tool-usage mix, approval rate, failure rate, slow-step count, and the longest step alongside the score.
+  - **Exercises Completed:** Extended `parseTrace` summary metrics, added approval-density and failure-density recommendations, updated markdown/JSON outputs, refreshed tests, and regenerated demo artifacts.
+  - **Tests Run:** `node --test tests/*.test.mjs` and `npm run report:bundle`
+  - **UI Demo Notes:** The markdown report is easier to scan now because reviewers can see whether a run is approval-heavy or latency-heavy without reading every step.
+  - **Tried / Solved / Learned:** A score alone hides operational shape. The extra profile metrics make it much faster to tell whether a run needs prompt work, tool redesign, or just better staging.
 
 ## Tried / Solved / Learned
 - Useful AI tooling is increasingly the observability layer around model behavior.
@@ -108,3 +114,4 @@ npm run report:bundle
 - Prompt review gets a lot better once the trace stores enough prompt text to explain *why* a rule fired.
 - A small `--out-dir` option can turn a one-off analysis CLI into something that fits cleanly into demos, CI, and repeatable review workflows.
 - A useful comparison mode should answer "what changed and did it get better?" faster than a reviewer could by manually diffing two separate reports.
+- Operational profile metrics help reviewers spot approval-heavy or failure-dense runs before they over-index on the headline score.

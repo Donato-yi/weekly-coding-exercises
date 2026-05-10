@@ -22,6 +22,13 @@
 - Prompt Preview: not captured
 - Prompt Length: 0 char(s)
 
+## Operational Profile
+- Tool Usage: shell x2, web_search x1, write x1
+- Approval Rate: 25% of tool calls
+- Failure Rate: 20% of steps
+- Slow Steps (20s+): 0
+- Longest Step: #1 shell (12.8s)
+
 ## Warnings
 - 1 step(s) failed during the run.
 - Run required 2 retries, which suggests low-confidence execution.
@@ -40,3 +47,4 @@
 - Log the destination, expected payload, and approval requirements for outbound network calls.
 - Require human review for destructive file-system commands and validate the target path first.
 - Capture the effective prompt text in future traces so prompt-risk checks can explain tool behavior more directly.
+- Failure density is high for a short run, so add a checkpoint after the first risky tool action to stop bad runs earlier.

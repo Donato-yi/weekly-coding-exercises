@@ -19,6 +19,9 @@ test('parseTrace summarizes steps, tools, and prompt signals', () => {
   assert.equal(parsed.summary.approvalCount, 1);
   assert.equal(parsed.summary.riskyCommandCount, 2);
   assert.equal(parsed.summary.riskyPromptCount, 0);
+  assert.deepEqual(parsed.summary.toolUsage, { web_search: 1, shell: 2, write: 1 });
+  assert.equal(parsed.summary.slowStepCount, 0);
+  assert.equal(parsed.summary.longestStep.toolName, 'shell');
   assert.equal(parsed.promptSignals.length, 0);
 });
 
@@ -30,6 +33,7 @@ test('evaluateTrace returns categorized warnings and recommendations', () => {
   assert.ok(evaluation.warnings.some((item) => item.includes('network command risk')));
   assert.ok(evaluation.warnings.some((item) => item.includes('destructive command risk')));
   assert.ok(evaluation.recommendations.some((item) => item.includes('human review')));
+  assert.ok(evaluation.recommendations.some((item) => item.includes('Failure density is high')));
   assert.ok(evaluation.ruleHits.some((item) => item.id === 'cmd-network'));
 });
 
@@ -50,7 +54,9 @@ test('report builders expose markdown and JSON views', () => {
   const json = buildJsonReport(parsed, evaluation);
 
   assert.match(markdown, /# Trace Review Report/);
-  assert.match(markdown, /## Rule Hits/);
+  assert.match(markdown, /## Operational Profile/);
+  assert.match(markdown, /Approval Rate:/);
   assert.equal(json.summary.riskyPromptCount, 3);
+  assert.equal(json.summary.longestStep.toolName, 'shell');
   assert.equal(json.evaluation.score, evaluation.score);
 });

@@ -1,0 +1,10 @@
+{
+  "teamName": "",
+  "sources": [
+    {
+      "name": "broken-source",
+      "kind": "github",
+      "url": "https://github.com/example/broken"
+    }
+  ]
+}

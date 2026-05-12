@@ -1,0 +1,33 @@
+{
+  "teamName": "Platform Team",
+  "sources": [
+    {
+      "name": "core-api",
+      "kind": "GitHub",
+      "url": "https://github.com/example/core-api",
+      "tags": ["Backend", "API", "releases"],
+      "updateCadence": "weekly"
+    },
+    {
+      "name": "frontend-app",
+      "kind": "github",
+      "url": "https://github.com/example/frontend-app",
+      "tags": ["web", "frontend"],
+      "updateCadence": "weekly"
+    },
+    {
+      "name": "security-advisories",
+      "kind": "rss",
+      "url": "https://example.com/security.xml",
+      "tags": ["security", "alerts"],
+      "updateCadence": "daily"
+    },
+    {
+      "name": "release-roundup",
+      "kind": "rss",
+      "url": "https://example.com/releases.xml",
+      "tags": ["release", "backend"],
+      "updateCadence": "monthly"
+    }
+  ]
+}

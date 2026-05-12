@@ -44,6 +44,7 @@
 
 ## Repo Structure
 - /src
+- /internal
 - /tests
 - /demos
 - /docs
@@ -67,8 +68,15 @@ go run ./src/cmd/repodigest summarize --config demos/sample-config.json
   - **Tests Run:** Not applicable.
   - **UI Demo Notes:** Not applicable.
   - **Tried / Solved / Learned:** Rotating from AI review tooling into automation work keeps the repo honest because the problem shifts from evaluation heuristics to operational reliability.
+- **Daily Entry — 2026-05-12**
+  - **Progress:** Built the first runnable Go slice with config models, validation, summary rendering, demo fixtures, CLI scaffolding, docs, and starter tests.
+  - **Exercises Completed:** Added `summarize` command wiring, fixture-backed config loading, summary aggregation, markdown output, and baseline test coverage.
+  - **Tests Run:** `go test ./...`
+  - **UI Demo Notes:** Added a generated sample markdown digest under `demos/generated/sample-summary.md` so the future report flow already has a visible artifact.
+  - **Tried / Solved / Learned:** Starting with normalized fixture inputs makes the later scoring work safer because the shape of the data is already stable before heuristics get layered on top.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
 - Automation projects benefit from artifact-first thinking because scheduled jobs are only trustworthy when their outputs are easy to inspect.
 - Go feels like a good fit for this week's constraints: small binaries, direct CLI ergonomics, and straightforward test structure.
+- The first useful CLI milestone is not smart scoring. It is dependable input handling plus readable output.

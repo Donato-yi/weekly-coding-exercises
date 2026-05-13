@@ -213,6 +213,52 @@ func RenderJSON(summary model.Summary) (string, error) {
 	return string(data) + "\n", nil
 }
 
+func RenderReview(summary model.Summary) string {
+	var highRisk []model.SourceScore
+	var watchlist []model.SourceScore
+	var healthy []model.SourceScore
+
+	for _, score := range summary.SourceScores {
+		switch score.Risk {
+		case model.RiskHigh:
+			highRisk = append(highRisk, score)
+		case model.RiskMedium:
+			watchlist = append(watchlist, score)
+		default:
+			healthy = append(healthy, score)
+		}
+	}
+
+	var b strings.Builder
+	fmt.Fprintf(&b, "# Repo Digest Review\n\n")
+	fmt.Fprintf(&b, "- Generated: %s\n", summary.GeneratedAt.Format(time.RFC3339))
+	fmt.Fprintf(&b, "- Team: %s\n", summary.TeamName)
+	fmt.Fprintf(&b, "- Total sources reviewed: %d\n", summary.TotalSources)
+	fmt.Fprintf(&b, "- High risk: %d\n", len(highRisk))
+	fmt.Fprintf(&b, "- Watchlist: %d\n", len(watchlist))
+	fmt.Fprintf(&b, "- Healthy: %d\n\n", len(healthy))
+
+	renderReviewSection(&b, "Act now", highRisk, "No urgent maintenance work surfaced in this run.")
+	b.WriteString("\n")
+	renderReviewSection(&b, "Watchlist", watchlist, "No medium-risk follow-ups right now.")
+	b.WriteString("\n")
+	renderReviewSection(&b, "Healthy", healthy, "No healthy sources were included in this run.")
+
+	return b.String()
+}
+
+func renderReviewSection(b *strings.Builder, title string, scores []model.SourceScore, empty string) {
+	fmt.Fprintf(b, "## %s\n", title)
+	if len(scores) == 0 {
+		fmt.Fprintf(b, "- %s\n", empty)
+		return
+	}
+
+	for _, score := range scores {
+		fmt.Fprintf(b, "- [ ] %s (%s) score %d: %s\n", score.Name, score.Kind, score.Score, strings.Join(score.Reasons, "; "))
+	}
+}
+
 func WriteOutput(path string, content string) error {
 	path = strings.TrimSpace(path)
 	if path == "" {

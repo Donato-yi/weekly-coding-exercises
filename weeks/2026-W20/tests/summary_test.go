@@ -138,6 +138,26 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 	}
 }
 
+func TestRenderReviewGroupsSourcesIntoActionSections(t *testing.T) {
+	summary := model.Summary{
+		GeneratedAt:  time.Date(2026, 5, 14, 7, 0, 0, 0, time.UTC),
+		TeamName:     "Platform Team",
+		TotalSources: 3,
+		SourceScores: []model.SourceScore{
+			{Name: "release-feed", Kind: "rss", Score: 21, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}},
+			{Name: "frontend-app", Kind: "github", Score: 68, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}},
+			{Name: "core-api", Kind: "github", Score: 97, Risk: model.RiskLow, Reasons: []string{"healthy recent activity"}},
+		},
+	}
+
+	out := app.RenderReview(summary)
+	for _, want := range []string{"Repo Digest Review", "## Act now", "release-feed", "## Watchlist", "frontend-app", "## Healthy", "core-api"} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("expected review output to contain %q, got:\n%s", want, out)
+		}
+	}
+}
+
 func TestWriteOutputCreatesParentDirectories(t *testing.T) {
 	tmp := t.TempDir()
 	outputPath := filepath.Join(tmp, "generated", "summary.md")

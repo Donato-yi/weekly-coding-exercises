@@ -60,6 +60,7 @@
 go test ./...
 go run ./src/cmd/repodigest summarize --config demos/sample-config.json
 go run ./src/cmd/repodigest report --format json --risk high --config demos/sample-config.json
+go run ./src/cmd/repodigest review --config demos/sample-config.json
 ```
 
 ## Daily Log
@@ -76,11 +77,11 @@ go run ./src/cmd/repodigest report --format json --risk high --config demos/samp
   - **UI Demo Notes:** Added a generated sample markdown digest under `demos/generated/sample-summary.md` so the future report flow already has a visible artifact.
   - **Tried / Solved / Learned:** Starting with normalized fixture inputs makes the later scoring work safer because the shape of the data is already stable before heuristics get layered on top.
 - **Daily Entry — 2026-05-13**
-  - **Progress:** Extended the digest into a more automation-friendly reporting surface with filtered summaries, structured JSON output, and schedule-friendly file writing so the same command now works better in cron, CI, and quick local review loops.
-  - **Exercises Completed:** Added a `report` command alias path, introduced kind and risk filters, added JSON rendering, carried applied filters through the summary model, added `--output` file support with automatic directory creation, refreshed tests, documented automation output behavior, and generated new demo artifacts for full, high-risk, and GitHub-only watchlist views.
+  - **Progress:** Pushed the digest a little further toward real maintenance workflows by adding an action-oriented review output alongside the earlier JSON and filtered report paths.
+  - **Exercises Completed:** Added a `review` command that groups high-risk, watchlist, and healthy sources into a markdown checklist, kept `--output` support for saved artifacts, refreshed tests around grouped review rendering, updated README instructions, and generated a reusable maintenance checklist demo.
   - **Tests Run:** Attempted `go test ./...`, but Go is not installed or not on PATH in this environment.
-  - **UI Demo Notes:** Added `demos/generated/sample-summary.json` for downstream automation, `demos/generated/high-risk-summary.md` for a filtered watchlist view, and `demos/generated/github-watchlist.{md,json}` to show saved artifacts from a kind-scoped run.
-  - **Tried / Solved / Learned:** Filtering is the point where a digest starts becoming operational. The next step is artifact management, because scheduled tooling becomes much easier to trust once it can leave behind stable files without relying on shell redirection tricks.
+  - **UI Demo Notes:** Added `demos/generated/review-checklist.md` so the week now shows both machine-friendly report output and a human-friendly action list for triage.
+  - **Tried / Solved / Learned:** Structured data is useful, but operators often need the next action spelled out plainly. Turning the digest into a checklist makes the same scoring logic easier to use during a quick repo triage session.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
@@ -89,3 +90,4 @@ go run ./src/cmd/repodigest report --format json --risk high --config demos/samp
 - The first useful CLI milestone is not smart scoring. It is dependable input handling plus readable output.
 - Scoring rules become easier to trust when each penalty leaves a plain-English breadcrumb in the digest.
 - Structured JSON plus lightweight filters make the same tool more useful to both humans and scheduled jobs.
+- A checklist view is a nice bridge between generated scores and actual maintenance work, because it turns "interesting data" into a concrete review pass.

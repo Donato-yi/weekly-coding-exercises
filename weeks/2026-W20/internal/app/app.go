@@ -3,6 +3,8 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -209,6 +211,25 @@ func RenderJSON(summary model.Summary) (string, error) {
 		return "", err
 	}
 	return string(data) + "\n", nil
+}
+
+func WriteOutput(path string, content string) error {
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return nil
+	}
+
+	dir := filepath.Dir(path)
+	if dir != "." && dir != "" {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fmt.Errorf("create output directory: %w", err)
+		}
+	}
+
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		return fmt.Errorf("write output file: %w", err)
+	}
+	return nil
 }
 
 func matchesFilter(source model.Source, score model.SourceScore, filter model.Filter) bool {

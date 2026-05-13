@@ -76,11 +76,11 @@ go run ./src/cmd/repodigest report --format json --risk high --config demos/samp
   - **UI Demo Notes:** Added a generated sample markdown digest under `demos/generated/sample-summary.md` so the future report flow already has a visible artifact.
   - **Tried / Solved / Learned:** Starting with normalized fixture inputs makes the later scoring work safer because the shape of the data is already stable before heuristics get layered on top.
 - **Daily Entry — 2026-05-13**
-  - **Progress:** Extended the digest into a more automation-friendly reporting surface with filtered summaries and structured JSON output while keeping the markdown view readable for humans.
-  - **Exercises Completed:** Added a `report` command alias path, introduced kind and risk filters, added JSON rendering, carried applied filters through the summary model, refreshed tests, and generated new demo artifacts for full and high-risk outputs.
+  - **Progress:** Extended the digest into a more automation-friendly reporting surface with filtered summaries, structured JSON output, and schedule-friendly file writing so the same command now works better in cron, CI, and quick local review loops.
+  - **Exercises Completed:** Added a `report` command alias path, introduced kind and risk filters, added JSON rendering, carried applied filters through the summary model, added `--output` file support with automatic directory creation, refreshed tests, documented automation output behavior, and generated new demo artifacts for full, high-risk, and GitHub-only watchlist views.
   - **Tests Run:** Attempted `go test ./...`, but Go is not installed or not on PATH in this environment.
-  - **UI Demo Notes:** Added `demos/generated/sample-summary.json` for downstream automation and `demos/generated/high-risk-summary.md` to show a filtered watchlist view.
-  - **Tried / Solved / Learned:** Filtering is the point where a digest starts becoming operational. Teams do not just want “the whole report,” they want the risky slice they need to act on right now.
+  - **UI Demo Notes:** Added `demos/generated/sample-summary.json` for downstream automation, `demos/generated/high-risk-summary.md` for a filtered watchlist view, and `demos/generated/github-watchlist.{md,json}` to show saved artifacts from a kind-scoped run.
+  - **Tried / Solved / Learned:** Filtering is the point where a digest starts becoming operational. The next step is artifact management, because scheduled tooling becomes much easier to trust once it can leave behind stable files without relying on shell redirection tricks.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.

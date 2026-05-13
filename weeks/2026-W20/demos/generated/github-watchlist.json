@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-05-13T19:25:00Z",
+  "teamName": "Platform Team",
+  "totalSources": 2,
+  "sourcesByKind": {
+    "github": 2
+  },
+  "uniqueTags": [
+    "api",
+    "backend",
+    "frontend",
+    "releases",
+    "web"
+  ],
+  "slowCadenceCount": 0,
+  "averageScore": 87,
+  "highestRiskCount": 0,
+  "watchlistCount": 1,
+  "healthyCount": 1,
+  "appliedFilter": {
+    "kind": "github"
+  },
+  "sourceScores": [
+    {
+      "name": "frontend-app",
+      "kind": "github",
+      "score": 74,
+      "risk": "medium",
+      "reasons": [
+        "release cadence drifting (52 days)",
+        "growing issue backlog (26 open)",
+        "CI is flaky"
+      ]
+    },
+    {
+      "name": "core-api",
+      "kind": "github",
+      "score": 100,
+      "risk": "low",
+      "reasons": [
+        "healthy recent activity"
+      ]
+    }
+  ]
+}

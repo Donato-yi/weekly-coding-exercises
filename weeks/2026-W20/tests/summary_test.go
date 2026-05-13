@@ -1,6 +1,8 @@
 package tests
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -133,5 +135,29 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected JSON output to contain %q, got:\n%s", want, out)
 		}
+	}
+}
+
+func TestWriteOutputCreatesParentDirectories(t *testing.T) {
+	tmp := t.TempDir()
+	outputPath := filepath.Join(tmp, "generated", "summary.md")
+	content := "# ok\n"
+
+	if err := app.WriteOutput(outputPath, content); err != nil {
+		t.Fatalf("WriteOutput returned error: %v", err)
+	}
+
+	data, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if string(data) != content {
+		t.Fatalf("unexpected written content: %q", string(data))
+	}
+}
+
+func TestWriteOutputSkipsEmptyPath(t *testing.T) {
+	if err := app.WriteOutput("", "ignored"); err != nil {
+		t.Fatalf("expected nil error for empty output path, got %v", err)
 	}
 }

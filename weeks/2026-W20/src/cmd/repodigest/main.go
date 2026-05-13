@@ -36,6 +36,7 @@ func runReport(args []string) {
 	format := fs.String("format", "markdown", "output format: markdown or json")
 	kind := fs.String("kind", "", "optional source kind filter")
 	risk := fs.String("risk", "", "optional risk filter: low, medium, or high")
+	outputPath := fs.String("output", "", "optional file path to write the rendered report")
 	fs.Parse(args)
 
 	cfg, err := config.Load(*configPath)
@@ -49,20 +50,28 @@ func runReport(args []string) {
 		Risk: *risk,
 	})
 
+	var out string
 	switch strings.ToLower(strings.TrimSpace(*format)) {
 	case "markdown", "md":
-		fmt.Print(app.RenderMarkdown(summary))
+		out = app.RenderMarkdown(summary)
 	case "json":
-		out, err := app.RenderJSON(summary)
+		rendered, err := app.RenderJSON(summary)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Print(out)
+		out = rendered
 	default:
 		fmt.Fprintf(os.Stderr, "error: unsupported format %q\n", *format)
 		os.Exit(1)
 	}
+
+	if err := app.WriteOutput(*outputPath, out); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Print(out)
 }
 
 func printUsage() {
@@ -76,4 +85,5 @@ func printUsage() {
 	fmt.Println("  repodigest summarize --config demos/sample-config.json")
 	fmt.Println("  repodigest report --format json --risk high")
 	fmt.Println("  repodigest report --kind github --format markdown")
+	fmt.Println("  repodigest report --format json --output demos/generated/sample-summary.json")
 }

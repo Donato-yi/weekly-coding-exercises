@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-05-13T19:00:00Z",
+  "teamName": "Platform Team",
+  "totalSources": 4,
+  "sourcesByKind": {
+    "github": 2,
+    "rss": 2
+  },
+  "uniqueTags": [
+    "alerts",
+    "api",
+    "backend",
+    "frontend",
+    "release",
+    "releases",
+    "security",
+    "web"
+  ],
+  "slowCadenceCount": 1,
+  "averageScore": 68,
+  "highestRiskCount": 1,
+  "watchlistCount": 1,
+  "healthyCount": 2,
+  "appliedFilter": {},
+  "sourceScores": [
+    {
+      "name": "release-roundup",
+      "kind": "rss",
+      "score": 0,
+      "risk": "high",
+      "reasons": [
+        "stale commits (74 days)",
+        "old release (133 days)",
+        "large issue backlog (57 open)",
+        "security alerts open (2)",
+        "CI is failing"
+      ]
+    },
+    {
+      "name": "frontend-app",
+      "kind": "github",
+      "score": 74,
+      "risk": "medium",
+      "reasons": [
+        "release cadence drifting (52 days)",
+        "growing issue backlog (26 open)",
+        "CI is flaky"
+      ]
+    },
+    {
+      "name": "core-api",
+      "kind": "github",
+      "score": 100,
+      "risk": "low",
+      "reasons": [
+        "healthy recent activity"
+      ]
+    },
+    {
+      "name": "security-advisories",
+      "kind": "rss",
+      "score": 100,
+      "risk": "low",
+      "reasons": [
+        "healthy recent activity"
+      ]
+    }
+  ]
+}

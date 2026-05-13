@@ -34,23 +34,29 @@ const (
 )
 
 type SourceScore struct {
-	Name    string
-	Kind    string
-	Score   int
-	Risk    RiskLevel
-	Reasons []string
+	Name    string    `json:"name"`
+	Kind    string    `json:"kind"`
+	Score   int       `json:"score"`
+	Risk    RiskLevel `json:"risk"`
+	Reasons []string  `json:"reasons"`
 }
 
 type Summary struct {
-	GeneratedAt       time.Time
-	TeamName          string
-	TotalSources      int
-	SourcesByKind     map[string]int
-	UniqueTags        []string
-	SlowCadenceCount  int
-	AverageScore      int
-	HighestRiskCount  int
-	WatchlistCount    int
-	HealthyCount      int
-	SourceScores      []SourceScore
+	GeneratedAt       time.Time         `json:"generatedAt"`
+	TeamName          string            `json:"teamName"`
+	TotalSources      int               `json:"totalSources"`
+	SourcesByKind     map[string]int    `json:"sourcesByKind"`
+	UniqueTags        []string          `json:"uniqueTags"`
+	SlowCadenceCount  int               `json:"slowCadenceCount"`
+	AverageScore      int               `json:"averageScore"`
+	HighestRiskCount  int               `json:"highestRiskCount"`
+	WatchlistCount    int               `json:"watchlistCount"`
+	HealthyCount      int               `json:"healthyCount"`
+	AppliedFilter     Filter            `json:"appliedFilter"`
+	SourceScores      []SourceScore     `json:"sourceScores"`
+}
+
+type Filter struct {
+	Kind string `json:"kind,omitempty"`
+	Risk string `json:"risk,omitempty"`
 }

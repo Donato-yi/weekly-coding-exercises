@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -10,6 +11,14 @@ import (
 )
 
 func BuildSummary(cfg model.Config, now time.Time) model.Summary {
+	return buildSummary(cfg, now, model.Filter{})
+}
+
+func BuildFilteredSummary(cfg model.Config, now time.Time, filter model.Filter) model.Summary {
+	return buildSummary(cfg, now, normalizeFilter(filter))
+}
+
+func buildSummary(cfg model.Config, now time.Time, filter model.Filter) model.Summary {
 	byKind := map[string]int{}
 	tagSet := map[string]struct{}{}
 	slowCadenceCount := 0
@@ -20,6 +29,11 @@ func BuildSummary(cfg model.Config, now time.Time) model.Summary {
 	sourceScores := make([]model.SourceScore, 0, len(cfg.Sources))
 
 	for _, source := range cfg.Sources {
+		score := scoreSource(source)
+		if !matchesFilter(source, score, filter) {
+			continue
+		}
+
 		byKind[source.Kind]++
 		if source.UpdateCadence == "monthly" || source.UpdateCadence == "quarterly" {
 			slowCadenceCount++
@@ -28,7 +42,6 @@ func BuildSummary(cfg model.Config, now time.Time) model.Summary {
 			tagSet[tag] = struct{}{}
 		}
 
-		score := scoreSource(source)
 		totalScore += score.Score
 		sourceScores = append(sourceScores, score)
 		switch score.Risk {
@@ -55,14 +68,14 @@ func BuildSummary(cfg model.Config, now time.Time) model.Summary {
 	})
 
 	averageScore := 0
-	if len(cfg.Sources) > 0 {
-		averageScore = totalScore / len(cfg.Sources)
+	if len(sourceScores) > 0 {
+		averageScore = totalScore / len(sourceScores)
 	}
 
 	return model.Summary{
 		GeneratedAt:      now.UTC(),
 		TeamName:         cfg.TeamName,
-		TotalSources:     len(cfg.Sources),
+		TotalSources:     len(sourceScores),
 		SourcesByKind:    byKind,
 		UniqueTags:       uniqueTags,
 		SlowCadenceCount: slowCadenceCount,
@@ -70,6 +83,7 @@ func BuildSummary(cfg model.Config, now time.Time) model.Summary {
 		HighestRiskCount: highestRiskCount,
 		WatchlistCount:   watchlistCount,
 		HealthyCount:     healthyCount,
+		AppliedFilter:    filter,
 		SourceScores:     sourceScores,
 	}
 }
@@ -174,6 +188,9 @@ func RenderMarkdown(summary model.Summary) string {
 	fmt.Fprintf(&b, "- High risk sources: %d\n", summary.HighestRiskCount)
 	fmt.Fprintf(&b, "- Watchlist sources: %d\n", summary.WatchlistCount)
 	fmt.Fprintf(&b, "- Healthy sources: %d\n", summary.HealthyCount)
+	if summary.AppliedFilter.Kind != "" || summary.AppliedFilter.Risk != "" {
+		fmt.Fprintf(&b, "- Filters: %s\n", renderFilterLabel(summary.AppliedFilter))
+	}
 	fmt.Fprintf(&b, "- Tags: %s\n\n", strings.Join(summary.UniqueTags, ", "))
 	fmt.Fprintf(&b, "## Sources by kind\n")
 	for _, kind := range kinds {
@@ -184,4 +201,39 @@ func RenderMarkdown(summary model.Summary) string {
 		fmt.Fprintf(&b, "- %s (%s): score %d, risk %s, %s\n", score.Name, score.Kind, score.Score, score.Risk, strings.Join(score.Reasons, "; "))
 	}
 	return b.String()
+}
+
+func RenderJSON(summary model.Summary) (string, error) {
+	data, err := json.MarshalIndent(summary, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(data) + "\n", nil
+}
+
+func matchesFilter(source model.Source, score model.SourceScore, filter model.Filter) bool {
+	if filter.Kind != "" && source.Kind != filter.Kind {
+		return false
+	}
+	if filter.Risk != "" && string(score.Risk) != filter.Risk {
+		return false
+	}
+	return true
+}
+
+func normalizeFilter(filter model.Filter) model.Filter {
+	filter.Kind = strings.ToLower(strings.TrimSpace(filter.Kind))
+	filter.Risk = strings.ToLower(strings.TrimSpace(filter.Risk))
+	return filter
+}
+
+func renderFilterLabel(filter model.Filter) string {
+	parts := []string{}
+	if filter.Kind != "" {
+		parts = append(parts, fmt.Sprintf("kind=%s", filter.Kind))
+	}
+	if filter.Risk != "" {
+		parts = append(parts, fmt.Sprintf("risk=%s", filter.Risk))
+	}
+	return strings.Join(parts, ", ")
 }

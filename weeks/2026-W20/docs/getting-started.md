@@ -1,23 +1,26 @@
 # Getting Started
 
-Wednesday extends the repo digest from simple inventory into fixture-driven health scoring.
+Thursday's slice extends the repo digest from scoring into report generation that can serve both humans and automation.
 
 ## Run
 
 ```bash
 go test ./...
 go run ./src/cmd/repodigest summarize --config demos/sample-config.json
+go run ./src/cmd/repodigest report --format json --config demos/sample-config.json
+go run ./src/cmd/repodigest report --risk high --format markdown --config demos/sample-config.json
 ```
 
 ## What changed today
 
-- Added per-source maintenance signals for stars, issue backlog, release age, commit freshness, CI status, and open security alerts.
-- Scored every source into low, medium, or high risk buckets.
-- Rendered a watchlist section so the markdown output explains *why* something looks risky.
+- Added a `report` command that can emit either markdown or JSON.
+- Added `--kind` and `--risk` filters so the same fixture set can produce focused slices.
+- Stored applied filters in the summary payload so downstream jobs can audit how an artifact was produced.
+- Refreshed tests to cover filtered summary generation and structured JSON rendering.
 
 ## Why this shape
 
-- `internal/config` now validates the new signal fields so bad fixture data fails early.
-- `internal/app` owns the scoring rules, risk bucketing, and markdown watchlist.
-- `demos/` now includes healthy, watchlist, and high-risk examples.
-- `tests/` lock in the new scoring behavior before Thursday's render/export work builds on top of it.
+- `internal/app` still owns the scoring logic, but now it can produce filtered summaries without duplicating heuristics.
+- `internal/model` carries JSON tags and applied-filter metadata so export output stays explicit.
+- `src/cmd/repodigest` now behaves more like a real automation CLI with format and filtering flags.
+- `demos/generated` includes both a full summary and a high-risk slice, which makes the tool easier to inspect before wiring it into cron or CI.

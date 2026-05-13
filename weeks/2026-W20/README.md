@@ -74,9 +74,16 @@ go run ./src/cmd/repodigest summarize --config demos/sample-config.json
   - **Tests Run:** `go test ./...`
   - **UI Demo Notes:** Added a generated sample markdown digest under `demos/generated/sample-summary.md` so the future report flow already has a visible artifact.
   - **Tried / Solved / Learned:** Starting with normalized fixture inputs makes the later scoring work safer because the shape of the data is already stable before heuristics get layered on top.
+- **Daily Entry — 2026-05-13**
+  - **Progress:** Added fixture-driven health scoring, risk buckets, and a readable watchlist section so the digest now explains which sources are healthy, drifting, or actively risky.
+  - **Exercises Completed:** Extended the config schema with repo signals, implemented scoring heuristics for commit freshness, release age, issue backlog, CI health, and security alerts, refreshed demo fixtures, and expanded tests/docs.
+  - **Tests Run:** Attempted `go test ./...`, but Go is not installed or not on PATH in this environment.
+  - **UI Demo Notes:** Refreshed `demos/generated/sample-summary.md` to show the new watchlist ordering and risk explanations.
+  - **Tried / Solved / Learned:** A maintenance digest gets much more actionable once it names the reasons behind a downgrade instead of hiding the judgment inside a single score.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
 - Automation projects benefit from artifact-first thinking because scheduled jobs are only trustworthy when their outputs are easy to inspect.
 - Go feels like a good fit for this week's constraints: small binaries, direct CLI ergonomics, and straightforward test structure.
 - The first useful CLI milestone is not smart scoring. It is dependable input handling plus readable output.
+- Scoring rules become easier to trust when each penalty leaves a plain-English breadcrumb in the digest.

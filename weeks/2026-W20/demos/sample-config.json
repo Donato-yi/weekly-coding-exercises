@@ -6,28 +6,60 @@
       "kind": "GitHub",
       "url": "https://github.com/example/core-api",
       "tags": ["Backend", "API", "releases"],
-      "updateCadence": "weekly"
+      "updateCadence": "weekly",
+      "signals": {
+        "stars": 420,
+        "openIssues": 7,
+        "daysSinceCommit": 2,
+        "daysSinceRelease": 10,
+        "ci": "passing",
+        "openSecurityAlerts": 0
+      }
     },
     {
       "name": "frontend-app",
       "kind": "github",
       "url": "https://github.com/example/frontend-app",
       "tags": ["web", "frontend"],
-      "updateCadence": "weekly"
+      "updateCadence": "weekly",
+      "signals": {
+        "stars": 118,
+        "openIssues": 26,
+        "daysSinceCommit": 16,
+        "daysSinceRelease": 52,
+        "ci": "flaky",
+        "openSecurityAlerts": 0
+      }
     },
     {
       "name": "security-advisories",
       "kind": "rss",
       "url": "https://example.com/security.xml",
       "tags": ["security", "alerts"],
-      "updateCadence": "daily"
+      "updateCadence": "daily",
+      "signals": {
+        "stars": 0,
+        "openIssues": 0,
+        "daysSinceCommit": 1,
+        "daysSinceRelease": 5,
+        "ci": "passing",
+        "openSecurityAlerts": 0
+      }
     },
     {
       "name": "release-roundup",
       "kind": "rss",
       "url": "https://example.com/releases.xml",
       "tags": ["release", "backend"],
-      "updateCadence": "monthly"
+      "updateCadence": "monthly",
+      "signals": {
+        "stars": 6,
+        "openIssues": 57,
+        "daysSinceCommit": 74,
+        "daysSinceRelease": 133,
+        "ci": "failing",
+        "openSecurityAlerts": 2
+      }
     }
   ]
 }

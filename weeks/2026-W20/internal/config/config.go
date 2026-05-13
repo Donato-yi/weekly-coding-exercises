@@ -48,6 +48,21 @@ func Validate(cfg model.Config) error {
 		if strings.TrimSpace(source.URL) == "" {
 			return fmt.Errorf("sources[%d].url is required", i)
 		}
+		if source.Signals.Stars < 0 {
+			return fmt.Errorf("sources[%d].signals.stars must be non-negative", i)
+		}
+		if source.Signals.OpenIssues < 0 {
+			return fmt.Errorf("sources[%d].signals.openIssues must be non-negative", i)
+		}
+		if source.Signals.DaysSinceCommit < 0 {
+			return fmt.Errorf("sources[%d].signals.daysSinceCommit must be non-negative", i)
+		}
+		if source.Signals.DaysSinceRelease < 0 {
+			return fmt.Errorf("sources[%d].signals.daysSinceRelease must be non-negative", i)
+		}
+		if source.Signals.OpenSecurityAlerts < 0 {
+			return fmt.Errorf("sources[%d].signals.openSecurityAlerts must be non-negative", i)
+		}
 	}
 
 	return nil
@@ -60,6 +75,7 @@ func normalize(cfg model.Config) model.Config {
 		cfg.Sources[i].Kind = strings.ToLower(strings.TrimSpace(cfg.Sources[i].Kind))
 		cfg.Sources[i].URL = strings.TrimSpace(cfg.Sources[i].URL)
 		cfg.Sources[i].UpdateCadence = strings.ToLower(strings.TrimSpace(cfg.Sources[i].UpdateCadence))
+		cfg.Sources[i].Signals.CI = strings.ToLower(strings.TrimSpace(cfg.Sources[i].Signals.CI))
 
 		cleanTags := make([]string, 0, len(cfg.Sources[i].Tags))
 		for _, tag := range cfg.Sources[i].Tags {

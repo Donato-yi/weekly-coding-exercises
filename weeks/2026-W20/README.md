@@ -35,11 +35,13 @@
 - Digest output keeps stable ordering and readable summaries
 - CLI commands write expected files and exit cleanly on partial failures
 - JSON output preserves enough structure for future scheduled integrations
+- Combined kind, risk, and tag filters stay deterministic and easy to audit
 
 ## UI Demos (What to Showcase)
 - Sample markdown maintenance digest
 - JSON automation report for downstream jobs
 - Fixture-driven examples for healthy versus risky repo states
+- Filtered markdown and JSON slices for backend and security-specific review flows
 - Notes on how a solo developer or small team could use the tool before planning maintenance work
 
 ## Repo Structure
@@ -61,6 +63,8 @@ go test ./...
 go run ./src/cmd/repodigest summarize --config demos/sample-config.json
 go run ./src/cmd/repodigest report --format json --risk high --config demos/sample-config.json
 go run ./src/cmd/repodigest review --config demos/sample-config.json
+go run ./src/cmd/repodigest report --kind github --tag backend --config demos/sample-config.json
+go run ./src/cmd/repodigest report --tag security --format json --output demos/generated/security-summary.json
 ```
 
 ## Daily Log
@@ -82,6 +86,12 @@ go run ./src/cmd/repodigest review --config demos/sample-config.json
   - **Tests Run:** Attempted `go test ./...`, but Go is not installed or not on PATH in this environment.
   - **UI Demo Notes:** Added `demos/generated/review-checklist.md` so the week now shows both machine-friendly report output and a human-friendly action list for triage.
   - **Tried / Solved / Learned:** Structured data is useful, but operators often need the next action spelled out plainly. Turning the digest into a checklist makes the same scoring logic easier to use during a quick repo triage session.
+- **Daily Entry — 2026-05-14**
+  - **Progress:** Tightened the report workflow so one source config can now produce narrower digest slices for different audiences without duplicating fixtures.
+  - **Exercises Completed:** Added `--tag` filtering to the CLI and summary model, covered combined kind-risk-tag filtering in tests, documented filter recipes, refreshed getting-started notes, and generated backend-focused markdown plus security-focused JSON demo artifacts.
+  - **Tests Run:** Not run here because Go is not installed or not available on PATH in this environment.
+  - **UI Demo Notes:** Added `demos/generated/backend-summary.md` and `demos/generated/security-summary.json` to show how the same dataset can drive a human review slice and a machine-friendly downstream payload.
+  - **Tried / Solved / Learned:** Filtering becomes much more useful once it lines up with how people actually review maintenance work. Tags are a simple way to create that extra slice without making the config harder to maintain.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
@@ -91,3 +101,4 @@ go run ./src/cmd/repodigest review --config demos/sample-config.json
 - Scoring rules become easier to trust when each penalty leaves a plain-English breadcrumb in the digest.
 - Structured JSON plus lightweight filters make the same tool more useful to both humans and scheduled jobs.
 - A checklist view is a nice bridge between generated scores and actual maintenance work, because it turns "interesting data" into a concrete review pass.
+- Tag-based slices are a good middle ground between one giant report and too many separate config files.

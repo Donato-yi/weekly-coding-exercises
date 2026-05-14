@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-05-14T07:00:00Z",
+  "teamName": "Platform Team",
+  "totalSources": 1,
+  "sourcesByKind": {
+    "rss": 1
+  },
+  "uniqueTags": [
+    "alerts",
+    "security"
+  ],
+  "slowCadenceCount": 0,
+  "averageScore": 100,
+  "highestRiskCount": 0,
+  "watchlistCount": 0,
+  "healthyCount": 1,
+  "appliedFilter": {
+    "tag": "security"
+  },
+  "sourceScores": [
+    {
+      "name": "security-advisories",
+      "kind": "rss",
+      "score": 100,
+      "risk": "low",
+      "reasons": [
+        "healthy recent activity"
+      ]
+    }
+  ]
+}

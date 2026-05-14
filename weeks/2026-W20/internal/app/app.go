@@ -285,12 +285,16 @@ func matchesFilter(source model.Source, score model.SourceScore, filter model.Fi
 	if filter.Risk != "" && string(score.Risk) != filter.Risk {
 		return false
 	}
+	if filter.Tag != "" && !hasTag(source.Tags, filter.Tag) {
+		return false
+	}
 	return true
 }
 
 func normalizeFilter(filter model.Filter) model.Filter {
 	filter.Kind = strings.ToLower(strings.TrimSpace(filter.Kind))
 	filter.Risk = strings.ToLower(strings.TrimSpace(filter.Risk))
+	filter.Tag = strings.ToLower(strings.TrimSpace(filter.Tag))
 	return filter
 }
 
@@ -302,5 +306,17 @@ func renderFilterLabel(filter model.Filter) string {
 	if filter.Risk != "" {
 		parts = append(parts, fmt.Sprintf("risk=%s", filter.Risk))
 	}
+	if filter.Tag != "" {
+		parts = append(parts, fmt.Sprintf("tag=%s", filter.Tag))
+	}
 	return strings.Join(parts, ", ")
+}
+
+func hasTag(tags []string, want string) bool {
+	for _, tag := range tags {
+		if strings.EqualFold(strings.TrimSpace(tag), want) {
+			return true
+		}
+	}
+	return false
 }

@@ -59,4 +59,5 @@ type Summary struct {
 type Filter struct {
 	Kind string `json:"kind,omitempty"`
 	Risk string `json:"risk,omitempty"`
+	Tag  string `json:"tag,omitempty"`
 }

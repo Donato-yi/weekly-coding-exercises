@@ -38,6 +38,7 @@ func runReport(args []string) {
 	format := fs.String("format", "markdown", "output format: markdown or json")
 	kind := fs.String("kind", "", "optional source kind filter")
 	risk := fs.String("risk", "", "optional risk filter: low, medium, or high")
+	tag := fs.String("tag", "", "optional tag filter")
 	outputPath := fs.String("output", "", "optional file path to write the rendered report")
 	fs.Parse(args)
 
@@ -50,6 +51,7 @@ func runReport(args []string) {
 	summary := app.BuildFilteredSummary(cfg, time.Now(), model.Filter{
 		Kind: *kind,
 		Risk: *risk,
+		Tag:  *tag,
 	})
 
 	var out string
@@ -108,7 +110,8 @@ func printUsage() {
 	fmt.Println("Examples:")
 	fmt.Println("  repodigest summarize --config demos/sample-config.json")
 	fmt.Println("  repodigest report --format json --risk high")
-	fmt.Println("  repodigest report --kind github --format markdown")
+	fmt.Println("  repodigest report --kind github --tag security --format markdown")
 	fmt.Println("  repodigest report --format json --output demos/generated/sample-summary.json")
+	fmt.Println("  repodigest report --tag backend --output demos/generated/backend-summary.md")
 	fmt.Println("  repodigest review --output demos/generated/review-checklist.md")
 }

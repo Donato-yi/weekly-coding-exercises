@@ -72,11 +72,12 @@ func TestBuildSummaryCountsKindsTagsAndRiskBuckets(t *testing.T) {
 	}
 }
 
-func TestBuildFilteredSummaryAppliesRiskAndKindFilters(t *testing.T) {
+func TestBuildFilteredSummaryAppliesRiskKindAndTagFilters(t *testing.T) {
 	cfg := testConfig()
 	summary := app.BuildFilteredSummary(cfg, time.Date(2026, 5, 13, 7, 0, 0, 0, time.UTC), model.Filter{
 		Kind: "rss",
 		Risk: "high",
+		Tag:  "release",
 	})
 
 	if summary.TotalSources != 1 {
@@ -85,7 +86,7 @@ func TestBuildFilteredSummaryAppliesRiskAndKindFilters(t *testing.T) {
 	if summary.SourceScores[0].Name != "release-feed" {
 		t.Fatalf("expected release-feed, got %#v", summary.SourceScores)
 	}
-	if summary.AppliedFilter.Kind != "rss" || summary.AppliedFilter.Risk != "high" {
+	if summary.AppliedFilter.Kind != "rss" || summary.AppliedFilter.Risk != "high" || summary.AppliedFilter.Tag != "release" {
 		t.Fatalf("unexpected filter: %#v", summary.AppliedFilter)
 	}
 }
@@ -102,14 +103,14 @@ func TestRenderMarkdownIncludesHealthWatchlistAndFilters(t *testing.T) {
 		HighestRiskCount: 1,
 		WatchlistCount:   1,
 		HealthyCount:     1,
-		AppliedFilter:    model.Filter{Kind: "github"},
+		AppliedFilter:    model.Filter{Kind: "github", Tag: "security"},
 		SourceScores: []model.SourceScore{
 			{Name: "frontend-app", Kind: "github", Score: 61, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}},
 		},
 	}
 
 	out := app.RenderMarkdown(summary)
-	for _, want := range []string{"Repo Digest Summary", "Platform Team", "github: 2", "Average health score: 76", "Health watchlist", "frontend-app", "Filters: kind=github"} {
+	for _, want := range []string{"Repo Digest Summary", "Platform Team", "github: 2", "Average health score: 76", "Health watchlist", "frontend-app", "Filters: kind=github, tag=security"} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected output to contain %q, got:\n%s", want, out)
 		}
@@ -121,7 +122,7 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 		GeneratedAt:   time.Date(2026, 5, 13, 7, 0, 0, 0, time.UTC),
 		TeamName:      "Platform Team",
 		TotalSources:  1,
-		AppliedFilter: model.Filter{Risk: "high"},
+		AppliedFilter: model.Filter{Risk: "high", Tag: "release"},
 		SourceScores: []model.SourceScore{
 			{Name: "release-feed", Kind: "rss", Score: 0, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}},
 		},
@@ -131,7 +132,7 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 	if err != nil {
 		t.Fatalf("RenderJSON returned error: %v", err)
 	}
-	for _, want := range []string{"\"teamName\": \"Platform Team\"", "\"risk\": \"high\"", "\"sourceScores\""} {
+	for _, want := range []string{"\"teamName\": \"Platform Team\"", "\"risk\": \"high\"", "\"tag\": \"release\"", "\"sourceScores\""} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected JSON output to contain %q, got:\n%s", want, out)
 		}

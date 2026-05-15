@@ -61,3 +61,22 @@ type Filter struct {
 	Risk string `json:"risk,omitempty"`
 	Tag  string `json:"tag,omitempty"`
 }
+
+type RunArtifact struct {
+	Name   string `json:"name"`
+	Path   string `json:"path"`
+	Format string `json:"format"`
+	Status string `json:"status"`
+	Error  string `json:"error,omitempty"`
+}
+
+type RunStatus struct {
+	GeneratedAt      time.Time     `json:"generatedAt"`
+	TeamName         string        `json:"teamName,omitempty"`
+	ConfigPath       string        `json:"configPath"`
+	OutputDir        string        `json:"outputDir"`
+	ContinueOnError  bool          `json:"continueOnError"`
+	Success          bool          `json:"success"`
+	Errors           []string      `json:"errors,omitempty"`
+	Artifacts        []RunArtifact `json:"artifacts"`
+}

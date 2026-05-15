@@ -1,0 +1,21 @@
+Bundle output snapshot
+======================
+
+Command
+- go run ./src/cmd/repodigest bundle --config demos/sample-config.json --output-dir demos/generated/daily-run
+
+Artifacts
+- summary.md
+- summary.json
+- review.md
+- run-status.json
+
+Outcome
+- success: true
+- continueOnError: false
+- artifact count: 3
+- high risk sources in sample fixture: 1
+- watchlist sources in sample fixture: 1
+- healthy sources in sample fixture: 2
+
+Use this demo alongside `demos/generated/daily-run/run-status.json` when wiring the command into cron or CI.

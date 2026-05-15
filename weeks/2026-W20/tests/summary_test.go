@@ -182,3 +182,61 @@ func TestWriteOutputSkipsEmptyPath(t *testing.T) {
 		t.Fatalf("expected nil error for empty output path, got %v", err)
 	}
 }
+
+func TestWriteJSONOutputWritesIndentedJSON(t *testing.T) {
+	tmp := t.TempDir()
+	outputPath := filepath.Join(tmp, "generated", "run-status.json")
+	status := model.RunStatus{
+		TeamName: "Platform Team",
+		Success:  true,
+	}
+
+	if err := app.WriteJSONOutput(outputPath, status); err != nil {
+		t.Fatalf("WriteJSONOutput returned error: %v", err)
+	}
+
+	data, err := os.ReadFile(outputPath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if !strings.Contains(string(data), "\n  \"teamName\": \"Platform Team\"") {
+		t.Fatalf("expected indented json, got:\n%s", string(data))
+	}
+}
+
+func TestRecordArtifactMarksFailuresInRunStatus(t *testing.T) {
+	status := app.BuildRunStatus("demos/sample-config.json", "demos/generated/daily-run", true)
+	app.RecordArtifact(&status, "summary.md", "demos/generated/daily-run/summary.md", "markdown", nil)
+	app.RecordArtifact(&status, "summary.json", "demos/generated/daily-run/summary.json", "json", os.ErrPermission)
+
+	if status.Success {
+		t.Fatalf("expected run status to be unsuccessful after artifact failure")
+	}
+	if len(status.Artifacts) != 2 {
+		t.Fatalf("expected 2 artifacts, got %d", len(status.Artifacts))
+	}
+	if status.Artifacts[1].Status != "error" {
+		t.Fatalf("expected second artifact to be marked error, got %#v", status.Artifacts[1])
+	}
+	if len(status.Errors) != 1 || !strings.Contains(status.Errors[0], "summary.json") {
+		t.Fatalf("unexpected run status errors: %#v", status.Errors)
+	}
+}
+
+func TestWriteStatusCreatesRunStatusFile(t *testing.T) {
+	tmp := t.TempDir()
+	status := app.BuildRunStatus("demos/sample-config.json", tmp, false)
+	status.TeamName = "Platform Team"
+
+	if err := app.WriteStatus(tmp, status); err != nil {
+		t.Fatalf("WriteStatus returned error: %v", err)
+	}
+
+	data, err := os.ReadFile(filepath.Join(tmp, "run-status.json"))
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if !strings.Contains(string(data), "\"outputDir\": ") || !strings.Contains(string(data), "\"teamName\": \"Platform Team\"") {
+		t.Fatalf("unexpected status content:\n%s", string(data))
+	}
+}

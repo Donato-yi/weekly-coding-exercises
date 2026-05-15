@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-05-15T07:00:00Z",
+  "teamName": "Platform Team",
+  "configPath": "demos/sample-config.json",
+  "outputDir": "demos/generated/daily-run",
+  "continueOnError": false,
+  "success": true,
+  "artifacts": [
+    {
+      "name": "summary.md",
+      "path": "demos/generated/daily-run/summary.md",
+      "format": "markdown",
+      "status": "ok"
+    },
+    {
+      "name": "summary.json",
+      "path": "demos/generated/daily-run/summary.json",
+      "format": "json",
+      "status": "ok"
+    },
+    {
+      "name": "review.md",
+      "path": "demos/generated/daily-run/review.md",
+      "format": "markdown",
+      "status": "ok"
+    }
+  ]
+}

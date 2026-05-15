@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -276,6 +277,49 @@ func WriteOutput(path string, content string) error {
 		return fmt.Errorf("write output file: %w", err)
 	}
 	return nil
+}
+
+func WriteJSONOutput(path string, value any) error {
+	data, err := json.MarshalIndent(value, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal output: %w", err)
+	}
+	return WriteOutput(path, string(data)+"\n")
+}
+
+func BuildRunStatus(configPath string, outputDir string, continueOnError bool) model.RunStatus {
+	return model.RunStatus{
+		GeneratedAt:     time.Now().UTC(),
+		ConfigPath:      strings.TrimSpace(configPath),
+		OutputDir:       strings.TrimSpace(outputDir),
+		ContinueOnError: continueOnError,
+		Success:         true,
+		Artifacts:       []model.RunArtifact{},
+	}
+}
+
+func RecordArtifact(status *model.RunStatus, name string, path string, format string, err error) {
+	artifact := model.RunArtifact{
+		Name:   name,
+		Path:   path,
+		Format: format,
+		Status: "ok",
+	}
+	if err != nil {
+		artifact.Status = "error"
+		artifact.Error = err.Error()
+		status.Success = false
+		status.Errors = append(status.Errors, fmt.Sprintf("%s: %v", name, err))
+	}
+	status.Artifacts = append(status.Artifacts, artifact)
+}
+
+func WriteStatus(outputDir string, status model.RunStatus) error {
+	if strings.TrimSpace(outputDir) == "" {
+		return errors.New("output directory is required for status writes")
+	}
+	statusPath := filepath.Join(outputDir, "run-status.json")
+	return WriteJSONOutput(statusPath, status)
 }
 
 func matchesFilter(source model.Source, score model.SourceScore, filter model.Filter) bool {

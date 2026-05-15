@@ -65,6 +65,7 @@ go run ./src/cmd/repodigest report --format json --risk high --config demos/samp
 go run ./src/cmd/repodigest review --config demos/sample-config.json
 go run ./src/cmd/repodigest report --kind github --tag backend --config demos/sample-config.json
 go run ./src/cmd/repodigest report --tag security --format json --output demos/generated/security-summary.json
+go run ./src/cmd/repodigest bundle --config demos/sample-config.json --output-dir demos/generated/daily-run
 ```
 
 ## Daily Log
@@ -92,6 +93,12 @@ go run ./src/cmd/repodigest report --tag security --format json --output demos/g
   - **Tests Run:** Not run here because Go is not installed or not available on PATH in this environment.
   - **UI Demo Notes:** Added `demos/generated/backend-summary.md` and `demos/generated/security-summary.json` to show how the same dataset can drive a human review slice and a machine-friendly downstream payload.
   - **Tried / Solved / Learned:** Filtering becomes much more useful once it lines up with how people actually review maintenance work. Tags are a simple way to create that extra slice without making the config harder to maintain.
+- **Daily Entry — 2026-05-15**
+  - **Progress:** Shifted the CLI toward scheduled-run ergonomics by adding a bundle workflow that writes a small artifact set and a run-status receipt in one shot.
+  - **Exercises Completed:** Added a `bundle` command, structured run-status models, JSON file-writing helpers, per-artifact failure tracking, docs for scheduled bundles, demo bundle outputs under `demos/generated/daily-run`, and a compact status summary artifact.
+  - **Tests Run:** Not run here because Go is not installed or not available on PATH in this environment.
+  - **UI Demo Notes:** Added `demos/generated/daily-run/summary.md`, `summary.json`, `review.md`, `run-status.json`, and `demos/generated/status-summary.txt` to show what a cron-friendly output directory looks like.
+  - **Tried / Solved / Learned:** Scheduler-oriented tooling gets a lot easier to trust once it leaves behind a single status receipt with per-artifact outcomes instead of forcing the caller to parse mixed logs.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
@@ -102,3 +109,4 @@ go run ./src/cmd/repodigest report --tag security --format json --output demos/g
 - Structured JSON plus lightweight filters make the same tool more useful to both humans and scheduled jobs.
 - A checklist view is a nice bridge between generated scores and actual maintenance work, because it turns "interesting data" into a concrete review pass.
 - Tag-based slices are a good middle ground between one giant report and too many separate config files.
+- A bundled output directory plus one explicit status receipt is a cleaner handoff to cron or CI than expecting another tool to scrape terminal output.

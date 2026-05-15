@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -23,6 +24,8 @@ func main() {
 		runReport(os.Args[2:])
 	case "review":
 		runReview(os.Args[2:])
+	case "bundle":
+		runBundle(os.Args[2:])
 	case "help", "--help", "-h":
 		printUsage()
 	default:
@@ -99,6 +102,79 @@ func runReview(args []string) {
 	fmt.Print(review)
 }
 
+func runBundle(args []string) {
+	fs := flag.NewFlagSet("bundle", flag.ExitOnError)
+	configPath := fs.String("config", "demos/sample-config.json", "path to config file")
+	outputDir := fs.String("output-dir", "demos/generated/bundle", "directory for generated artifacts")
+	continueOnError := fs.Bool("continue-on-error", false, "keep writing remaining artifacts after a failure and record the outcome in run-status.json")
+	fs.Parse(args)
+
+	status := app.BuildRunStatus(*configPath, *outputDir, *continueOnError)
+
+	cfg, err := config.Load(*configPath)
+	if err != nil {
+		status.Success = false
+		status.Errors = append(status.Errors, err.Error())
+		if strings.TrimSpace(*outputDir) != "" {
+			if writeErr := app.WriteStatus(*outputDir, status); writeErr != nil {
+				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+				fmt.Fprintf(os.Stderr, "error: %v\n", writeErr)
+				os.Exit(1)
+			}
+		}
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	status.TeamName = cfg.TeamName
+
+	summary := app.BuildSummary(cfg, time.Now())
+	markdown := app.RenderMarkdown(summary)
+	jsonOut, jsonErr := app.RenderJSON(summary)
+	if jsonErr != nil {
+		status.Success = false
+		status.Errors = append(status.Errors, fmt.Sprintf("summary.json: %v", jsonErr))
+	}
+	review := app.RenderReview(summary)
+
+	type artifactSpec struct {
+		name    string
+		path    string
+		format  string
+		content string
+		skip    bool
+		err     error
+	}
+
+	artifacts := []artifactSpec{
+		{name: "summary.md", path: filepath.Join(*outputDir, "summary.md"), format: "markdown", content: markdown},
+		{name: "summary.json", path: filepath.Join(*outputDir, "summary.json"), format: "json", content: jsonOut, err: jsonErr, skip: jsonErr != nil},
+		{name: "review.md", path: filepath.Join(*outputDir, "review.md"), format: "markdown", content: review},
+	}
+
+	for _, artifact := range artifacts {
+		writeErr := artifact.err
+		if !artifact.skip && writeErr == nil {
+			writeErr = app.WriteOutput(artifact.path, artifact.content)
+		}
+		app.RecordArtifact(&status, artifact.name, artifact.path, artifact.format, writeErr)
+		if writeErr != nil && !*continueOnError {
+			break
+		}
+	}
+
+	if err := app.WriteStatus(*outputDir, status); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	if !status.Success {
+		fmt.Fprintf(os.Stderr, "bundle completed with errors; see %s\n", filepath.Join(*outputDir, "run-status.json"))
+		os.Exit(1)
+	}
+
+	fmt.Printf("bundle wrote %d artifacts to %s\n", len(status.Artifacts), *outputDir)
+}
+
 func printUsage() {
 	fmt.Println("repodigest <command>")
 	fmt.Println()
@@ -106,6 +182,7 @@ func printUsage() {
 	fmt.Println("  summarize   Alias for report --format markdown")
 	fmt.Println("  report      Load a config file and print markdown or JSON output")
 	fmt.Println("  review      Render an action-oriented maintenance checklist")
+	fmt.Println("  bundle      Write a scheduler-friendly artifact set plus run-status.json")
 	fmt.Println()
 	fmt.Println("Examples:")
 	fmt.Println("  repodigest summarize --config demos/sample-config.json")
@@ -114,4 +191,5 @@ func printUsage() {
 	fmt.Println("  repodigest report --format json --output demos/generated/sample-summary.json")
 	fmt.Println("  repodigest report --tag backend --output demos/generated/backend-summary.md")
 	fmt.Println("  repodigest review --output demos/generated/review-checklist.md")
+	fmt.Println("  repodigest bundle --config demos/sample-config.json --output-dir demos/generated/daily-run")
 }

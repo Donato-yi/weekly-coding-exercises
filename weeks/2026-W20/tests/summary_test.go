@@ -70,6 +70,9 @@ func TestBuildSummaryCountsKindsTagsAndRiskBuckets(t *testing.T) {
 	if len(summary.SourceScores) != 2 || summary.SourceScores[0].Name != "release-feed" {
 		t.Fatalf("expected release-feed to be lowest score, got %#v", summary.SourceScores)
 	}
+	if summary.SourceScores[0].NextStep == "" || summary.SourceScores[1].NextStep == "" {
+		t.Fatalf("expected next-step guidance for every source, got %#v", summary.SourceScores)
+	}
 }
 
 func TestBuildFilteredSummaryAppliesRiskKindAndTagFilters(t *testing.T) {
@@ -105,12 +108,12 @@ func TestRenderMarkdownIncludesHealthWatchlistAndFilters(t *testing.T) {
 		HealthyCount:     1,
 		AppliedFilter:    model.Filter{Kind: "github", Tag: "security"},
 		SourceScores: []model.SourceScore{
-			{Name: "frontend-app", Kind: "github", Score: 61, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}},
+			{Name: "frontend-app", Kind: "github", Score: 61, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}, NextStep: "quarantine flaky checks or add retries so release signal stays trustworthy"},
 		},
 	}
 
 	out := app.RenderMarkdown(summary)
-	for _, want := range []string{"Repo Digest Summary", "Platform Team", "github: 2", "Average health score: 76", "Health watchlist", "frontend-app", "Filters: kind=github, tag=security"} {
+	for _, want := range []string{"Repo Digest Summary", "Platform Team", "github: 2", "Average health score: 76", "Health watchlist", "frontend-app", "Filters: kind=github, tag=security", "Next step: quarantine flaky checks or add retries so release signal stays trustworthy"} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected output to contain %q, got:\n%s", want, out)
 		}
@@ -124,7 +127,7 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 		TotalSources:  1,
 		AppliedFilter: model.Filter{Risk: "high", Tag: "release"},
 		SourceScores: []model.SourceScore{
-			{Name: "release-feed", Kind: "rss", Score: 0, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}},
+			{Name: "release-feed", Kind: "rss", Score: 0, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}, NextStep: "stabilize the failing CI workflow and rerun the digest"},
 		},
 	}
 
@@ -132,7 +135,7 @@ func TestRenderJSONIncludesStructuredFields(t *testing.T) {
 	if err != nil {
 		t.Fatalf("RenderJSON returned error: %v", err)
 	}
-	for _, want := range []string{"\"teamName\": \"Platform Team\"", "\"risk\": \"high\"", "\"tag\": \"release\"", "\"sourceScores\""} {
+	for _, want := range []string{"\"teamName\": \"Platform Team\"", "\"risk\": \"high\"", "\"tag\": \"release\"", "\"sourceScores\"", "\"nextStep\": \"stabilize the failing CI workflow and rerun the digest\""} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected JSON output to contain %q, got:\n%s", want, out)
 		}
@@ -145,14 +148,14 @@ func TestRenderReviewGroupsSourcesIntoActionSections(t *testing.T) {
 		TeamName:     "Platform Team",
 		TotalSources: 3,
 		SourceScores: []model.SourceScore{
-			{Name: "release-feed", Kind: "rss", Score: 21, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}},
-			{Name: "frontend-app", Kind: "github", Score: 68, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}},
-			{Name: "core-api", Kind: "github", Score: 97, Risk: model.RiskLow, Reasons: []string{"healthy recent activity"}},
+			{Name: "release-feed", Kind: "rss", Score: 21, Risk: model.RiskHigh, Reasons: []string{"CI is failing"}, NextStep: "stabilize the failing CI workflow and rerun the digest"},
+			{Name: "frontend-app", Kind: "github", Score: 68, Risk: model.RiskMedium, Reasons: []string{"CI is flaky"}, NextStep: "quarantine flaky checks or add retries so release signal stays trustworthy"},
+			{Name: "core-api", Kind: "github", Score: 97, Risk: model.RiskLow, Reasons: []string{"healthy recent activity"}, NextStep: "keep monitoring with the existing scheduled digest cadence"},
 		},
 	}
 
 	out := app.RenderReview(summary)
-	for _, want := range []string{"Repo Digest Review", "## Act now", "release-feed", "## Watchlist", "frontend-app", "## Healthy", "core-api"} {
+	for _, want := range []string{"Repo Digest Review", "## Act now", "release-feed", "## Watchlist", "frontend-app", "## Healthy", "core-api", "Next step: stabilize the failing CI workflow and rerun the digest"} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("expected review output to contain %q, got:\n%s", want, out)
 		}

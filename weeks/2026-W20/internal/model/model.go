@@ -39,6 +39,7 @@ type SourceScore struct {
 	Score   int       `json:"score"`
 	Risk    RiskLevel `json:"risk"`
 	Reasons []string  `json:"reasons"`
+	NextStep string   `json:"nextStep,omitempty"`
 }
 
 type Summary struct {

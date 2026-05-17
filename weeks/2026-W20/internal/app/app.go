@@ -171,7 +171,33 @@ func scoreSource(source model.Source) model.SourceScore {
 		Score:   score,
 		Risk:    risk,
 		Reasons: reasons,
+		NextStep: recommendNextStep(source, risk),
 	}
+}
+
+func recommendNextStep(source model.Source, risk model.RiskLevel) string {
+	signals := source.Signals
+
+	if signals.OpenSecurityAlerts > 0 {
+		return "review and clear open security alerts before the next scheduled run"
+	}
+	if signals.CI == "failing" {
+		return "stabilize the failing CI workflow and rerun the digest"
+	}
+	if signals.CI == "flaky" {
+		return "quarantine flaky checks or add retries so release signal stays trustworthy"
+	}
+	if signals.DaysSinceCommit >= 45 || signals.DaysSinceRelease >= 90 {
+		return "verify whether the project is intentionally quiet or needs a maintenance refresh"
+	}
+	if signals.OpenIssues >= 20 {
+		return "triage the issue backlog and cut a smaller follow-up list for the next review"
+	}
+	if risk == model.RiskLow {
+		return "keep monitoring with the existing scheduled digest cadence"
+	}
+
+	return "capture the current state in the weekly maintenance checklist and review again tomorrow"
 }
 
 func RenderMarkdown(summary model.Summary) string {
@@ -201,7 +227,7 @@ func RenderMarkdown(summary model.Summary) string {
 	}
 	fmt.Fprintf(&b, "\n## Health watchlist\n")
 	for _, score := range summary.SourceScores {
-		fmt.Fprintf(&b, "- %s (%s): score %d, risk %s, %s\n", score.Name, score.Kind, score.Score, score.Risk, strings.Join(score.Reasons, "; "))
+		fmt.Fprintf(&b, "- %s (%s): score %d, risk %s, %s. Next step: %s\n", score.Name, score.Kind, score.Score, score.Risk, strings.Join(score.Reasons, "; "), score.NextStep)
 	}
 	return b.String()
 }
@@ -256,7 +282,7 @@ func renderReviewSection(b *strings.Builder, title string, scores []model.Source
 	}
 
 	for _, score := range scores {
-		fmt.Fprintf(b, "- [ ] %s (%s) score %d: %s\n", score.Name, score.Kind, score.Score, strings.Join(score.Reasons, "; "))
+		fmt.Fprintf(b, "- [ ] %s (%s) score %d: %s. Next step: %s\n", score.Name, score.Kind, score.Score, strings.Join(score.Reasons, "; "), score.NextStep)
 	}
 }
 

@@ -38,7 +38,8 @@
         "large issue backlog (57 open)",
         "security alerts open (2)",
         "CI is failing"
-      ]
+      ],
+      "nextStep": "review and clear open security alerts before the next scheduled run"
     },
     {
       "name": "frontend-app",
@@ -49,7 +50,8 @@
         "release cadence drifting (52 days)",
         "growing issue backlog (26 open)",
         "CI is flaky"
-      ]
+      ],
+      "nextStep": "quarantine flaky checks or add retries so release signal stays trustworthy"
     },
     {
       "name": "core-api",
@@ -58,7 +60,8 @@
       "risk": "low",
       "reasons": [
         "healthy recent activity"
-      ]
+      ],
+      "nextStep": "keep monitoring with the existing scheduled digest cadence"
     },
     {
       "name": "security-advisories",
@@ -67,7 +70,8 @@
       "risk": "low",
       "reasons": [
         "healthy recent activity"
-      ]
+      ],
+      "nextStep": "keep monitoring with the existing scheduled digest cadence"
     }
   ]
 }

@@ -99,6 +99,12 @@ go run ./src/cmd/repodigest bundle --config demos/sample-config.json --output-di
   - **Tests Run:** Not run here because Go is not installed or not available on PATH in this environment.
   - **UI Demo Notes:** Added `demos/generated/daily-run/summary.md`, `summary.json`, `review.md`, `run-status.json`, and `demos/generated/status-summary.txt` to show what a cron-friendly output directory looks like.
   - **Tried / Solved / Learned:** Scheduler-oriented tooling gets a lot easier to trust once it leaves behind a single status receipt with per-artifact outcomes instead of forcing the caller to parse mixed logs.
+- **Daily Entry — 2026-05-17**
+  - **Progress:** Added source-level next-step recommendations so the digest now points reviewers toward the first maintenance action instead of only listing risk reasons.
+  - **Exercises Completed:** Extended `SourceScore` with `nextStep`, added recommendation logic in the scoring layer, updated markdown and review rendering, refreshed tests, and manually updated the generated demo artifacts to reflect the new guidance.
+  - **Tests Run:** Not run here because Go is not installed or not available on PATH in this environment.
+  - **UI Demo Notes:** The generated summary and review artifacts now read more like an ops handoff because each risky item includes a plain-English follow-up action.
+  - **Tried / Solved / Learned:** Scores help with ranking, but a tiny recommendation layer is what turns a digest into something a busy engineer can act on quickly.
 
 ## Tried / Solved / Learned
 - Weekly rotation is working well when the theme changes both the focus area and the implementation style.
@@ -110,3 +116,4 @@ go run ./src/cmd/repodigest bundle --config demos/sample-config.json --output-di
 - A checklist view is a nice bridge between generated scores and actual maintenance work, because it turns "interesting data" into a concrete review pass.
 - Tag-based slices are a good middle ground between one giant report and too many separate config files.
 - A bundled output directory plus one explicit status receipt is a cleaner handoff to cron or CI than expecting another tool to scrape terminal output.
+- A short, deterministic next-step hint makes review output much more useful because it answers "what should I do first?" without hiding the underlying reasons.

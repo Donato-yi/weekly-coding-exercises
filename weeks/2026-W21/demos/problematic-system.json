@@ -1,0 +1,26 @@
+{
+  "services": [
+    {
+      "name": "web",
+      "layer": "edge",
+      "dependencies": ["api", "orders"]
+    },
+    {
+      "name": "api",
+      "layer": "application",
+      "dependencies": ["orders", "billing"]
+    },
+    {
+      "name": "orders",
+      "layer": "domain",
+      "dependencies": ["api"]
+    }
+  ],
+  "forbidden_dependencies": [
+    {
+      "source": "web",
+      "target": "orders",
+      "reason": "edge services must call the API facade instead of domain services directly"
+    }
+  ]
+}

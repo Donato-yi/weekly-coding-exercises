@@ -1,0 +1,25 @@
+{
+  "dependency_count": 5,
+  "service_count": 3,
+  "violation_count": 3,
+  "violations": [
+    {
+      "dependency": "orders",
+      "kind": "cycle",
+      "message": "dependency cycle: api -> orders -> api",
+      "service": "api"
+    },
+    {
+      "dependency": "orders",
+      "kind": "forbidden_dependency",
+      "message": "edge services must call the API facade instead of domain services directly",
+      "service": "web"
+    },
+    {
+      "dependency": "billing",
+      "kind": "missing_dependency",
+      "message": "api depends on unknown service billing",
+      "service": "api"
+    }
+  ]
+}

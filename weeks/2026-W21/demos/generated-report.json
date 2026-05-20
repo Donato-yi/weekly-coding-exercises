@@ -1,7 +1,7 @@
 {
-  "dependency_count": 5,
-  "service_count": 3,
-  "violation_count": 3,
+  "dependency_count": 6,
+  "service_count": 4,
+  "violation_count": 5,
   "violations": [
     {
       "dependency": "orders",
@@ -16,10 +16,22 @@
       "service": "web"
     },
     {
+      "dependency": "api",
+      "kind": "layer_order",
+      "message": "orders (domain) must not depend upward on api (application)",
+      "service": "orders"
+    },
+    {
       "dependency": "billing",
       "kind": "missing_dependency",
       "message": "api depends on unknown service billing",
       "service": "api"
+    },
+    {
+      "dependency": "orders",
+      "kind": "ownership_boundary",
+      "message": "fulfillment package must not reach into commerce internals directly",
+      "service": "warehouse"
     }
   ]
 }

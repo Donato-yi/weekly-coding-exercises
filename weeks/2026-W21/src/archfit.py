@@ -14,6 +14,7 @@ class ConfigError(ValueError):
 class Service:
     name: str
     layer: str
+    package: str
     dependencies: tuple[str, ...]
 
 
@@ -25,9 +26,18 @@ class ForbiddenDependency:
 
 
 @dataclass(frozen=True)
+class OwnershipBoundary:
+    package: str
+    allowed_dependency_packages: tuple[str, ...]
+    reason: str
+
+
+@dataclass(frozen=True)
 class ArchitectureMap:
     services: dict[str, Service]
     forbidden: tuple[ForbiddenDependency, ...]
+    layer_order: tuple[str, ...]
+    ownership_boundaries: tuple[OwnershipBoundary, ...]
 
 
 @dataclass(frozen=True)
@@ -63,13 +73,24 @@ def load_architecture(path: str | Path) -> ArchitectureMap:
         services[service.name] = service
 
     forbidden = tuple(_parse_forbidden(item) for item in raw.get("forbidden_dependencies", []))
-    return ArchitectureMap(services=services, forbidden=forbidden)
+    layer_order = _parse_layer_order(raw.get("layer_order", []))
+    ownership_boundaries = tuple(
+        _parse_ownership_boundary(item) for item in raw.get("ownership_boundaries", [])
+    )
+    return ArchitectureMap(
+        services=services,
+        forbidden=forbidden,
+        layer_order=layer_order,
+        ownership_boundaries=ownership_boundaries,
+    )
 
 
 def analyze(architecture: ArchitectureMap) -> dict[str, Any]:
     violations: list[Violation] = []
     violations.extend(_missing_dependency_violations(architecture))
     violations.extend(_forbidden_dependency_violations(architecture))
+    violations.extend(_layer_order_violations(architecture))
+    violations.extend(_ownership_boundary_violations(architecture))
     violations.extend(_cycle_violations(architecture))
     violations.sort(key=lambda item: (item.kind, item.service, item.dependency or "", item.message))
 
@@ -91,7 +112,11 @@ def _parse_service(item: object) -> Service:
     if not isinstance(deps_raw, list) or not all(isinstance(dep, str) for dep in deps_raw):
         raise ConfigError(f"dependencies for {name} must be a list of strings")
 
-    return Service(name=name, layer=layer, dependencies=tuple(sorted(deps_raw)))
+    package = item.get("package", name)
+    if not isinstance(package, str) or not package.strip():
+        raise ConfigError(f"package for {name} must be a non-empty string")
+
+    return Service(name=name, layer=layer, package=package.strip(), dependencies=tuple(sorted(deps_raw)))
 
 
 def _parse_forbidden(item: object) -> ForbiddenDependency:
@@ -100,6 +125,34 @@ def _parse_forbidden(item: object) -> ForbiddenDependency:
     return ForbiddenDependency(
         source=_required_string(item, "source"),
         target=_required_string(item, "target"),
+        reason=_required_string(item, "reason"),
+    )
+
+
+def _parse_layer_order(value: object) -> tuple[str, ...]:
+    if value in (None, []):
+        return ()
+    if not isinstance(value, list) or not all(isinstance(layer, str) and layer.strip() for layer in value):
+        raise ConfigError("layer_order must be a list of non-empty strings")
+    normalized = tuple(layer.strip() for layer in value)
+    if len(set(normalized)) != len(normalized):
+        raise ConfigError("layer_order must not contain duplicates")
+    return normalized
+
+
+def _parse_ownership_boundary(item: object) -> OwnershipBoundary:
+    if not isinstance(item, dict):
+        raise ConfigError("each ownership boundary must be an object")
+
+    allowed_raw = item.get("allowed_dependency_packages", [])
+    if not isinstance(allowed_raw, list) or not all(
+        isinstance(package, str) and package.strip() for package in allowed_raw
+    ):
+        raise ConfigError("allowed_dependency_packages must be a list of non-empty strings")
+
+    return OwnershipBoundary(
+        package=_required_string(item, "package"),
+        allowed_dependency_packages=tuple(sorted(package.strip() for package in allowed_raw)),
         reason=_required_string(item, "reason"),
     )
 
@@ -140,6 +193,78 @@ def _forbidden_dependency_violations(architecture: ArchitectureMap) -> list[Viol
                         kind="forbidden_dependency",
                         service=service.name,
                         dependency=dependency,
+                        message=rule.reason,
+                    )
+                )
+    return violations
+
+
+def _layer_order_violations(architecture: ArchitectureMap) -> list[Violation]:
+    if not architecture.layer_order:
+        return []
+
+    layer_rank = {layer: rank for rank, layer in enumerate(architecture.layer_order)}
+    violations: list[Violation] = []
+    for service in architecture.services.values():
+        if service.layer not in layer_rank:
+            violations.append(
+                Violation(
+                    kind="unknown_layer",
+                    service=service.name,
+                    dependency=None,
+                    message=f"{service.name} uses layer {service.layer}, which is not in layer_order",
+                )
+            )
+            continue
+
+        for dependency_name in service.dependencies:
+            dependency = architecture.services.get(dependency_name)
+            if dependency is None:
+                continue
+            if dependency.layer not in layer_rank:
+                violations.append(
+                    Violation(
+                        kind="unknown_layer",
+                        service=dependency.name,
+                        dependency=None,
+                        message=f"{dependency.name} uses layer {dependency.layer}, which is not in layer_order",
+                    )
+                )
+                continue
+            if layer_rank[service.layer] > layer_rank[dependency.layer]:
+                violations.append(
+                    Violation(
+                        kind="layer_order",
+                        service=service.name,
+                        dependency=dependency.name,
+                        message=(
+                            f"{service.name} ({service.layer}) must not depend upward on "
+                            f"{dependency.name} ({dependency.layer})"
+                        ),
+                    )
+                )
+    return violations
+
+
+def _ownership_boundary_violations(architecture: ArchitectureMap) -> list[Violation]:
+    rules = {rule.package: rule for rule in architecture.ownership_boundaries}
+    if not rules:
+        return []
+
+    violations: list[Violation] = []
+    for service in architecture.services.values():
+        rule = rules.get(service.package)
+        if not rule:
+            continue
+        allowed = set(rule.allowed_dependency_packages) | {service.package}
+        for dependency_name in service.dependencies:
+            dependency = architecture.services.get(dependency_name)
+            if dependency and dependency.package not in allowed:
+                violations.append(
+                    Violation(
+                        kind="ownership_boundary",
+                        service=service.name,
+                        dependency=dependency.name,
                         message=rule.reason,
                     )
                 )

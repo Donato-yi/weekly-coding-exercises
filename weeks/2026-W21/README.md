@@ -26,6 +26,8 @@
 - Directed dependency graph for service-to-service calls
 - Cycle detection for architecture drift
 - Rule engine for forbidden dependencies
+- Layer-order checks for dependencies that point back up the stack
+- Package ownership checks for cross-package coupling
 - CLI command that writes JSON reports for automation
 - Demo fixtures for clean and problematic service maps
 
@@ -34,6 +36,8 @@
 - Missing service references are reported as violations
 - Cycles are detected and normalized in stable order
 - Forbidden dependency rules catch exact source/target pairs
+- Layer-order rules catch domain-to-application shortcuts
+- Ownership boundaries catch package internals being reused directly
 - CLI emits JSON with nonzero violation counts for problematic fixtures
 
 ## UI Demos (What to Showcase)
@@ -63,6 +67,12 @@
   - **Tests Run:** python -m unittest discover -s tests
   - **UI Demo Notes:** Added demos/problematic-system.json and CLI report output so the week starts with a concrete review artifact.
   - **Tried / Solved / Learned:** Lightweight architecture checks work best when they report precise boundary violations first. A small graph model plus explicit rules gives useful signal without requiring a heavyweight platform.
+- **Daily Entry - 2026-05-20**
+  - **Progress:** Added Wednesday's layer-order and package ownership rules, expanded fixtures with package metadata, and updated the report surface so teams can distinguish explicit bans from structural drift.
+  - **Exercises Completed:** Implemented `layer_order` validation, upward dependency detection, `ownership_boundaries` parsing, cross-package dependency checks, and focused tests for both rule families.
+  - **Tests Run:** python -m unittest discover -s tests
+  - **UI Demo Notes:** Regenerated demos/generated-report.json with five stable violations that cover missing dependencies, forbidden edges, cycles, layer drift, and package ownership drift.
+  - **Tried / Solved / Learned:** Layer rules catch direction-of-travel mistakes while ownership rules catch social/API boundary mistakes. Keeping those as separate violation kinds makes the report easier to triage.
 
 ## Tried / Solved / Learned
 - Rotating from automation to architecture changes the problem from scheduled output reliability to design-boundary clarity.

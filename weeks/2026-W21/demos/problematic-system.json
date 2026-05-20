@@ -3,17 +3,39 @@
     {
       "name": "web",
       "layer": "edge",
+      "package": "frontend",
       "dependencies": ["api", "orders"]
     },
     {
       "name": "api",
       "layer": "application",
+      "package": "commerce",
       "dependencies": ["orders", "billing"]
     },
     {
       "name": "orders",
       "layer": "domain",
+      "package": "commerce",
       "dependencies": ["api"]
+    },
+    {
+      "name": "warehouse",
+      "layer": "application",
+      "package": "fulfillment",
+      "dependencies": ["orders"]
+    }
+  ],
+  "layer_order": ["edge", "application", "domain", "infrastructure"],
+  "ownership_boundaries": [
+    {
+      "package": "frontend",
+      "allowed_dependency_packages": ["commerce"],
+      "reason": "frontend code must depend only on public commerce entrypoints"
+    },
+    {
+      "package": "fulfillment",
+      "allowed_dependency_packages": [],
+      "reason": "fulfillment package must not reach into commerce internals directly"
     }
   ],
   "forbidden_dependencies": [

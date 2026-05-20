@@ -30,7 +30,7 @@ class CliTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 1)
             report = json.loads(output.read_text(encoding="utf-8"))
-            self.assertEqual(report["violation_count"], 3)
+            self.assertEqual(report["violation_count"], 5)
 
     def test_analyze_returns_success_for_clean_system(self) -> None:
         result = subprocess.run(

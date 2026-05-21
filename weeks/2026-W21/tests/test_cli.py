@@ -48,6 +48,30 @@ class CliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn('"violation_count": 0', result.stdout)
 
+    def test_analyze_writes_markdown_report(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "report.md"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "src" / "cli.py"),
+                    "analyze",
+                    str(ROOT / "demos" / "problematic-system.json"),
+                    "--format",
+                    "markdown",
+                    "--output",
+                    str(output),
+                ],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 1)
+            markdown = output.read_text(encoding="utf-8")
+            self.assertIn("# Architecture Fitness Report", markdown)
+            self.assertIn("### forbidden_dependency: web -> orders", markdown)
+
 
 if __name__ == "__main__":
     unittest.main()

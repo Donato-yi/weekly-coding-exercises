@@ -29,6 +29,7 @@
 - Layer-order checks for dependencies that point back up the stack
 - Package ownership checks for cross-package coupling
 - CLI command that writes JSON reports for automation
+- Markdown report renderer for pull request review notes
 - Demo fixtures for clean and problematic service maps
 
 ## Tests (What to Validate)
@@ -39,10 +40,11 @@
 - Layer-order rules catch domain-to-application shortcuts
 - Ownership boundaries catch package internals being reused directly
 - CLI emits JSON with nonzero violation counts for problematic fixtures
+- Markdown reports include summary counts and violation review notes
 
 ## UI Demos (What to Showcase)
 - JSON architecture report suitable for CI or dashboard ingestion
-- Short notes showing how a reviewer would interpret the violation list
+- Markdown review notes showing how a reviewer would interpret the violation list
 
 ## Repo Structure
 - /src
@@ -59,6 +61,7 @@
     python -m unittest discover -s tests
     python src/cli.py analyze demos/problematic-system.json
     python src/cli.py analyze demos/problematic-system.json --output demos/generated-report.json
+    python src/cli.py analyze demos/problematic-system.json --format markdown --output demos/generated-report.md
 
 ## Daily Log
 - **Daily Entry - 2026-05-19**
@@ -73,6 +76,12 @@
   - **Tests Run:** python -m unittest discover -s tests
   - **UI Demo Notes:** Regenerated demos/generated-report.json with five stable violations that cover missing dependencies, forbidden edges, cycles, layer drift, and package ownership drift.
   - **Tried / Solved / Learned:** Layer rules catch direction-of-travel mistakes while ownership rules catch social/API boundary mistakes. Keeping those as separate violation kinds makes the report easier to triage.
+- **Daily Entry - 2026-05-21**
+  - **Progress:** Added Thursday's markdown report renderer so the same analyzer can produce CI JSON and pull-request-friendly review notes.
+  - **Exercises Completed:** Implemented `render_markdown_report`, added `--format json|markdown` to the CLI, expanded unit and CLI tests, and documented markdown usage.
+  - **Tests Run:** python -m unittest discover -s tests
+  - **UI Demo Notes:** Regenerated demos/generated-report.json and added demos/generated-report.md with grouped review notes for each architecture violation.
+  - **Tried / Solved / Learned:** The JSON report is best for machines, but reviewers need a compact narrative artifact. Keeping both formats backed by one report model avoids duplicate rule logic.
 
 ## Tried / Solved / Learned
 - Rotating from automation to architecture changes the problem from scheduled output reliability to design-boundary clarity.

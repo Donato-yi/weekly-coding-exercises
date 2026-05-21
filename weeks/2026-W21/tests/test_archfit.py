@@ -9,7 +9,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from archfit import ConfigError, analyze, load_architecture
+from archfit import ConfigError, analyze, load_architecture, render_markdown_report
 
 
 class ArchitectureFitnessTests(unittest.TestCase):
@@ -56,6 +56,22 @@ class ArchitectureFitnessTests(unittest.TestCase):
         self.assertEqual(len(ownership_violations), 1)
         self.assertEqual(ownership_violations[0]["service"], "warehouse")
         self.assertEqual(ownership_violations[0]["dependency"], "orders")
+
+    def test_markdown_report_renders_review_notes(self) -> None:
+        report = analyze(load_architecture(ROOT / "demos" / "problematic-system.json"))
+        markdown = render_markdown_report(report)
+
+        self.assertIn("# Architecture Fitness Report", markdown)
+        self.assertIn("- Violations: 5", markdown)
+        self.assertIn("### layer_order: orders -> api", markdown)
+        self.assertIn("dependency cycle: api -> orders -> api", markdown)
+
+    def test_markdown_report_handles_clean_system(self) -> None:
+        report = analyze(load_architecture(ROOT / "demos" / "clean-system.json"))
+        markdown = render_markdown_report(report)
+
+        self.assertIn("- Violations: 0", markdown)
+        self.assertIn("- No architecture violations found.", markdown)
 
     def test_duplicate_services_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

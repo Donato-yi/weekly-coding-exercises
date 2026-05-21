@@ -102,6 +102,37 @@ def analyze(architecture: ArchitectureMap) -> dict[str, Any]:
     }
 
 
+def render_markdown_report(report: dict[str, Any]) -> str:
+    lines = [
+        "# Architecture Fitness Report",
+        "",
+        "## Summary",
+        f"- Services: {report['service_count']}",
+        f"- Dependencies: {report['dependency_count']}",
+        f"- Violations: {report['violation_count']}",
+        "",
+    ]
+
+    violations = report.get("violations", [])
+    if not violations:
+        lines.extend(["## Review Notes", "- No architecture violations found."])
+        return "\n".join(lines) + "\n"
+
+    lines.append("## Review Notes")
+    for violation in violations:
+        dependency = violation.get("dependency") or "n/a"
+        lines.extend(
+            [
+                f"### {violation['kind']}: {violation['service']} -> {dependency}",
+                f"- Service: {violation['service']}",
+                f"- Dependency: {dependency}",
+                f"- Detail: {violation['message']}",
+                "",
+            ]
+        )
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def _parse_service(item: object) -> Service:
     if not isinstance(item, dict):
         raise ConfigError("each service must be an object")

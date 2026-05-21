@@ -17,3 +17,9 @@ Example:
 The command exits with code 1 when it finds architecture violations, which makes it easy to wire into automation later.
 
 Layer rules are configured with a top-down `layer_order`. A service may depend on its own layer or a deeper layer, but not upward. Package rules are configured with `ownership_boundaries`, where each package lists the other packages it may call directly.
+
+For pull request review, use markdown output:
+
+    python src/cli.py analyze demos/problematic-system.json --format markdown --output demos/generated-report.md
+
+The markdown report keeps counts at the top and then groups each finding into a small review note with the service, dependency, and rule detail.

@@ -102,6 +102,27 @@ def analyze(architecture: ArchitectureMap) -> dict[str, Any]:
     }
 
 
+def compare_reports(current: dict[str, Any], baseline: dict[str, Any]) -> dict[str, Any]:
+    current_items = {_violation_key(item): item for item in current.get("violations", [])}
+    baseline_items = {_violation_key(item): item for item in baseline.get("violations", [])}
+
+    introduced_keys = sorted(current_items.keys() - baseline_items.keys())
+    fixed_keys = sorted(baseline_items.keys() - current_items.keys())
+    unchanged_keys = sorted(current_items.keys() & baseline_items.keys())
+
+    return {
+        "baseline_violation_count": len(baseline_items),
+        "current_violation_count": len(current_items),
+        "fixed_count": len(fixed_keys),
+        "introduced_count": len(introduced_keys),
+        "unchanged_count": len(unchanged_keys),
+        "status": _comparison_status(len(fixed_keys), len(introduced_keys)),
+        "fixed": [baseline_items[key] for key in fixed_keys],
+        "introduced": [current_items[key] for key in introduced_keys],
+        "unchanged": [current_items[key] for key in unchanged_keys],
+    }
+
+
 def render_markdown_report(report: dict[str, Any]) -> str:
     lines = [
         "# Architecture Fitness Report",
@@ -116,6 +137,9 @@ def render_markdown_report(report: dict[str, Any]) -> str:
     violations = report.get("violations", [])
     if not violations:
         lines.extend(["## Review Notes", "- No architecture violations found."])
+        baseline = report.get("baseline")
+        if isinstance(baseline, dict):
+            lines.extend(["", *_render_baseline_lines(baseline)])
         return "\n".join(lines) + "\n"
 
     lines.append("## Review Notes")
@@ -130,7 +154,42 @@ def render_markdown_report(report: dict[str, Any]) -> str:
                 "",
             ]
         )
+    baseline = report.get("baseline")
+    if isinstance(baseline, dict):
+        lines.extend(_render_baseline_lines(baseline))
     return "\n".join(lines).rstrip() + "\n"
+
+
+def _violation_key(item: dict[str, Any]) -> tuple[str, str, str, str]:
+    return (
+        str(item.get("kind", "")),
+        str(item.get("service", "")),
+        str(item.get("dependency") or ""),
+        str(item.get("message", "")),
+    )
+
+
+def _comparison_status(fixed_count: int, introduced_count: int) -> str:
+    if introduced_count and fixed_count:
+        return "mixed"
+    if introduced_count:
+        return "regressed"
+    if fixed_count:
+        return "improved"
+    return "unchanged"
+
+
+def _render_baseline_lines(baseline: dict[str, Any]) -> list[str]:
+    return [
+        "## Baseline Comparison",
+        f"- Status: {baseline['status']}",
+        f"- Baseline violations: {baseline['baseline_violation_count']}",
+        f"- Current violations: {baseline['current_violation_count']}",
+        f"- Fixed: {baseline['fixed_count']}",
+        f"- Introduced: {baseline['introduced_count']}",
+        f"- Unchanged: {baseline['unchanged_count']}",
+        "",
+    ]
 
 
 def _parse_service(item: object) -> Service:

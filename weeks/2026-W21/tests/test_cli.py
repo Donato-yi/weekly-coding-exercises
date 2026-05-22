@@ -72,6 +72,46 @@ class CliTests(unittest.TestCase):
             self.assertIn("# Architecture Fitness Report", markdown)
             self.assertIn("### forbidden_dependency: web -> orders", markdown)
 
+    def test_analyze_compares_against_baseline_report(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            baseline = Path(tmp) / "baseline.json"
+            output = Path(tmp) / "report.json"
+            baseline.write_text(
+                json.dumps(
+                    {
+                        "violations": [
+                            {
+                                "kind": "cycle",
+                                "service": "api",
+                                "dependency": "orders",
+                                "message": "dependency cycle: api -> orders -> api",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "src" / "cli.py"),
+                    "analyze",
+                    str(ROOT / "demos" / "problematic-system.json"),
+                    "--baseline",
+                    str(baseline),
+                    "--output",
+                    str(output),
+                ],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 1)
+            report = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(report["baseline"]["status"], "regressed")
+            self.assertEqual(report["baseline"]["introduced_count"], 4)
+
 
 if __name__ == "__main__":
     unittest.main()

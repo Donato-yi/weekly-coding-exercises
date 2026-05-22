@@ -23,3 +23,9 @@ For pull request review, use markdown output:
     python src/cli.py analyze demos/problematic-system.json --format markdown --output demos/generated-report.md
 
 The markdown report keeps counts at the top and then groups each finding into a small review note with the service, dependency, and rule detail.
+
+To track whether drift is getting better or worse, compare the current run with a previous JSON report:
+
+    python src/cli.py analyze demos/problematic-system.json --baseline demos/baseline-report.json --output demos/generated-report.json
+
+The report adds a baseline object with fixed, introduced, and unchanged findings. Treat introduced violations as review blockers first, because they represent new drift even when the total violation count still looks small.

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import sys
 
-from archfit import ConfigError, analyze, load_architecture, render_markdown_report
+from archfit import ConfigError, analyze, compare_reports, load_architecture, render_markdown_report
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -15,6 +15,7 @@ def main(argv: list[str] | None = None) -> int:
     analyze_parser = subparsers.add_parser("analyze", help="Analyze a service map JSON file.")
     analyze_parser.add_argument("config", help="Path to the service map JSON file.")
     analyze_parser.add_argument("--output", help="Optional path for the JSON report.")
+    analyze_parser.add_argument("--baseline", help="Optional prior JSON report to compare against.")
     analyze_parser.add_argument(
         "--format",
         choices=("json", "markdown"),
@@ -24,13 +25,18 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     if args.command == "analyze":
-        return _run_analyze(args.config, args.output, args.format)
+        return _run_analyze(args.config, args.output, args.format, args.baseline)
     return 2
 
 
-def _run_analyze(config_path: str, output_path: str | None, report_format: str) -> int:
+def _run_analyze(
+    config_path: str, output_path: str | None, report_format: str, baseline_path: str | None
+) -> int:
     try:
         report = analyze(load_architecture(config_path))
+        if baseline_path:
+            baseline_report = json.loads(Path(baseline_path).read_text(encoding="utf-8"))
+            report["baseline"] = compare_reports(report, baseline_report)
     except (ConfigError, json.JSONDecodeError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

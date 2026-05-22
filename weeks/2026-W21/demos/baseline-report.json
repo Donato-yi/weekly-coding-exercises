@@ -1,0 +1,31 @@
+{
+  "dependency_count": 5,
+  "service_count": 4,
+  "violation_count": 4,
+  "violations": [
+    {
+      "dependency": "orders",
+      "kind": "cycle",
+      "message": "dependency cycle: api -> orders -> api",
+      "service": "api"
+    },
+    {
+      "dependency": "orders",
+      "kind": "forbidden_dependency",
+      "message": "edge services must call the API facade instead of domain services directly",
+      "service": "web"
+    },
+    {
+      "dependency": "api",
+      "kind": "layer_order",
+      "message": "orders (domain) must not depend upward on api (application)",
+      "service": "orders"
+    },
+    {
+      "dependency": "orders",
+      "kind": "ownership_boundary",
+      "message": "fulfillment package must not reach into commerce internals directly",
+      "service": "warehouse"
+    }
+  ]
+}

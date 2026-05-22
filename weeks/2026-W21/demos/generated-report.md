@@ -30,3 +30,11 @@
 - Service: warehouse
 - Dependency: orders
 - Detail: fulfillment package must not reach into commerce internals directly
+
+## Baseline Comparison
+- Status: regressed
+- Baseline violations: 4
+- Current violations: 5
+- Fixed: 0
+- Introduced: 1
+- Unchanged: 4

@@ -9,7 +9,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from archfit import ConfigError, analyze, load_architecture, render_markdown_report
+from archfit import ConfigError, analyze, compare_reports, load_architecture, render_markdown_report
 
 
 class ArchitectureFitnessTests(unittest.TestCase):
@@ -72,6 +72,66 @@ class ArchitectureFitnessTests(unittest.TestCase):
 
         self.assertIn("- Violations: 0", markdown)
         self.assertIn("- No architecture violations found.", markdown)
+
+    def test_baseline_comparison_classifies_architecture_drift(self) -> None:
+        baseline = {
+            "violations": [
+                {
+                    "kind": "forbidden_dependency",
+                    "service": "web",
+                    "dependency": "orders",
+                    "message": "edge services must call the API facade",
+                },
+                {
+                    "kind": "cycle",
+                    "service": "api",
+                    "dependency": "orders",
+                    "message": "dependency cycle: api -> orders -> api",
+                },
+            ]
+        }
+        current = {
+            "violations": [
+                {
+                    "kind": "cycle",
+                    "service": "api",
+                    "dependency": "orders",
+                    "message": "dependency cycle: api -> orders -> api",
+                },
+                {
+                    "kind": "missing_dependency",
+                    "service": "api",
+                    "dependency": "billing",
+                    "message": "api depends on unknown service billing",
+                },
+            ]
+        }
+
+        comparison = compare_reports(current, baseline)
+
+        self.assertEqual(comparison["status"], "mixed")
+        self.assertEqual(comparison["fixed_count"], 1)
+        self.assertEqual(comparison["introduced_count"], 1)
+        self.assertEqual(comparison["unchanged_count"], 1)
+        self.assertEqual(comparison["fixed"][0]["kind"], "forbidden_dependency")
+        self.assertEqual(comparison["introduced"][0]["kind"], "missing_dependency")
+
+    def test_markdown_report_includes_baseline_summary(self) -> None:
+        report = analyze(load_architecture(ROOT / "demos" / "problematic-system.json"))
+        baseline = {
+            "violations": [
+                item
+                for item in report["violations"]
+                if item["kind"] != "missing_dependency"
+            ]
+        }
+        report["baseline"] = compare_reports(report, baseline)
+
+        markdown = render_markdown_report(report)
+
+        self.assertIn("## Baseline Comparison", markdown)
+        self.assertIn("- Status: regressed", markdown)
+        self.assertIn("- Introduced: 1", markdown)
 
     def test_duplicate_services_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

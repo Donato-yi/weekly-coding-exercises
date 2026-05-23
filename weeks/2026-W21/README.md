@@ -32,6 +32,7 @@
 - Markdown report renderer for pull request review notes
 - Baseline comparison for tracking fixed, introduced, and unchanged violations
 - Demo fixtures for clean and problematic service maps
+- Prioritized remediation plan for turning report findings into review actions
 
 ## Tests (What to Validate)
 - Valid service maps load into deterministic models
@@ -43,10 +44,12 @@
 - CLI emits JSON with nonzero violation counts for problematic fixtures
 - Markdown reports include summary counts and violation review notes
 - Baseline comparisons classify architecture drift as improved, regressed, mixed, or unchanged
+- Remediation plans prioritize stale maps and dependency cycles ahead of softer boundary drift
 
 ## UI Demos (What to Showcase)
 - JSON architecture report suitable for CI or dashboard ingestion
 - Markdown review notes showing how a reviewer would interpret the violation list
+- Adoption playbook and pull request review example for applying the checks to a real repository
 
 ## Repo Structure
 - /src
@@ -65,6 +68,7 @@
     python src/cli.py analyze demos/problematic-system.json --output demos/generated-report.json
     python src/cli.py analyze demos/problematic-system.json --format markdown --output demos/generated-report.md
     python src/cli.py analyze demos/problematic-system.json --baseline demos/baseline-report.json --output demos/generated-report.json
+    python src/cli.py analyze demos/problematic-system.json --baseline demos/baseline-report.json --format markdown --output demos/generated-report.md
 
 ## Daily Log
 - **Daily Entry - 2026-05-19**
@@ -91,6 +95,12 @@
   - **Tests Run:** python -m unittest discover -s tests
   - **UI Demo Notes:** Regenerated demos/generated-report.json and demos/generated-report.md with a baseline comparison that marks one newly introduced missing dependency as a regression.
   - **Tried / Solved / Learned:** A raw violation count is weaker than a comparison. Classifying fixed, introduced, and unchanged findings gives reviewers a better sense of direction without hiding current risk.
+- **Daily Entry - 2026-05-23**
+  - **Progress:** Added Saturday's richer review layer with prioritized remediation guidance, an adoption playbook, a service-map template, and a pull request review example.
+  - **Exercises Completed:** Implemented build_remediation_plan, included remediation output in JSON and markdown reports, expanded unit/CLI coverage, and added docs for applying the checker to a real repository.
+  - **Tests Run:** python -m unittest discover -s tests
+  - **UI Demo Notes:** Regenerated demos/generated-report.json and demos/generated-report.md so the review artifact now includes baseline status plus suggested remediation actions.
+  - **Tried / Solved / Learned:** Teams need more than "pass/fail" from architecture tooling. A ranked action list helps reviewers separate stale maps and cycles from softer boundary cleanup.
 
 ## Tried / Solved / Learned
 - Rotating from automation to architecture changes the problem from scheduled output reliability to design-boundary clarity.

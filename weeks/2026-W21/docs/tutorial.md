@@ -29,3 +29,11 @@ To track whether drift is getting better or worse, compare the current run with 
     python src/cli.py analyze demos/problematic-system.json --baseline demos/baseline-report.json --output demos/generated-report.json
 
 The report adds a baseline object with fixed, introduced, and unchanged findings. Treat introduced violations as review blockers first, because they represent new drift even when the total violation count still looks small.
+
+Saturday's addition is a remediation plan. JSON and markdown reports now include a prioritized list of suggested next actions. Missing dependencies and cycles are high priority because they usually mean the map is stale or the service graph can deadlock ownership decisions. Explicit boundary violations stay medium priority unless the team decides to promote a specific rule to a release gate.
+
+Use the companion adoption playbook when applying the checks to a real repository:
+
+    docs/adoption-playbook.md
+
+The short version is to map real modules to services first, run the analyzer in reporting mode, tune noisy rules, then add the markdown output to pull requests before making any rule blocking.

@@ -38,3 +38,10 @@
 - Fixed: 0
 - Introduced: 1
 - Unchanged: 4
+
+## Suggested Remediation
+- high: api -> orders - Break the cycle with an event, interface, or dependency inversion point.
+- high: api -> billing - Either add billing to the service map or remove the stale dependency from api.
+- medium: web -> orders - Route web through the approved facade instead of calling orders directly.
+- medium: orders -> api - Move shared behavior behind a lower-layer abstraction before orders calls api.
+- medium: warehouse -> orders - Expose an owned API or event contract instead of direct package access from warehouse.

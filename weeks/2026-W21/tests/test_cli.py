@@ -31,6 +31,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             report = json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(report["violation_count"], 5)
+            self.assertEqual(report["remediation_plan"][0]["priority"], "high")
 
     def test_analyze_returns_success_for_clean_system(self) -> None:
         result = subprocess.run(
@@ -71,6 +72,7 @@ class CliTests(unittest.TestCase):
             markdown = output.read_text(encoding="utf-8")
             self.assertIn("# Architecture Fitness Report", markdown)
             self.assertIn("### forbidden_dependency: web -> orders", markdown)
+            self.assertIn("## Suggested Remediation", markdown)
 
     def test_analyze_compares_against_baseline_report(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,0 +1,37 @@
+{
+  "services": [
+    {
+      "name": "web",
+      "layer": "edge",
+      "package": "frontend",
+      "dependencies": ["api"]
+    },
+    {
+      "name": "api",
+      "layer": "application",
+      "package": "commerce",
+      "dependencies": ["orders", "identity"]
+    },
+    {
+      "name": "orders",
+      "layer": "domain",
+      "package": "commerce",
+      "dependencies": []
+    }
+  ],
+  "layer_order": ["edge", "application", "domain", "infrastructure"],
+  "ownership_boundaries": [
+    {
+      "package": "frontend",
+      "allowed_dependency_packages": ["commerce"],
+      "reason": "frontend code must depend only on public commerce entrypoints"
+    }
+  ],
+  "forbidden_dependencies": [
+    {
+      "source": "web",
+      "target": "orders",
+      "reason": "edge services must call the API facade instead of domain services directly"
+    }
+  ]
+}

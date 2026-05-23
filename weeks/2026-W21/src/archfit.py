@@ -94,12 +94,14 @@ def analyze(architecture: ArchitectureMap) -> dict[str, Any]:
     violations.extend(_cycle_violations(architecture))
     violations.sort(key=lambda item: (item.kind, item.service, item.dependency or "", item.message))
 
-    return {
+    report = {
         "service_count": len(architecture.services),
         "dependency_count": sum(len(service.dependencies) for service in architecture.services.values()),
         "violation_count": len(violations),
         "violations": [violation.to_dict() for violation in violations],
     }
+    report["remediation_plan"] = build_remediation_plan(report)
+    return report
 
 
 def compare_reports(current: dict[str, Any], baseline: dict[str, Any]) -> dict[str, Any]:
@@ -121,6 +123,27 @@ def compare_reports(current: dict[str, Any], baseline: dict[str, Any]) -> dict[s
         "introduced": [current_items[key] for key in introduced_keys],
         "unchanged": [current_items[key] for key in unchanged_keys],
     }
+
+
+def build_remediation_plan(report: dict[str, Any]) -> list[dict[str, str]]:
+    plan: list[dict[str, str]] = []
+    for violation in report.get("violations", []):
+        kind = str(violation.get("kind", ""))
+        service = str(violation.get("service", ""))
+        dependency = violation.get("dependency")
+        dependency_text = str(dependency) if dependency else "n/a"
+        guidance = _remediation_guidance(kind, service, dependency_text)
+        plan.append(
+            {
+                "priority": guidance["priority"],
+                "kind": kind,
+                "service": service,
+                "dependency": dependency_text,
+                "action": guidance["action"],
+            }
+        )
+    plan.sort(key=lambda item: (_priority_rank(item["priority"]), item["kind"], item["service"]))
+    return plan
 
 
 def render_markdown_report(report: dict[str, Any]) -> str:
@@ -157,6 +180,9 @@ def render_markdown_report(report: dict[str, Any]) -> str:
     baseline = report.get("baseline")
     if isinstance(baseline, dict):
         lines.extend(_render_baseline_lines(baseline))
+    remediation_plan = report.get("remediation_plan", [])
+    if isinstance(remediation_plan, list) and remediation_plan:
+        lines.extend(_render_remediation_lines(remediation_plan))
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -190,6 +216,52 @@ def _render_baseline_lines(baseline: dict[str, Any]) -> list[str]:
         f"- Unchanged: {baseline['unchanged_count']}",
         "",
     ]
+
+
+def _render_remediation_lines(remediation_plan: list[dict[str, str]]) -> list[str]:
+    lines = ["## Suggested Remediation"]
+    for item in remediation_plan:
+        lines.append(
+            f"- {item['priority']}: {item['service']} -> {item['dependency']} - {item['action']}"
+        )
+    lines.append("")
+    return lines
+
+
+def _priority_rank(priority: str) -> int:
+    return {"high": 0, "medium": 1, "low": 2}.get(priority, 3)
+
+
+def _remediation_guidance(kind: str, service: str, dependency: str) -> dict[str, str]:
+    if kind == "missing_dependency":
+        return {
+            "priority": "high",
+            "action": f"Either add {dependency} to the service map or remove the stale dependency from {service}.",
+        }
+    if kind == "cycle":
+        return {
+            "priority": "high",
+            "action": "Break the cycle with an event, interface, or dependency inversion point.",
+        }
+    if kind == "forbidden_dependency":
+        return {
+            "priority": "medium",
+            "action": f"Route {service} through the approved facade instead of calling {dependency} directly.",
+        }
+    if kind == "layer_order":
+        return {
+            "priority": "medium",
+            "action": f"Move shared behavior behind a lower-layer abstraction before {service} calls {dependency}.",
+        }
+    if kind == "ownership_boundary":
+        return {
+            "priority": "medium",
+            "action": f"Expose an owned API or event contract instead of direct package access from {service}.",
+        }
+    return {
+        "priority": "low",
+        "action": "Review the service map and decide whether the rule or dependency should change.",
+    }
 
 
 def _parse_service(item: object) -> Service:

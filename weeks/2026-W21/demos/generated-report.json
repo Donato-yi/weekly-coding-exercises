@@ -43,6 +43,43 @@
     "unchanged_count": 4
   },
   "dependency_count": 6,
+  "remediation_plan": [
+    {
+      "action": "Break the cycle with an event, interface, or dependency inversion point.",
+      "dependency": "orders",
+      "kind": "cycle",
+      "priority": "high",
+      "service": "api"
+    },
+    {
+      "action": "Either add billing to the service map or remove the stale dependency from api.",
+      "dependency": "billing",
+      "kind": "missing_dependency",
+      "priority": "high",
+      "service": "api"
+    },
+    {
+      "action": "Route web through the approved facade instead of calling orders directly.",
+      "dependency": "orders",
+      "kind": "forbidden_dependency",
+      "priority": "medium",
+      "service": "web"
+    },
+    {
+      "action": "Move shared behavior behind a lower-layer abstraction before orders calls api.",
+      "dependency": "api",
+      "kind": "layer_order",
+      "priority": "medium",
+      "service": "orders"
+    },
+    {
+      "action": "Expose an owned API or event contract instead of direct package access from warehouse.",
+      "dependency": "orders",
+      "kind": "ownership_boundary",
+      "priority": "medium",
+      "service": "warehouse"
+    }
+  ],
   "service_count": 4,
   "violation_count": 5,
   "violations": [

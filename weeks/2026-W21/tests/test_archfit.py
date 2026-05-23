@@ -9,7 +9,14 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from archfit import ConfigError, analyze, compare_reports, load_architecture, render_markdown_report
+from archfit import (
+    ConfigError,
+    analyze,
+    build_remediation_plan,
+    compare_reports,
+    load_architecture,
+    render_markdown_report,
+)
 
 
 class ArchitectureFitnessTests(unittest.TestCase):
@@ -65,6 +72,8 @@ class ArchitectureFitnessTests(unittest.TestCase):
         self.assertIn("- Violations: 5", markdown)
         self.assertIn("### layer_order: orders -> api", markdown)
         self.assertIn("dependency cycle: api -> orders -> api", markdown)
+        self.assertIn("## Suggested Remediation", markdown)
+        self.assertIn("high: api -> billing", markdown)
 
     def test_markdown_report_handles_clean_system(self) -> None:
         report = analyze(load_architecture(ROOT / "demos" / "clean-system.json"))
@@ -115,6 +124,17 @@ class ArchitectureFitnessTests(unittest.TestCase):
         self.assertEqual(comparison["unchanged_count"], 1)
         self.assertEqual(comparison["fixed"][0]["kind"], "forbidden_dependency")
         self.assertEqual(comparison["introduced"][0]["kind"], "missing_dependency")
+
+    def test_remediation_plan_prioritizes_missing_dependencies_and_cycles(self) -> None:
+        report = analyze(load_architecture(ROOT / "demos" / "problematic-system.json"))
+
+        plan = build_remediation_plan(report)
+
+        self.assertEqual(len(plan), 5)
+        self.assertEqual([item["priority"] for item in plan[:2]], ["high", "high"])
+        self.assertEqual(plan[0]["kind"], "cycle")
+        self.assertEqual(plan[1]["kind"], "missing_dependency")
+        self.assertIn("add billing to the service map", plan[1]["action"])
 
     def test_markdown_report_includes_baseline_summary(self) -> None:
         report = analyze(load_architecture(ROOT / "demos" / "problematic-system.json"))

@@ -1,0 +1,73 @@
+# Weekly Focus - 2026-W22
+
+## Theme
+- Design-token inspector for accessible interface systems
+
+## Focus Area
+- design
+
+## Primary Language / Stack
+- TypeScript with Vite, Vitest, CSS custom properties, and a small browser demo
+
+## Weekly Goal
+- Build a compact design-system utility that reads token definitions, validates contrast and naming consistency, and presents a usable inspector for designers and engineers reviewing interface foundations.
+
+## Plan (Mon -> Sun)
+- Mon: Define goal + plan only
+- Tue: Create token schema, parser, validation rules, sample token sets, and starter Vitest coverage
+- Wed: Add contrast checking for foreground/background pairs and semantic status colors
+- Thu: Build a simple inspector demo that renders swatches, typography samples, and spacing ramps
+- Fri: Add exportable audit reports with warnings, failures, and suggested fixes
+- Sat: Add documentation for integrating token audits into UI review and pull requests
+- Sun: Refactor, tighten edge-case tests, and summarize design tradeoffs
+
+## Exercises (What to Build)
+- Token JSON schema for color, typography, spacing, radius, and shadow values
+- TypeScript parser that normalizes token input into stable internal models
+- Naming consistency checks for semantic, component, and raw scale tokens
+- WCAG-oriented contrast checks for selected text/background pairs
+- Token audit report with pass, warning, and fail categories
+- Browser demo that displays token previews without requiring a full design system
+- Documentation that explains how to use token audits during UI implementation reviews
+
+## Tests (What to Validate)
+- Valid token files parse into deterministic models
+- Missing token fields and unknown categories produce clear validation errors
+- Semantic color pairs report contrast pass/fail status consistently
+- Naming rules catch mixed casing, ambiguous prefixes, and duplicate aliases
+- Report output stays stable enough for pull request review
+- Demo fixtures cover both clean and problematic token sets
+
+## UI Demos (What to Showcase)
+- Color swatches with contrast results and semantic usage labels
+- Typography scale preview with sample text
+- Spacing and radius ramps for quick visual comparison
+- Audit summary panel that separates failures from advisory warnings
+
+## Repo Structure
+- /src
+- /tests
+- /demos
+- /docs
+
+## Tutorial Notes
+- Design-token checks should explain the practical UI problem behind each warning.
+- Contrast validation is strongest when it checks semantic pairs, not isolated colors.
+- A useful design tool should make inconsistencies visible before debating style preference.
+
+## Getting Started
+- Planned test command: npm test
+- Planned demo command: npm run dev
+- Planned audit command: npm run audit -- demos/problematic-tokens.json
+
+## Daily Log
+- **Daily Entry - 2026-05-25**
+  - **Progress:** Created the W22 design-week plan only, per Monday automation rules.
+  - **Exercises Completed:** Defined the token inspector goal, planned implementation slices, and listed validation, reporting, demo, and documentation targets.
+  - **Tests Run:** Not run; Monday is planning only and no code was added.
+  - **UI Demo Notes:** Planned a browser demo for swatches, typography, spacing, radius, and audit summaries.
+  - **Tried / Solved / Learned:** Rotating from architecture to design keeps the weekly practice close to real product work: constraints need both structural checks and clear visual review surfaces.
+
+## Tried / Solved / Learned
+- After architecture boundary checks in W21, design-token inspection is a natural next step because it turns UI foundations into something reviewable and testable.
+- TypeScript fits this week because design tokens often feed web interfaces, build tools, and frontend tests.

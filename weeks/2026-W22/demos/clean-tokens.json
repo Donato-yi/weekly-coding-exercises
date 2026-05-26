@@ -1,0 +1,32 @@
+{
+  "name": "clean-product-system",
+  "tokens": [
+    {
+      "name": "color.text.primary",
+      "category": "color",
+      "value": "#111827",
+      "aliases": ["body-text"]
+    },
+    {
+      "name": "color.surface.canvas",
+      "category": "color",
+      "value": "#ffffff"
+    },
+    {
+      "name": "typography.body-md",
+      "category": "typography",
+      "value": "16px/1.5 Inter"
+    },
+    {
+      "name": "spacing.scale-2",
+      "category": "spacing",
+      "value": "0.5rem"
+    },
+    {
+      "name": "radius.card-sm",
+      "category": "radius",
+      "value": "6px"
+    }
+  ]
+}
+

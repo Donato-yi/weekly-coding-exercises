@@ -56,9 +56,10 @@
 - A useful design tool should make inconsistencies visible before debating style preference.
 
 ## Getting Started
-- Planned test command: npm test
-- Planned demo command: npm run dev
-- Planned audit command: npm run audit -- demos/problematic-tokens.json
+    npm install
+    npm test
+    npm run audit -- demos/clean-tokens.json
+    npm run audit -- demos/problematic-tokens.json
 
 ## Daily Log
 - **Daily Entry - 2026-05-25**
@@ -67,7 +68,15 @@
   - **Tests Run:** Not run; Monday is planning only and no code was added.
   - **UI Demo Notes:** Planned a browser demo for swatches, typography, spacing, radius, and audit summaries.
   - **Tried / Solved / Learned:** Rotating from architecture to design keeps the weekly practice close to real product work: constraints need both structural checks and clear visual review surfaces.
+- **Daily Entry - 2026-05-26**
+  - **Progress:** Built the first runnable TypeScript slice: token parsing, normalization, naming validation, color value checks, duplicate alias detection, CLI audit output, fixtures, docs, and Vitest coverage.
+  - **Exercises Completed:** Added src/tokens.ts, src/cli.ts, clean/problematic demo token sets, starter tests, and audit notes.
+  - **Tests Run:** npm test
+  - **UI Demo Notes:** Added JSON fixtures that will feed Thursday's browser inspector; no rendered UI yet because Tuesday focuses on the model and validation layer.
+  - **Tried / Solved / Learned:** Deterministic naming rules make design-token problems concrete early. A small report model gives the future demo a stable data surface instead of tying validation directly to UI rendering.
 
 ## Tried / Solved / Learned
 - After architecture boundary checks in W21, design-token inspection is a natural next step because it turns UI foundations into something reviewable and testable.
 - TypeScript fits this week because design tokens often feed web interfaces, build tools, and frontend tests.
+- The first implementation slice should stay boring and testable: parse data, normalize paths, and produce a stable audit report before adding visuals.
+

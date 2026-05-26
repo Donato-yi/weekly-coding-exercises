@@ -1,0 +1,17 @@
+{
+  "name": "w22-design-token-inspector",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "audit": "tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^1.6.1"
+  }
+}
+

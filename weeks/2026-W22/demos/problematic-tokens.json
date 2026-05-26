@@ -1,0 +1,23 @@
+{
+  "name": "problematic-product-system",
+  "tokens": [
+    {
+      "name": "Color.text.Primary",
+      "category": "color",
+      "value": "blue",
+      "aliases": ["copy"]
+    },
+    {
+      "name": "spacing.misc-gap",
+      "category": "spacing",
+      "value": "8px",
+      "aliases": ["copy"]
+    },
+    {
+      "name": "color.surface.card",
+      "category": "radius",
+      "value": "4px"
+    }
+  ]
+}
+

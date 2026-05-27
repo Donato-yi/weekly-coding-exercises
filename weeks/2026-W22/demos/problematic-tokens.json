@@ -1,5 +1,12 @@
 {
   "name": "problematic-product-system",
+  "contrastPairs": [
+    {
+      "name": "muted-copy",
+      "foreground": "color.text.muted",
+      "background": "color.surface.card"
+    }
+  ],
   "tokens": [
     {
       "name": "Color.text.Primary",
@@ -17,7 +24,21 @@
       "name": "color.surface.card",
       "category": "radius",
       "value": "4px"
+    },
+    {
+      "name": "color.text.muted",
+      "category": "color",
+      "value": "#9ca3af"
+    },
+    {
+      "name": "color.status.warning.foreground",
+      "category": "color",
+      "value": "#f59e0b"
+    },
+    {
+      "name": "color.status.warning.background",
+      "category": "color",
+      "value": "#fef3c7"
     }
   ]
 }
-

@@ -10,8 +10,13 @@ The first slice focuses on deterministic parsing and naming checks. The audit is
 - Color token values must be hex strings.
 - Aliases cannot be reused by different tokens.
 - Vague segments such as misc, other, and stuff are warnings.
+- Explicit contrast pairs can be listed with foreground and background token names.
+- Semantic color pairs named as color.<role>.<state>.foreground/background are inferred automatically.
+- Contrast below 4.5:1 fails; contrast from 4.5:1 to below 7:1 passes AA but warns that it misses AAA.
+
+## Contrast Pair Notes
+Contrast checks are intentionally pair-based. A color can be valid by itself and still fail once it is used as text on a real surface. The audit supports both explicit pairs for product-specific roles and inferred pairs for semantic statuses such as success, warning, and danger.
 
 ## Next Slice
-- Add contrast checks for semantic foreground/background pairs.
 - Render audit output in a browser demo with swatches and grouped failures.
-
+- Show inferred semantic color pairs beside explicit contrast-pair checks.

@@ -74,9 +74,14 @@
   - **Tests Run:** npm test
   - **UI Demo Notes:** Added JSON fixtures that will feed Thursday's browser inspector; no rendered UI yet because Tuesday focuses on the model and validation layer.
   - **Tried / Solved / Learned:** Deterministic naming rules make design-token problems concrete early. A small report model gives the future demo a stable data surface instead of tying validation directly to UI rendering.
+- **Daily Entry - 2026-05-27**
+  - **Progress:** Added contrast-pair auditing for explicit foreground/background pairs and inferred semantic status pairs such as color.status.success.foreground/background.
+  - **Exercises Completed:** Implemented WCAG-style contrast ratio calculation, missing-pair validation, AA/AAA warning behavior, expanded clean/problematic fixtures, and documented the pair-based contrast model.
+  - **Tests Run:** npm install; npm test
+  - **UI Demo Notes:** Fixtures now include body-copy and semantic-status color pairs so Thursday's browser inspector can render swatches with real contrast results instead of placeholder colors.
+  - **Tried / Solved / Learned:** Accessibility checks need usage context. A token can be valid hex and still fail once paired with a surface, so the audit model now treats contrast as a relationship between tokens.
 
 ## Tried / Solved / Learned
 - After architecture boundary checks in W21, design-token inspection is a natural next step because it turns UI foundations into something reviewable and testable.
 - TypeScript fits this week because design tokens often feed web interfaces, build tools, and frontend tests.
 - The first implementation slice should stay boring and testable: parse data, normalize paths, and produce a stable audit report before adding visuals.
-

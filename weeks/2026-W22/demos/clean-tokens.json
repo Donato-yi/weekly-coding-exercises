@@ -1,5 +1,12 @@
 {
   "name": "clean-product-system",
+  "contrastPairs": [
+    {
+      "name": "body",
+      "foreground": "color.text.primary",
+      "background": "color.surface.canvas"
+    }
+  ],
   "tokens": [
     {
       "name": "color.text.primary",
@@ -11,6 +18,16 @@
       "name": "color.surface.canvas",
       "category": "color",
       "value": "#ffffff"
+    },
+    {
+      "name": "color.status.success.foreground",
+      "category": "color",
+      "value": "#052e16"
+    },
+    {
+      "name": "color.status.success.background",
+      "category": "color",
+      "value": "#f0fdf4"
     },
     {
       "name": "typography.body-md",
@@ -29,4 +46,3 @@
     }
   ]
 }
-

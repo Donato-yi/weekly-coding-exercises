@@ -18,5 +18,8 @@ The first slice focuses on deterministic parsing and naming checks. The audit is
 Contrast checks are intentionally pair-based. A color can be valid by itself and still fail once it is used as text on a real surface. The audit supports both explicit pairs for product-specific roles and inferred pairs for semantic statuses such as success, warning, and danger.
 
 ## Next Slice
-- Render audit output in a browser demo with swatches and grouped failures.
-- Show inferred semantic color pairs beside explicit contrast-pair checks.
+- Add exportable markdown/JSON audit reports for pull request review.
+- Include suggested fixes for common naming and contrast failures.
+
+## Browser Inspector Notes
+The browser demo uses the same parser and audit model as the CLI, then maps the result into preview sections: color swatches, typography samples, spacing ramps, radius ramps, contrast cards, and grouped issue rows. Keeping the view model in TypeScript makes the demo easy to test without requiring a DOM test harness.

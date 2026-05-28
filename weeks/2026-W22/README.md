@@ -60,6 +60,7 @@
     npm test
     npm run audit -- demos/clean-tokens.json
     npm run audit -- demos/problematic-tokens.json
+    npm run demo
 
 ## Daily Log
 - **Daily Entry - 2026-05-25**
@@ -80,8 +81,15 @@
   - **Tests Run:** npm install; npm test
   - **UI Demo Notes:** Fixtures now include body-copy and semantic-status color pairs so Thursday's browser inspector can render swatches with real contrast results instead of placeholder colors.
   - **Tried / Solved / Learned:** Accessibility checks need usage context. A token can be valid hex and still fail once paired with a surface, so the audit model now treats contrast as a relationship between tokens.
+- **Daily Entry - 2026-05-28**
+  - **Progress:** Built the browser-inspector slice with a tested TypeScript view model and a Vite-served demo.
+  - **Exercises Completed:** Added src/inspector.ts, src/browser-demo.ts, demos/inspector.html, inspector tests, and demo launch instructions.
+  - **Tests Run:** npm install; npm test
+  - **UI Demo Notes:** The demo can switch between clean and problematic fixtures, rendering color swatches, typography samples, spacing and radius ramps, contrast cards, and audit issue rows from the same audit data used by the CLI.
+  - **Tried / Solved / Learned:** A small view-model layer keeps the UI honest: the demo remains visual, but the grouping and contrast status logic are still covered by unit tests.
 
 ## Tried / Solved / Learned
 - After architecture boundary checks in W21, design-token inspection is a natural next step because it turns UI foundations into something reviewable and testable.
 - TypeScript fits this week because design tokens often feed web interfaces, build tools, and frontend tests.
 - The first implementation slice should stay boring and testable: parse data, normalize paths, and produce a stable audit report before adding visuals.
+- Browser demos are more useful when they reuse the same audit model as the CLI; otherwise the visual layer can drift from automated review behavior.

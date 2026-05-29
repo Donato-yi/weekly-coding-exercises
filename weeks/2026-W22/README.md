@@ -60,6 +60,7 @@
     npm test
     npm run audit -- demos/clean-tokens.json
     npm run audit -- demos/problematic-tokens.json
+    npm run audit -- demos/problematic-tokens.json --format markdown
     npm run demo
 
 ## Daily Log
@@ -87,9 +88,16 @@
   - **Tests Run:** npm install; npm test
   - **UI Demo Notes:** The demo can switch between clean and problematic fixtures, rendering color swatches, typography samples, spacing and radius ramps, contrast cards, and audit issue rows from the same audit data used by the CLI.
   - **Tried / Solved / Learned:** A small view-model layer keeps the UI honest: the demo remains visual, but the grouping and contrast status logic are still covered by unit tests.
+- **Daily Entry - 2026-05-29**
+  - **Progress:** Added exportable audit reports for pull request review.
+  - **Exercises Completed:** Added src/report.ts, report rendering tests, CLI --format support for JSON/markdown, suggested fixes for common audit codes, and report usage notes.
+  - **Tests Run:** npm test; npm run audit -- demos/clean-tokens.json --format markdown; npm run audit -- demos/problematic-tokens.json --format markdown
+  - **UI Demo Notes:** No new browser surface today; the report layer uses the same audit model as the CLI and inspector so review comments, terminal output, and the demo stay aligned.
+  - **Tried / Solved / Learned:** Reviewable design-system automation needs two audiences: machines need structured JSON, while humans need grouped markdown that leads with failures and includes concrete next fixes.
 
 ## Tried / Solved / Learned
 - After architecture boundary checks in W21, design-token inspection is a natural next step because it turns UI foundations into something reviewable and testable.
 - TypeScript fits this week because design tokens often feed web interfaces, build tools, and frontend tests.
 - The first implementation slice should stay boring and testable: parse data, normalize paths, and produce a stable audit report before adding visuals.
 - Browser demos are more useful when they reuse the same audit model as the CLI; otherwise the visual layer can drift from automated review behavior.
+- Exported reports are more useful when they separate severity from suggestion text; the audit can remain deterministic while the review format teaches the next fix.
